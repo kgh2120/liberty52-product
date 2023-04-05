@@ -10,7 +10,6 @@ spring:
     import:
       - optional:configserver:http://3.34.181.222:8888/
       - classpath:aws-config-sample.yml
-      - classpath:application-oauth-sample.yaml
   h2:
     console:
       enabled: true
