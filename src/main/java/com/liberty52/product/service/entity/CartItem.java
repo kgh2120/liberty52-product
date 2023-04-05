@@ -19,7 +19,7 @@ public class CartItem {
     @Column(nullable = false)
     private int ea;
 
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     private String authId;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
