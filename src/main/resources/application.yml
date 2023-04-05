@@ -1,0 +1,27 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: product
+  profiles:
+    active: prod
+  config:
+    import:
+      - optional:configserver:http://3.34.181.222:8888/
+      - classpath:aws-config-sample.yml
+      - classpath:application-oauth-sample.yaml
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  cloud:
+    config:
+      label: main
+
+logging:
+  level:
+    root: info
+
+frontend:
+  url: http://localhost:3000

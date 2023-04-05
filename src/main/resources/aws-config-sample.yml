@@ -1,0 +1,14 @@
+cloud:
+  aws:
+    credentials:
+      access-key: asdf
+      secret-key: asdf
+    s3:
+      bucket: liberty52
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+
+oauth:
+  redirect: http://127.0.0.1:5173/tokens?
