@@ -1,7 +1,6 @@
 package com.liberty52.product.service.applicationservice;
 
 import com.liberty52.product.global.adapter.S3Uploader;
-import com.liberty52.product.global.exception.external.NotMatchOptionException;
 import com.liberty52.product.global.exception.external.OptionDetailNotFoundException;
 import com.liberty52.product.global.exception.external.OptionNotFoundException;
 import com.liberty52.product.global.exception.external.ProductNotFoundException;
@@ -12,9 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -36,11 +32,9 @@ public class CartItemCreateServiceImpl implements CartItemCreateService{
         cartItemRepository.save(cartItem);
         for (CartItemRequest.OptionRequest optionRequest :dto.getOptionRequestList()){
             ProductCartOption productCartOption = ProductCartOption.create();
-            ProductOption productOption = productOptionRepository.findById(optionRequest.getOptionId()).orElseThrow(() -> new OptionNotFoundException(dto.getProductId()));
-            OptionDetail optionDetail = optionDetailRepository.findById(optionRequest.getDetailId()).orElseThrow(() -> new OptionDetailNotFoundException(dto.getProductId()));
-            if(!product.getId().equals(productOption.getProduct().getId()) || !productOption.getId().equals(optionDetail.getProductOption().getId())) {
-                throw new NotMatchOptionException();
-            }
+            ProductOption productOption = productOptionRepository.findByIdAndProduct_Id(optionRequest.getOptionId(), dto.getProductId()).orElseThrow(() -> new OptionNotFoundException(dto.getProductId()));
+            OptionDetail optionDetail = optionDetailRepository.findByIdAndProductOption_Id(optionRequest.getDetailId(), productOption.getId()).orElseThrow(() -> new OptionDetailNotFoundException(dto.getProductId()));
+
             productCartOption.associate(productOption);
             productCartOption.associate(optionDetail);
             productCartOption.associate(cartItem);

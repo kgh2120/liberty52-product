@@ -9,8 +9,7 @@ public enum ProductErrorCode implements ErrorCode{
     FORBIDDEN(HttpStatus.FORBIDDEN),
     PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND),
     OPTION_NOT_FOUND(HttpStatus.NOT_FOUND),
-    OPTION_DETAIL_NOT_FOUND(HttpStatus.NOT_FOUND),
-    NOT_MATCH_OPTION(HttpStatus.NOT_FOUND);
+    OPTION_DETAIL_NOT_FOUND(HttpStatus.NOT_FOUND);
 
     private final HttpStatus httpStatus;
     private final String errorMessage;

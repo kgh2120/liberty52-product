@@ -1,6 +1,5 @@
-package com.liberty52.product.Service;
+package com.liberty52.product.service;
 
-import com.liberty52.product.global.exception.external.NotMatchOptionException;
 import com.liberty52.product.global.exception.external.OptionDetailNotFoundException;
 import com.liberty52.product.global.exception.external.OptionNotFoundException;
 import com.liberty52.product.global.exception.external.ProductNotFoundException;
@@ -9,7 +8,6 @@ import com.liberty52.product.service.controller.dto.CartItemRequest;
 import com.liberty52.product.service.entity.CartItem;
 import com.liberty52.product.service.entity.ProductCartOption;
 import com.liberty52.product.service.repository.CartItemRepository;
-import com.liberty52.product.service.repository.ProductCartOptionRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,10 +48,6 @@ public class CartItemCreateServiceTest {
         dto4.create("L1", 4);
         dto4.addOprion("a","a5");
 
-        CartItemRequest dto5 = new CartItemRequest();
-        dto5.create("L1", 5);
-        dto5.addOprion("a","b1");
-
         cartItemCreateService.createCartItem("aaa", null, dto1);
         CartItem cartItem = cartItemRepository.findByAuthId("aaa").orElseThrow(()->new RuntimeException());
         Assertions.assertEquals(cartItem.getEa(), 1);
@@ -75,9 +69,6 @@ public class CartItemCreateServiceTest {
         Assertions.assertThrows(OptionNotFoundException.class, () -> cartItemCreateService.createCartItem("aaa", null, dto3));
 
         Assertions.assertThrows(OptionDetailNotFoundException.class, () -> cartItemCreateService.createCartItem("aaa", null, dto4));
-
-        Assertions.assertThrows(NotMatchOptionException.class, () -> cartItemCreateService.createCartItem("aaa", null, dto5));
-
 
     }
 }
