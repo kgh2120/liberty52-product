@@ -52,11 +52,11 @@ public class CartItemCreateServiceImpl implements CartItemCreateService{
         productOption1.associate(product);
         productOptionRepository.save(productOption1);
 
-        OptionDetail optionDetail1 = new OptionDetail("a1", "이젤 거치형", 0);
+        OptionDetail optionDetail1 = new OptionDetail("a1", "이젤 거치형", 500000);
         optionDetail1.associate(productOption1);
         optionDetailRepository.save(optionDetail1);
 
-        OptionDetail optionDetail2 = new OptionDetail("a2", "벽걸이형", 0);
+        OptionDetail optionDetail2 = new OptionDetail("a2", "벽걸이형", 300000);
         optionDetail2.associate(productOption1);
         optionDetailRepository.save(optionDetail2);
 
@@ -72,19 +72,19 @@ public class CartItemCreateServiceImpl implements CartItemCreateService{
         productOption3.associate(product);
         productOptionRepository.save(productOption3);
 
-        OptionDetail optionDetail4 = new OptionDetail("c1", "유광실버", 0);
+        OptionDetail optionDetail4 = new OptionDetail("c1", "유광실버", 600000);
         optionDetail4.associate(productOption3);
         optionDetailRepository.save(optionDetail4);
 
-        OptionDetail optionDetail5 = new OptionDetail("c2", "무광실버", 0);
+        OptionDetail optionDetail5 = new OptionDetail("c2", "무광실버", 400000);
         optionDetail5.associate(productOption3);
         optionDetailRepository.save(optionDetail5);
 
-        OptionDetail optionDetail6 = new OptionDetail("c3", "유광백색", 0);
+        OptionDetail optionDetail6 = new OptionDetail("c3", "유광백색", 300000);
         optionDetail6.associate(productOption3);
         optionDetailRepository.save(optionDetail6);
 
-        OptionDetail optionDetail7 = new OptionDetail("c4", "무광백색", 0);
+        OptionDetail optionDetail7 = new OptionDetail("c4", "무광백색", 500000);
         optionDetail7.associate(productOption3);
         optionDetailRepository.save(optionDetail7);
 

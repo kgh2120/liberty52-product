@@ -1,4 +1,4 @@
-package com.liberty52.product.service;
+package com.liberty52.product.service.applicationservice;
 
 import com.liberty52.product.global.exception.external.OptionDetailNotFoundException;
 import com.liberty52.product.global.exception.external.OptionNotFoundException;
@@ -49,7 +49,8 @@ public class CartItemCreateServiceTest {
         dto4.addOprion("a","a5");
 
         cartItemCreateService.createCartItem("aaa", null, dto1);
-        CartItem cartItem = cartItemRepository.findByAuthId("aaa").orElseThrow(()->new RuntimeException());
+        List<CartItem> cartItemList = cartItemRepository.findByAuthId("aaa");
+        CartItem cartItem = cartItemList.get(0);
         Assertions.assertEquals(cartItem.getEa(), 1);
         Assertions.assertEquals(cartItem.getAuthId(), "aaa");
         Assertions.assertEquals(cartItem.getProduct().getId(), "L1");
