@@ -46,6 +46,7 @@ public class CartItemCreateServiceImpl implements CartItemCreateService{
             productCartOption.associate(cartItem);
             productCartOptionRepository.save(productCartOption);
         }
+        cartItemRepository.save(cartItem);
     }
 //데모용 나중에 지워야 한다
     @Override
@@ -103,6 +104,12 @@ public class CartItemCreateServiceImpl implements CartItemCreateService{
         optionDetail7.init("c4", "무광백색", 0);
         optionDetail7.associate(productOption3);
         optionDetailRepository.save(optionDetail7);
+
+        productRepository.save(product);
+        productOptionRepository.save(productOption1);
+        productOptionRepository.save(productOption2);
+        productOptionRepository.save(productOption3);
+
     }
 
     private String uploadImage(MultipartFile multipartFile) {

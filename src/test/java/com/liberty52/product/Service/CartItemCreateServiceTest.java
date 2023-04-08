@@ -7,6 +7,7 @@ import com.liberty52.product.global.exception.external.ProductNotFoundException;
 import com.liberty52.product.service.applicationservice.CartItemCreateService;
 import com.liberty52.product.service.controller.dto.CartItemRequest;
 import com.liberty52.product.service.entity.CartItem;
+import com.liberty52.product.service.entity.ProductCartOption;
 import com.liberty52.product.service.repository.CartItemRepository;
 import com.liberty52.product.service.repository.ProductCartOptionRepository;
 import org.junit.jupiter.api.Assertions;
@@ -14,6 +15,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @SpringBootTest
 @Transactional
@@ -25,9 +28,6 @@ public class CartItemCreateServiceTest {
     @Autowired
     CartItemRepository cartItemRepository;
 
-    @Autowired
-    ProductCartOptionRepository productCartOptionRepository;
-
     @Test
     void 장바구니생성(){
         cartItemCreateService.init();
@@ -36,7 +36,7 @@ public class CartItemCreateServiceTest {
         dto1.create("L1", 1);
         dto1.addOprion("a","a1");
         dto1.addOprion("b","b1");
-        dto1.addOprion("c","c1");
+        dto1.addOprion("c","c2");
 
         CartItemRequest dto2 = new CartItemRequest();
         dto2.create("L", 2);
@@ -59,6 +59,16 @@ public class CartItemCreateServiceTest {
         Assertions.assertEquals(cartItem.getEa(), 1);
         Assertions.assertEquals(cartItem.getAuthId(), "aaa");
         Assertions.assertEquals(cartItem.getProduct().getId(), "L1");
+
+
+        List<ProductCartOption> productCartOptionList = cartItem.getOptions();
+        System.out.println(cartItem.getOptions().size());
+        Assertions.assertEquals(productCartOptionList.get(0).getProductOption().getId(),"a");
+        Assertions.assertEquals(productCartOptionList.get(0).getOptionDetail().getId(),"a1");
+        Assertions.assertEquals(productCartOptionList.get(1).getProductOption().getId(),"b");
+        Assertions.assertEquals(productCartOptionList.get(1).getOptionDetail().getId(),"b1");
+        Assertions.assertEquals(productCartOptionList.get(2).getProductOption().getId(),"c");
+        Assertions.assertEquals(productCartOptionList.get(2).getOptionDetail().getId(),"c2");
 
         Assertions.assertThrows(ProductNotFoundException.class, () -> cartItemCreateService.createCartItem("aaa", null, dto2));
 

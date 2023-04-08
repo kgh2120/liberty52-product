@@ -30,12 +30,13 @@ public class CartItem {
     private Product product;
 
     @OneToMany(mappedBy = "cartItem")
-    private List<ProductCartOption> options = new ArrayList<>();
+    private List<ProductCartOption> options;
 
     public CartItem(String authId, int ea, String image) {
         this.authId = authId;
         this.ea = ea;
         this.image_url = image;
+        this.options = new ArrayList<>();
     }
 
     public static CartItem createCartItem(String authId, int ea, String image) {
