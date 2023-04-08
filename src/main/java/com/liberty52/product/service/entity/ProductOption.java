@@ -1,7 +1,10 @@
 package com.liberty52.product.service.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +13,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "product_option")
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProductOption {
     @Id
     private String id = UUID.randomUUID().toString();
@@ -27,6 +31,12 @@ public class ProductOption {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "productOption")
     private List<OptionDetail> optionDetails = new ArrayList<>();
 
+    @Builder
+    private ProductOption(String name, boolean require) {
+        this.name = name;
+        this.require = require;
+    }
+
     public void associate(Product product) {
         this.product = product;
         this.product.addOption(this);
@@ -36,9 +46,13 @@ public class ProductOption {
         this.optionDetails.add(optionDetail);
     }
 
-    public void init(String id, String name, boolean require) {
+    public ProductOption(String id, String name, boolean require) {
         this.id = id;
         this.name = name;
         this.require = require;
+    }
+
+    public static ProductOption create(String name, boolean require) {
+        return builder().name(name).require(require).build();
     }
 }

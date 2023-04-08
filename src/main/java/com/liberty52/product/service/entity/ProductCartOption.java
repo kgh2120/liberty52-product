@@ -4,12 +4,15 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
 @Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProductCartOption {
     @Id
     private String id = UUID.randomUUID().toString();
@@ -22,6 +25,10 @@ public class ProductCartOption {
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private OptionDetail optionDetail;
+
+    public static ProductCartOption create() {
+        return new ProductCartOption();
+    }
 
     public void associate(CartItem cartItem) {
         this.cartItem = cartItem;

@@ -1,17 +1,18 @@
 package com.liberty52.product.service.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.bouncycastle.math.ec.ECAlgorithms;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CartItem {
     @Id
     private String id = UUID.randomUUID().toString();
@@ -32,15 +33,20 @@ public class CartItem {
     @OneToMany(mappedBy = "cartItem")
     private List<ProductCartOption> options;
 
-    public CartItem(String authId, int ea, String image) {
-        this.authId = authId;
+    public static CartItem createCartItem(String authId, int ea, String image) {
+        return new CartItem(image, ea, authId);
+    }
+
+    @Builder
+    private CartItem(String image_url, int ea, String authId) {
+        this.image_url = image_url;
         this.ea = ea;
-        this.image_url = image;
+        this.authId = authId;
         this.options = new ArrayList<>();
     }
 
-    public static CartItem createCartItem(String authId, int ea, String image) {
-        return new CartItem(authId, ea, image);
+    public static CartItem create(String imageUrl, int ea, String authId) {
+        return builder().image_url(imageUrl).ea(ea).authId(authId).build();
     }
 
     public void associate(Product product) {
