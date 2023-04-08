@@ -5,11 +5,10 @@ spring:
   application:
     name: product
   profiles:
-    active: prod
+    active: dev
   config:
     import:
       - optional:configserver:http://3.34.181.222:8888/
-      - classpath:aws-config-sample.yml
   h2:
     console:
       enabled: true
@@ -17,10 +16,12 @@ spring:
   cloud:
     config:
       label: main
+  jpa:
+    show-sql: true
 
 logging:
   level:
     root: info
 
 frontend:
-  url: http://localhost:3000
+  redirectUrlWithAccessTokenAndRefreshToken: http://43.201.26.253/redirect?accessToken=%s&refreshToken=%s
