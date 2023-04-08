@@ -2,6 +2,8 @@ package com.liberty52.product.service.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.bouncycastle.math.ec.ECAlgorithms;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +11,7 @@ import java.util.UUID;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class CartItem {
     @Id
     private String id = UUID.randomUUID().toString();
@@ -26,8 +29,18 @@ public class CartItem {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @OneToMany(mappedBy = "cartItem")
+    @OneToMany(mappedBy = "cartItem", cascade = CascadeType.ALL)
     private List<ProductCartOption> options = new ArrayList<>();
+
+    public CartItem(String authId, int ea, String image) {
+        this.authId = authId;
+        this.ea = ea;
+        this.image_url = image;
+    }
+
+    public static CartItem createCartItem(String authId, int ea, String image) {
+        return new CartItem(authId, ea, image);
+    }
 
     public void associate(Product product) {
         this.product = product;

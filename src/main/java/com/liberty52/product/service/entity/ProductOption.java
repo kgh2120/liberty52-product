@@ -24,7 +24,7 @@ public class ProductOption {
     @Column(nullable = false)
     private boolean require;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "productOption")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "productOption", cascade = CascadeType.ALL)
     private List<OptionDetail> optionDetails = new ArrayList<>();
 
     public void associate(Product product) {

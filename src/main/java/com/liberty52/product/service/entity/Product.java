@@ -25,7 +25,7 @@ public class Product {
     @Column(nullable = false)
     private Long price;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<ProductOption> productOptions = new ArrayList<>();
 
     public void addOption(ProductOption productOption) {
