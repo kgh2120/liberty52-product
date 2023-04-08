@@ -24,7 +24,7 @@ public class ProductOption {
     @Column(nullable = false)
     private boolean require;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "productOption", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "productOption")
     private List<OptionDetail> optionDetails = new ArrayList<>();
 
     public void associate(Product product) {
@@ -34,5 +34,11 @@ public class ProductOption {
 
     public void addDetail(OptionDetail optionDetail) {
         this.optionDetails.add(optionDetail);
+    }
+
+    public void init(String id, String name, boolean require) {
+        this.id = id;
+        this.name = name;
+        this.require = require;
     }
 }

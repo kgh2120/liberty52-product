@@ -6,5 +6,5 @@ import org.springframework.web.multipart.MultipartFile;
 public interface CartItemCreateService {
     void createCartItem(String authId, MultipartFile imageFile, CartItemRequest dto);
 
-    void inialization();
+    void init();
 }

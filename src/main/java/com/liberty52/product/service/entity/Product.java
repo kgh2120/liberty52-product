@@ -25,10 +25,17 @@ public class Product {
     @Column(nullable = false)
     private Long price;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product")
     private List<ProductOption> productOptions = new ArrayList<>();
 
     public void addOption(ProductOption productOption) {
         this.productOptions.add(productOption);
+    }
+
+    public void init(String id, String name, ProductState state, Long price) {
+        this.id =id;
+        this.name = name;
+        this.state =state;
+        this.price = price;
     }
 }

@@ -26,4 +26,12 @@ public class OptionDetail {
         this.productOption = productOption;
         this.productOption.addDetail(this);
     }
+
+    public void init(String id, String name, Integer price) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+    }
+
+
 }

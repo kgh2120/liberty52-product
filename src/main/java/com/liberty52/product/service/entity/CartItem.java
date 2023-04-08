@@ -29,7 +29,7 @@ public class CartItem {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @OneToMany(mappedBy = "cartItem", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "cartItem")
     private List<ProductCartOption> options = new ArrayList<>();
 
     public CartItem(String authId, int ea, String image) {
