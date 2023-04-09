@@ -18,6 +18,7 @@ public class CartItemCreateController {
     public void createCartItem(@RequestHeader(HttpHeaders.AUTHORIZATION) String authId, @RequestPart(value = "file") MultipartFile imageFile, @RequestBody CartItemRequest dto) {
         cartItemCreateService.init();
         cartItemCreateService.createCartItem(authId, imageFile, dto);
+
     }
 
 }
