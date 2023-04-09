@@ -45,7 +45,7 @@ public class CartItemCreateServiceImpl implements CartItemCreateService{
 //데모용 나중에 지워야 한다
     @Override
     public void init() {
-        Product product = new Product("L1", "Liberty52",ProductState.ON_SAIL, (long)100000);
+        Product product = new Product("L1", "Liberty52",ProductState.ON_SAIL, (long)1000000);
         productRepository.save(product);
 
         ProductOption productOption1 = new ProductOption("a", "거치 방식 선택", true);

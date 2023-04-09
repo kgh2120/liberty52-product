@@ -12,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class CartItemCreateController {
     private final CartItemCreateService cartItemCreateService;
 
-    @PostMapping("/cart")
+    @PostMapping("/cart-items")
     @ResponseStatus(HttpStatus.CREATED)
     public void createCartItem(@PathVariable("authId") String AuthId, @RequestPart(value = "file") MultipartFile imageFile, @RequestBody CartItemRequest dto) {
         cartItemCreateService.init();
