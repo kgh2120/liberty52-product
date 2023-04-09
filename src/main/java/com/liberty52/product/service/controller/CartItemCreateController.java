@@ -3,6 +3,7 @@ package com.liberty52.product.service.controller;
 import com.liberty52.product.service.applicationservice.CartItemCreateService;
 import com.liberty52.product.service.controller.dto.CartItemRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,9 +15,9 @@ public class CartItemCreateController {
 
     @PostMapping("/cart-items")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createCartItem(@PathVariable("authId") String AuthId, @RequestPart(value = "file") MultipartFile imageFile, @RequestBody CartItemRequest dto) {
+    public void createCartItem(@RequestHeader(HttpHeaders.AUTHORIZATION) String authId, @RequestPart(value = "file") MultipartFile imageFile, @RequestBody CartItemRequest dto) {
         cartItemCreateService.init();
-        cartItemCreateService.createCartItem(AuthId, imageFile, dto);
+        cartItemCreateService.createCartItem(authId, imageFile, dto);
     }
 
 }
