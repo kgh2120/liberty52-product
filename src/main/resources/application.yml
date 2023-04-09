@@ -23,5 +23,3 @@ logging:
   level:
     root: info
 
-frontend:
-  redirectUrlWithAccessTokenAndRefreshToken: http://43.201.26.253/redirect?accessToken=%s&refreshToken=%s
