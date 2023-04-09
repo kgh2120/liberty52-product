@@ -18,7 +18,7 @@ public class CartItem {
     private String id = UUID.randomUUID().toString();
 
     @Column(nullable = false)
-    private String image_url;
+    private String imageUrl;
 
     @Column(nullable = false)
     private int ea;
@@ -38,15 +38,15 @@ public class CartItem {
     }
 
     @Builder
-    private CartItem(String image_url, int ea, String authId) {
-        this.image_url = image_url;
+    private CartItem(String imageUrl, int ea, String authId) {
+        this.imageUrl = imageUrl;
         this.ea = ea;
         this.authId = authId;
         this.options = new ArrayList<>();
     }
 
     public static CartItem create(String imageUrl, int ea, String authId) {
-        return builder().image_url(imageUrl).ea(ea).authId(authId).build();
+        return builder().imageUrl(imageUrl).ea(ea).authId(authId).build();
     }
 
     public void associate(Product product) {
