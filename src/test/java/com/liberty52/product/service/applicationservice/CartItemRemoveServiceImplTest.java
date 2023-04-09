@@ -1,19 +1,14 @@
 package com.liberty52.product.service.applicationservice;
 
-import com.liberty52.product.global.exception.external.ResourceNotFoundException;
 import com.liberty52.product.service.entity.*;
 import com.liberty52.product.service.repository.*;
 import com.liberty52.product.service.utils.MockFactory;
-import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @SpringBootTest
 @Transactional

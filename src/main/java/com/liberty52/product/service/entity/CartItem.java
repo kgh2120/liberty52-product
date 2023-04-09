@@ -5,7 +5,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
+import org.bouncycastle.math.ec.ECAlgorithms;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -31,13 +31,18 @@ public class CartItem {
     private Product product;
 
     @OneToMany(mappedBy = "cartItem")
-    private List<ProductCartOption> options = new ArrayList<>();
+    private List<ProductCartOption> options;
+
+    public static CartItem createCartItem(String authId, int ea, String image) {
+        return new CartItem(image, ea, authId);
+    }
 
     @Builder
     private CartItem(String image_url, int ea, String authId) {
         this.image_url = image_url;
         this.ea = ea;
         this.authId = authId;
+        this.options = new ArrayList<>();
     }
 
     public static CartItem create(String imageUrl, int ea, String authId) {

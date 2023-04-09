@@ -6,7 +6,10 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum ProductErrorCode implements ErrorCode{
     RESOURCE_NOT_FOUND(HttpStatus.NOT_FOUND),
-    FORBIDDEN(HttpStatus.FORBIDDEN);
+    FORBIDDEN(HttpStatus.FORBIDDEN),
+    PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND),
+    OPTION_NOT_FOUND(HttpStatus.NOT_FOUND),
+    OPTION_DETAIL_NOT_FOUND(HttpStatus.NOT_FOUND);
 
     private final HttpStatus httpStatus;
     private final String errorMessage;
