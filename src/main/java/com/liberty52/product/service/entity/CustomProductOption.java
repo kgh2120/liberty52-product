@@ -13,12 +13,12 @@ import java.util.UUID;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ProductCartOption {
+public class CustomProductOption {
     @Id
     private String id = UUID.randomUUID().toString();
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private CartItem cartItem;
+    private CustomProduct customProduct;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private ProductOption productOption;
@@ -26,13 +26,13 @@ public class ProductCartOption {
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private OptionDetail optionDetail;
 
-    public static ProductCartOption create() {
-        return new ProductCartOption();
+    public static CustomProductOption create() {
+        return new CustomProductOption();
     }
 
-    public void associate(CartItem cartItem) {
-        this.cartItem = cartItem;
-        this.cartItem.addCartOption(this);
+    public void associate(CustomProduct cartItem) {
+        this.customProduct = cartItem;
+        this.customProduct.addCartOption(this);
     }
 
     public void associate(ProductOption productOption) {

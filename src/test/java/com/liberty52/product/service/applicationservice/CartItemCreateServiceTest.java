@@ -3,10 +3,9 @@ package com.liberty52.product.service.applicationservice;
 import com.liberty52.product.global.exception.external.OptionDetailNotFoundException;
 import com.liberty52.product.global.exception.external.OptionNotFoundException;
 import com.liberty52.product.global.exception.external.ProductNotFoundException;
-import com.liberty52.product.service.applicationservice.CartItemCreateService;
 import com.liberty52.product.service.controller.dto.CartItemRequest;
-import com.liberty52.product.service.entity.CartItem;
-import com.liberty52.product.service.entity.ProductCartOption;
+import com.liberty52.product.service.entity.CustomProduct;
+import com.liberty52.product.service.entity.CustomProductOption;
 import com.liberty52.product.service.repository.CartItemRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -49,14 +48,14 @@ public class CartItemCreateServiceTest {
         dto4.addOprion("a","a5");
 
         cartItemCreateService.createCartItem("aaa", null, dto1);
-        List<CartItem> cartItemList = cartItemRepository.findByAuthId("aaa");
-        CartItem cartItem = cartItemList.get(0);
-        Assertions.assertEquals(cartItem.getEa(), 1);
+        List<CustomProduct> cartItemList = cartItemRepository.findByAuthId("aaa");
+        CustomProduct cartItem = cartItemList.get(0);
+        Assertions.assertEquals(cartItem.getQuantity(), 1);
         Assertions.assertEquals(cartItem.getAuthId(), "aaa");
         Assertions.assertEquals(cartItem.getProduct().getId(), "L1");
 
 
-        List<ProductCartOption> productCartOptionList = cartItem.getOptions();
+        List<CustomProductOption> productCartOptionList = cartItem.getOptions();
         System.out.println(cartItem.getOptions().size());
         Assertions.assertEquals(productCartOptionList.get(0).getProductOption().getId(),"a");
         Assertions.assertEquals(productCartOptionList.get(0).getOptionDetail().getId(),"a1");

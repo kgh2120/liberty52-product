@@ -3,8 +3,8 @@ package com.liberty52.product.service.utils;
 import com.liberty52.product.service.entity.*;
 
 public class MockFactory {
-    public static CartItem createCartItem(String imageUrl, int ea, String authId) {
-        return CartItem.create(imageUrl, ea, authId);
+    public static CustomProduct createCartItem(String imageUrl, int ea, String authId) {
+        return CustomProduct.create(imageUrl, ea, authId);
     }
 
     public static Product createProduct(String name, ProductState state, Long price) {
@@ -19,7 +19,7 @@ public class MockFactory {
         return OptionDetail.create(name, price);
     }
 
-    public static ProductCartOption createProductCartOption() {
-        return ProductCartOption.create();
+    public static CustomProductOption createProductCartOption() {
+        return CustomProductOption.create();
     }
 }

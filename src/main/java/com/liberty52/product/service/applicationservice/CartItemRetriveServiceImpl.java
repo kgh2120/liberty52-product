@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,33 +21,33 @@ public class CartItemRetriveServiceImpl implements CartItemRetriveService {
     private final ProductOptionRepository productOptionRepository;
     private final OptionDetailRepository optionDetailRepository;
     private final CartItemRepository cartItemRepository;
-    private final ProductCartOptionRepository productCartOptionRepository;
+    private final CustomProductOptionRepository productCartOptionRepository;
 
     @Override
     public List<CartItemResponse> retriveCartItem(String authId) {
         List<CartItemResponse> cartItemResponseList = new ArrayList<CartItemResponse>();
 
 
-        List<CartItem> cartItemList = cartItemRepository.findByAuthId(authId);
+        List<CustomProduct> cartItemList = cartItemRepository.findByAuthId(authId);
         if (cartItemList.size() == 0){
             throw new NotFoundCartItemException();
         }
 
-        for(CartItem cartItem:cartItemList){
+        for(CustomProduct cartItem:cartItemList){
             Product product = cartItem.getProduct();
-            CartItemResponse cartItemResponse = CartItemResponse.of(product.getId(), product.getName(), product.getPrice(), cartItem.getEa(), cartItem.getImageUrl(), getCartOptionList(cartItem.getOptions()));
+            CartItemResponse cartItemResponse = CartItemResponse.of(product.getId(), product.getName(), product.getPrice(), cartItem.getQuantity(), cartItem.getUserCustomPictureUrl(), getCartOptionList(cartItem.getOptions()));
             cartItemResponseList.add(cartItemResponse);
         }
         return cartItemResponseList;
     }
 
-    private List<CartOptionResponse> getCartOptionList(List<ProductCartOption> options) {
+    private List<CartOptionResponse> getCartOptionList(List<CustomProductOption> options) {
         if (options.size() == 0) {
             return null;
         }
         List<CartOptionResponse> cartOptionResponseList = new ArrayList<CartOptionResponse>();
 
-        for (ProductCartOption productCartOption : options) {
+        for (CustomProductOption productCartOption : options) {
             ProductOption productOption = productCartOption.getProductOption();
             OptionDetail optionDetail = productCartOption.getOptionDetail();
             CartOptionResponse cartOptionResponse = CartOptionResponse.of(productOption.getId(), productOption.getName(), optionDetail.getId(), optionDetail.getName(), optionDetail.getPrice());

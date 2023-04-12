@@ -24,7 +24,7 @@ class CartItemRemoveServiceImplTest {
     @Autowired
     private OptionDetailRepository optionDetailRepository;
     @Autowired
-    private ProductCartOptionRepository productCartOptionRepository;
+    private CustomProductOptionRepository productCartOptionRepository;
     String authId = "auth_id";
     String imageUrl = "url";
 
@@ -47,11 +47,11 @@ class CartItemRemoveServiceImplTest {
         detailWall.associate(displayOption);
         detailWall = optionDetailRepository.save(detailWall);
 
-        CartItem cartItem = MockFactory.createCartItem(imageUrl, 1, authId);
-        cartItem.associate(product);
+        CustomProduct cartItem = MockFactory.createCartItem(imageUrl, 1, authId);
+        cartItem.associateWithProduct(product);
         cartItem = cartItemRepository.save(cartItem);
 
-        ProductCartOption productCartOption = MockFactory.createProductCartOption();
+        CustomProductOption productCartOption = MockFactory.createProductCartOption();
         productCartOption.associate(cartItem);
         productCartOption.associate(displayOption);
         productCartOption.associate(detailEasel);
@@ -65,7 +65,7 @@ class CartItemRemoveServiceImplTest {
 
     @Test
     void removeCartItem() {
-        CartItem cartItem = cartItemRepository.findById(cartItemId).get();
+        CustomProduct cartItem = cartItemRepository.findById(cartItemId).get();
 
         Assertions.assertFalse(cartItem.getOptions().isEmpty());
 

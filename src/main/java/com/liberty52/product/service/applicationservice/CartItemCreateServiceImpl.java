@@ -22,16 +22,16 @@ public class CartItemCreateServiceImpl implements CartItemCreateService{
     private final ProductOptionRepository productOptionRepository;
     private final OptionDetailRepository optionDetailRepository;
     private final CartItemRepository cartItemRepository;
-    private final ProductCartOptionRepository productCartOptionRepository;
+    private final CustomProductOptionRepository productCartOptionRepository;
 
     @Override
     public void createCartItem(String authId, MultipartFile imageFile, CartItemRequest dto) {
-        CartItem cartItem = CartItem.createCartItem(authId, dto.getEa(), uploadImage(imageFile));
+        CustomProduct cartItem = CustomProduct.createCartItem(authId, dto.getEa(), uploadImage(imageFile));
         Product product = productRepository.findById(dto.getProductId()).orElseThrow(() -> new ProductNotFoundException(dto.getProductId())); //예외처리 해야함
-        cartItem.associate(product);
+        cartItem.associateWithProduct(product);
         cartItemRepository.save(cartItem);
         for (CartItemRequest.OptionRequest optionRequest :dto.getOptionRequestList()){
-            ProductCartOption productCartOption = ProductCartOption.create();
+            CustomProductOption productCartOption = CustomProductOption.create();
             ProductOption productOption = productOptionRepository.findByIdAndProduct_Id(optionRequest.getOptionId(), dto.getProductId()).orElseThrow(() -> new OptionNotFoundException(dto.getProductId()));
             OptionDetail optionDetail = optionDetailRepository.findByIdAndProductOption_Id(optionRequest.getDetailId(), productOption.getId()).orElseThrow(() -> new OptionDetailNotFoundException(dto.getProductId()));
 
