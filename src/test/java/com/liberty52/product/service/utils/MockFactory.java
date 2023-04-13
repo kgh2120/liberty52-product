@@ -2,9 +2,11 @@ package com.liberty52.product.service.utils;
 
 import com.liberty52.product.service.entity.*;
 
+import java.util.List;
+
 public class MockFactory {
-    public static CustomProduct createCartItem(String imageUrl, int ea, String authId) {
-        return CustomProduct.create(imageUrl, ea, authId);
+    public static CustomProduct createCustomProduct(String imageUrl, int quantity, String authId) {
+        return CustomProduct.create(imageUrl, quantity, authId);
     }
 
     public static Product createProduct(String name, ProductState state, Long price) {
@@ -21,5 +23,13 @@ public class MockFactory {
 
     public static CustomProductOption createProductCartOption() {
         return CustomProductOption.create();
+    }
+
+    public static Cart createCart(String authId) {
+        return Cart.create(authId);
+    }
+
+    public static Orders createOrder(String authId, List<CustomProduct> customProducts) {
+        return Orders.create(authId, customProducts);
     }
 }

@@ -48,10 +48,10 @@ public class CartItemRetriveServiceImpl implements CartItemRetriveService {
         List<CartOptionResponse> cartOptionResponseList = new ArrayList<CartOptionResponse>();
 
         for (CustomProductOption productCartOption : options) {
-            ProductOption productOption = productCartOption.getProductOption();
+//            ProductOption productOption = productCartOption.getProductOption();
             OptionDetail optionDetail = productCartOption.getOptionDetail();
-            CartOptionResponse cartOptionResponse = CartOptionResponse.of(productOption.getId(), productOption.getName(), optionDetail.getId(), optionDetail.getName(), optionDetail.getPrice());
-            cartOptionResponseList.add(cartOptionResponse);
+//            CartOptionResponse cartOptionResponse = CartOptionResponse.of(productOption.getId(), productOption.getName(), optionDetail.getId(), optionDetail.getName(), optionDetail.getPrice());
+//            cartOptionResponseList.add(cartOptionResponse);
         }
         return cartOptionResponseList;
     }

@@ -1,5 +1,7 @@
 package com.liberty52.product.service.applicationservice;
 
+import com.liberty52.product.global.exception.external.NotYourResource;
+import com.liberty52.product.global.exception.external.UnRemovableResourceException;
 import com.liberty52.product.service.entity.*;
 import com.liberty52.product.service.repository.*;
 import com.liberty52.product.service.utils.MockFactory;
@@ -10,13 +12,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.UUID;
+
 @SpringBootTest
 @Transactional
 class CartItemRemoveServiceImplTest {
     @Autowired
     CartItemRemoveService cartItemRemoveService;
     @Autowired
-    CartItemRepository cartItemRepository;
+    CartItemRepository customProductRepository;
     @Autowired
     ProductRepository productRepository;
     @Autowired
@@ -29,6 +34,10 @@ class CartItemRemoveServiceImplTest {
     String imageUrl = "url";
 
     String cartItemId;
+    @Autowired
+    private CartRepository cartRepository;
+    @Autowired
+    private OrdersRepository ordersRepository;
 
     @BeforeEach
     void beforeEach() {
@@ -47,35 +56,57 @@ class CartItemRemoveServiceImplTest {
         detailWall.associate(displayOption);
         detailWall = optionDetailRepository.save(detailWall);
 
-        CustomProduct cartItem = MockFactory.createCartItem(imageUrl, 1, authId);
-        cartItem.associateWithProduct(product);
-        cartItem = cartItemRepository.save(cartItem);
+        CustomProduct customProduct = MockFactory.createCustomProduct(imageUrl, 1, authId);
+        customProduct.associateWithProduct(product);
+        customProduct = customProductRepository.save(customProduct);
 
-        CustomProductOption productCartOption = MockFactory.createProductCartOption();
-        productCartOption.associate(cartItem);
-        productCartOption.associate(displayOption);
-        productCartOption.associate(detailEasel);
-        productCartOption = productCartOptionRepository.save(productCartOption);
+        CustomProductOption customProductOption = MockFactory.createProductCartOption();
+        customProductOption.associate(customProduct);
+        customProductOption.associate(detailEasel);
+        customProductOption = productCartOptionRepository.save(customProductOption);
 
-        System.out.println(cartItem);
-        System.out.println(cartItem.getOptions());
-        System.out.println(cartItem.getOptions().size());
-        this.cartItemId = cartItem.getId();
+        this.cartItemId = customProduct.getId();
+    }
+
+    private CustomProduct createMockCartAndGetItem() {
+        Cart cart = cartRepository.findByAuthId(authId).orElse(cartRepository.save(MockFactory.createCart(authId)));
+        CustomProduct customProduct = customProductRepository.findById(this.cartItemId).get();
+        customProduct.associateWithCart(cart);
+        return customProductRepository.save(customProduct);
+    }
+    private CustomProduct createMockOrderAndGetItem() {
+        CustomProduct customProduct = customProductRepository.findById(this.cartItemId).get();
+        Orders order = ordersRepository.save(MockFactory.createOrder(authId, List.of(customProduct)));
+        return customProductRepository.save(customProduct);
     }
 
     @Test
     void removeCartItem() {
-        CustomProduct cartItem = cartItemRepository.findById(cartItemId).get();
+        CustomProduct customProduct = createMockCartAndGetItem();
 
-        Assertions.assertFalse(cartItem.getOptions().isEmpty());
+        Assertions.assertFalse(customProduct.getOptions().isEmpty());
 
         cartItemRemoveService.removeCartItem(authId, cartItemId);
 
-        cartItem.getOptions().forEach(option -> {
+        customProduct.getOptions().forEach(option -> {
             boolean b = productOptionRepository.existsById(option.getId());
             Assertions.assertFalse(b);
         });
 
-        Assertions.assertFalse(cartItemRepository.existsById(cartItemId));
+        Assertions.assertFalse(customProductRepository.existsById(cartItemId));
+
+    }
+
+    // Order의 CustomProduct를 삭제하려는 경우 반드시 예외가 발생한다.
+    @Test
+    void removeOrderItemMustThrow() {
+        createMockOrderAndGetItem();
+        Assertions.assertThrows(UnRemovableResourceException.class, () -> cartItemRemoveService.removeCartItem(authId, cartItemId));
+    }
+
+    @Test
+    void forbiddenCausedByInvalidAuthId() {
+        createMockCartAndGetItem();
+        Assertions.assertThrows(NotYourResource.class, () -> cartItemRemoveService.removeCartItem(UUID.randomUUID().toString(), cartItemId));
     }
 }

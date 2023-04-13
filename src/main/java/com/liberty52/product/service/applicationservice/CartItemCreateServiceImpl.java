@@ -35,7 +35,6 @@ public class CartItemCreateServiceImpl implements CartItemCreateService{
             ProductOption productOption = productOptionRepository.findByIdAndProduct_Id(optionRequest.getOptionId(), dto.getProductId()).orElseThrow(() -> new OptionNotFoundException(dto.getProductId()));
             OptionDetail optionDetail = optionDetailRepository.findByIdAndProductOption_Id(optionRequest.getDetailId(), productOption.getId()).orElseThrow(() -> new OptionDetailNotFoundException(dto.getProductId()));
 
-            productCartOption.associate(productOption);
             productCartOption.associate(optionDetail);
             productCartOption.associate(cartItem);
             productCartOptionRepository.save(productCartOption);

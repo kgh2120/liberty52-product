@@ -21,9 +21,6 @@ public class CustomProductOption {
     private CustomProduct customProduct;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private ProductOption productOption;
-
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private OptionDetail optionDetail;
 
     public static CustomProductOption create() {
@@ -33,10 +30,6 @@ public class CustomProductOption {
     public void associate(CustomProduct cartItem) {
         this.customProduct = cartItem;
         this.customProduct.addCartOption(this);
-    }
-
-    public void associate(ProductOption productOption) {
-        this.productOption = productOption;
     }
 
     public void associate(OptionDetail optionDetail) {

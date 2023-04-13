@@ -9,6 +9,8 @@ spring:
   config:
     import:
       - optional:configserver:http://3.34.181.222:8888/
+  datasource:
+      url: jdbc:h2:mem:testdb
   h2:
     console:
       enabled: true

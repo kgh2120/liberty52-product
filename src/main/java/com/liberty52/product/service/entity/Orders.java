@@ -8,14 +8,12 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -29,7 +27,7 @@ public class Orders {
     @Column(unique = true, updatable = false)
     private String authId;
 
-    private LocalDate orderDate;
+    private LocalDate orderDate = LocalDate.now();
 
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
@@ -50,7 +48,7 @@ public class Orders {
         Assert.notEmpty(customProducts,"주문에서 제품이 없을 수 없습니다.");
 
         customProducts.forEach(cp ->
-                cp.addToOrders(orders));
+                cp.associateWithOrder(orders));
         orders.customProducts = customProducts;
         return orders;
     }

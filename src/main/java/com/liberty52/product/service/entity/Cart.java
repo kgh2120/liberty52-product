@@ -24,7 +24,7 @@ public class Cart {
     @OneToMany(mappedBy = "cart")
     private List<CustomProduct> customProducts = new ArrayList<>();
 
-    public Cart(String authId) {
+    private Cart(String authId) {
         this.authId = authId;
     }
     public static Cart create(String authId) {
