@@ -25,7 +25,8 @@ public enum ProductErrorCode implements ErrorCode{
     FILE_UPLOAD_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드 작업에 오류가 발생하였습니다."),
 
     // 만약 전에 주문한 제품을 다시 주문하도록 한다면 삭제
-    CART_ADD_INVALID_ITEM(HttpStatus.BAD_REQUEST, "해당 상품은 장바구니에 담길 수 없습니다. (사유 : 이미 주문된 제품)")
+    CART_ADD_INVALID_ITEM(HttpStatus.BAD_REQUEST, "해당 상품은 장바구니에 담길 수 없습니다. (사유 : 이미 주문된 제품)"),
+    CANNOT_ACCESS_ORDER(HttpStatus.BAD_REQUEST, "해당 주문에 접근할 수 없습니다.")
 
     ;
 
