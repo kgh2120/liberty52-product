@@ -27,8 +27,8 @@ public class CustomProductOption {
         return new CustomProductOption();
     }
 
-    public void associate(CustomProduct cartItem) {
-        this.customProduct = cartItem;
+    public void associate(CustomProduct customProduct) {
+        this.customProduct = customProduct;
         this.customProduct.addCartOption(this);
     }
 

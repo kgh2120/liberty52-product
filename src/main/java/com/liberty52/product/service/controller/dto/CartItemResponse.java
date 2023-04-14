@@ -13,19 +13,19 @@ import java.util.List;
 @NoArgsConstructor
 public class CartItemResponse {
 
-    String productId;
+    String id;
 
-    String productName;
+    String name;
 
-    long productPrice;
+    String imageUrl;
 
-    int ea;
+    long price;
 
-    String image;
+    int quantity;
 
-    List<CartOptionResponse> optionRequestList;
+    List<CartOptionResponse> options;
 
-    public static CartItemResponse of(String productId, String productName, long price, int ea, String image, List<CartOptionResponse> optionRequestList){
-        return new CartItemResponse(productId, productName, price, ea, image, optionRequestList);
+    public static CartItemResponse of(String id, String name, String imageUrl, long price, int quantity,  List<CartOptionResponse> options){
+        return new CartItemResponse(id, name, imageUrl, price, quantity, options);
     }
 }

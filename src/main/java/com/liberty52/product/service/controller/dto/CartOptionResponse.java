@@ -9,13 +9,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
 public class CartOptionResponse {
-    String optionId;
     String optionName;
-    String detailOptionId;
-    String detailOptionName;
+    String detailName;
     int price;
+    boolean require;
 
-    public static CartOptionResponse of(String optionId, String optionName, String detailOptionId, String detailOptionName, int price){
-    return new CartOptionResponse(optionId, optionName, detailOptionId, detailOptionName, price);
+    public static CartOptionResponse of(String optionName, String detailName, int price, boolean require){
+    return new CartOptionResponse(optionName, detailName, price, require);
     }
 }

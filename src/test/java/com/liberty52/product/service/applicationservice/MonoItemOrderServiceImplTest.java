@@ -6,7 +6,6 @@ import com.liberty52.product.service.controller.dto.MonoItemOrderRequestDto;
 import com.liberty52.product.service.controller.dto.MonoItemOrderResponseDto;
 import com.liberty52.product.service.entity.*;
 import com.liberty52.product.service.repository.*;
-import com.liberty52.product.service.utils.MockFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

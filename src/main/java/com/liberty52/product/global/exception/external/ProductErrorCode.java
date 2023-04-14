@@ -10,8 +10,8 @@ public enum ProductErrorCode implements ErrorCode{
     PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND),
     OPTION_NOT_FOUND(HttpStatus.NOT_FOUND),
     OPTION_DETAIL_NOT_FOUND(HttpStatus.NOT_FOUND),
-    NOT_FOUND_CART_ITEM(HttpStatus.NOT_FOUND),
-
+    NOT_FOUND_CART_Product(HttpStatus.NOT_FOUND),
+    NOT_FOUND_AUTH_ID(HttpStatus.NOT_FOUND),
     INVALID_QUANTITY(HttpStatus.BAD_REQUEST, "구입할 상품의 수량이 0이하일 수 없습니다."),
 
     ALREADY_COMPLETED_ORDER(HttpStatus.BAD_REQUEST, "이미 완료된 거래입니다."),
