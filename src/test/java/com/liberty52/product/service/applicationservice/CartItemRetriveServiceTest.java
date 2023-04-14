@@ -1,13 +1,11 @@
 package com.liberty52.product.service.applicationservice;
 
 import com.liberty52.product.global.exception.external.NotFoundCartItemException;
-import com.liberty52.product.global.exception.external.OptionDetailNotFoundException;
 import com.liberty52.product.service.controller.dto.CartItemRequest;
 import com.liberty52.product.service.controller.dto.CartItemResponse;
 import com.liberty52.product.service.controller.dto.CartOptionResponse;
 import com.liberty52.product.service.repository.CartItemRepository;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,17 +28,16 @@ public class CartItemRetriveServiceTest {
 //    @Test
     void 장바구니조회(){
         cartItemCreateService.init();
+
         CartItemRequest dto1 = new CartItemRequest();
-        dto1.create("L1", 1);
-        dto1.addOprion("a","a1");
-        dto1.addOprion("b","b1");
-        dto1.addOprion("c","c2");
+        String[] option = {"이젤 거치형", "1mm 두께 승화전사 인쇄용 알루미늄시트", "무광실버"};
+        dto1.create("Liberty52", 1, option);
         cartItemCreateService.createCartItem("aaa", null, dto1);
 
         CartItemRequest dto2 = new CartItemRequest();
-        dto2.create("L1", 2);
-        dto2.addOprion("a","a2");
-        dto2.addOprion("c","c4");
+        String[] option2 = {"벽걸이형", "1mm 두께 승화전사 인쇄용 알루미늄시트", "무광백색"};
+
+        dto2.create("Liberty52", 2, option2);
         cartItemCreateService.createCartItem("aaa", null, dto2);
 
         List<CartItemResponse> cartItemResponseList = cartItemRetriveService.retriveCartItem("aaa");

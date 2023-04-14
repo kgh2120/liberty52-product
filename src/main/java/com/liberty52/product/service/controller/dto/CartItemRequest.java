@@ -2,9 +2,7 @@ package com.liberty52.product.service.controller.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,36 +11,19 @@ import java.util.List;
 public class CartItemRequest {
 
     @NotBlank
-    String productId;
+    String productName;
 
     @NotNull
-    Integer ea;
+    Integer quantity;
 
     @NotNull
-    List<OptionRequest> optionRequestList;
+    String[] options;
 
 
-    public void create(String productId, Integer ea) {
-        this.productId = productId;
-        this.ea = ea;
-        this.optionRequestList = new ArrayList<OptionRequest>();
-    }
-
-    public void addOprion(String optionId, String detailId){
-        OptionRequest optionRequest = new OptionRequest();
-        optionRequest.optionId = optionId;
-        optionRequest.detailId = detailId;
-        this.optionRequestList.add(optionRequest);
-    }
-
-    @Getter
-    public class OptionRequest {
-
-        @NotBlank
-        String optionId;
-
-        @NotBlank
-        String detailId;
+    public void create(String productName, Integer quantity, String[] options) {
+        this.productName = productName;
+        this.quantity = quantity;
+        this.options = options;
     }
 
 }

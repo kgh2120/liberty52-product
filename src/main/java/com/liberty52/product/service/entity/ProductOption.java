@@ -46,12 +46,6 @@ public class ProductOption {
         this.optionDetails.add(optionDetail);
     }
 
-    public ProductOption(String id, String name, boolean require) {
-        this.id = id;
-        this.name = name;
-        this.require = require;
-    }
-
     public static ProductOption create(String name, boolean require) {
         return builder().name(name).require(require).build();
     }

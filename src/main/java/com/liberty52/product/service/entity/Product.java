@@ -37,13 +37,6 @@ public class Product {
         this.price = price;
     }
 
-    public Product(String id, String name, ProductState state, Long price) {
-        this.id = id;
-        this.name = name;
-        this.state = state;
-        this.price = price;
-    }
-
     public void addOption(ProductOption productOption) {
         this.productOptions.add(productOption);
     }

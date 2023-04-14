@@ -40,12 +40,4 @@ public class OptionDetail {
         this.productOption = productOption;
         this.productOption.addDetail(this);
     }
-
-    public OptionDetail(String id, String name, Integer price) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-    }
-
-
 }
