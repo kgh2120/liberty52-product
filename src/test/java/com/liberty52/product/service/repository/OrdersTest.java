@@ -1,4 +1,4 @@
-package com.liberty52.product.service.applicationservice;
+package com.liberty52.product.service.repository;
 
 import com.liberty52.product.service.entity.OrderDestination;
 import com.liberty52.product.service.entity.Orders;
