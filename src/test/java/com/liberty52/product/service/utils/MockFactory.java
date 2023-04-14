@@ -30,6 +30,6 @@ public class MockFactory {
     }
 
     public static Orders createOrder(String authId, List<CustomProduct> customProducts) {
-        return Orders.create(authId, customProducts);
+        return Orders.create(authId, 0,null);
     }
 }

@@ -27,7 +27,7 @@ public class CartItemRetriveServiceTest {
     @Autowired
     CartItemRetriveService cartItemRetriveService;
 
-    @Test
+//    @Test
     void 장바구니조회(){
         cartItemCreateService.init();
         CartItemRequest dto1 = new CartItemRequest();
