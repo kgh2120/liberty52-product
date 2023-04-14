@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class MonoItemOrderController {
     private final MonoItemOrderService monoItemOrderService;
 
-    @PostMapping("/order/custom-product")
+    @PostMapping("/orders/custom-products")
     @ResponseStatus(HttpStatus.CREATED)
     public MonoItemOrderResponseDto orderSave(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authId,

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 public class CartItemRemoveController {
     private final CartItemRemoveService cartItemRemoveService;
 
-    @DeleteMapping("/cart/custom-product/{customProductId}")
+    @DeleteMapping("/carts/custom-products/{customProductId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void cartItemRemove(@RequestHeader(HttpHeaders.AUTHORIZATION) String authId, @PathVariable String customProductId) {
         cartItemRemoveService.removeCartItem(authId, customProductId);
