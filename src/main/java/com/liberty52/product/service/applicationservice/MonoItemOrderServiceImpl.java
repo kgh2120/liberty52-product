@@ -42,12 +42,19 @@ public class MonoItemOrderServiceImpl implements MonoItemOrderService {
             details.add(optionDetail);
         }
 
+        OrderDestination orderDestination = OrderDestination.create("", "", "", "", "", "");
+
+        // Save Order
+        Orders order = Orders.create(authId, dto.getDeliveryPrice(), orderDestination); // OrderDestination will be saved by cascading
+        order = ordersRepository.save(order);
+
         // Upload Image
         String imgUrl = s3Uploader.upload(imageFile);
 
         // Save CustomProduct
         CustomProduct customProduct = CustomProduct.create(imgUrl, dto.getQuantity(), authId);
         customProduct.associateWithProduct(product);
+        customProduct.associateWithOrder(order);
         customProduct = customProductRepository.save(customProduct);
 
         // Save CustomProductOption
@@ -57,10 +64,6 @@ public class MonoItemOrderServiceImpl implements MonoItemOrderService {
             customProductOption.associate(detail);
             customProductOptionRepository.save(customProductOption);
         }
-
-        // Save Order
-        Orders order = ordersRepository.save(Orders.create(authId));
-        customProduct.associateWithOrder(order);
 
         return MonoItemOrderResponseDto.create(order.getId(), order.getOrderDate(), order.getOrderStatus());
     }

@@ -90,6 +90,7 @@ public class CustomProduct {
         Objects.requireNonNull(orders);
         verifyQuantity();
         this.orders = orders;
+        orders.addCustomProduct(this);
         removedFromCart();
     }
 

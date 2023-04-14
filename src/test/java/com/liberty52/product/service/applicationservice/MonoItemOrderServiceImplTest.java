@@ -34,12 +34,6 @@ class MonoItemOrderServiceImplTest {
     @Autowired
     ProductOptionRepository productOptionRepository;
     @Autowired
-    private OptionDetailRepository optionDetailRepository;
-    @Autowired
-    private CustomProductOptionRepository productCartOptionRepository;
-    @Autowired
-    private CartRepository cartRepository;
-    @Autowired
     private OrdersRepository ordersRepository;
 
     MonoItemOrderServiceImplTest() throws IOException {
@@ -54,7 +48,7 @@ class MonoItemOrderServiceImplTest {
     void save() throws IOException {
         int quantity = 2;
         int deliveryPrice = 120000;
-        MonoItemOrderResponseDto dto = monoItemOrderService.save(authId, imageFile, MonoItemOrderRequestDto.createForTest(productName, List.of(detailName), quantity, deliveryPrice));
+        MonoItemOrderResponseDto dto = save(productName, detailName, quantity, deliveryPrice);
 
         Orders orders = ordersRepository.findById(dto.getId()).get();
         Assertions.assertEquals(OrderStatus.ORDERED, orders.getOrderStatus());
@@ -65,21 +59,28 @@ class MonoItemOrderServiceImplTest {
     void wrongProductName() {
         int quantity = 2;
         int deliveryPrice = 120000;
-        Assertions.assertThrows(ResourceNotFoundException.class, () -> monoItemOrderService.save(authId, imageFile, MonoItemOrderRequestDto.createForTest("wrong name", List.of(detailName), quantity, deliveryPrice)));
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> save("wrong name", detailName, quantity, deliveryPrice));
     }
 
     @Test
     void wrongOptionName() {
         int quantity = 2;
         int deliveryPrice = 120000;
-        Assertions.assertThrows(ResourceNotFoundException.class, () -> monoItemOrderService.save(authId, imageFile, MonoItemOrderRequestDto.createForTest(productName, List.of("wrong name"), quantity, deliveryPrice)));
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> save(productName, "wrong name", quantity, deliveryPrice));
     }
 
     @Test
     void invalidQuantity() {
         int quantity = 0;
         int deliveryPrice = 120000;
-        Assertions.assertThrows(InvalidQuantityException.class, () -> monoItemOrderService.save(authId, imageFile, MonoItemOrderRequestDto.createForTest(productName, List.of(detailName), quantity, deliveryPrice)));
+        Assertions.assertThrows(InvalidQuantityException.class, () -> save(productName, detailName, quantity, deliveryPrice));
     }
 
+    MonoItemOrderResponseDto save(String productName, String detailName, int quantity, int deliveryPrice) {
+        return monoItemOrderService.save(authId, imageFile, MonoItemOrderRequestDto.createForTest(productName, List.of(detailName), quantity, deliveryPrice, createDestinationDto()));
+    }
+
+    private MonoItemOrderRequestDto.DestinationDto createDestinationDto() {
+        return MonoItemOrderRequestDto.DestinationDto.create("receiverName", "receiverEmail", "receiverPhoneNumber", "address1", "address2", "zipCode");
+    }
 }

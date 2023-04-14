@@ -6,6 +6,7 @@ import com.liberty52.product.service.controller.dto.MonoItemOrderResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,7 +20,7 @@ public class MonoItemOrderController {
     public MonoItemOrderResponseDto orderSave(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authId,
             @RequestPart("imageFile") MultipartFile imageFile,
-            @RequestPart("dto") MonoItemOrderRequestDto dto) {
+            @RequestPart("dto") @Validated MonoItemOrderRequestDto dto) {
         return monoItemOrderService.save(authId, imageFile, dto);
     }
 }
