@@ -49,7 +49,7 @@ class OrderRetrieveControllerTest {
     @Autowired
     MockMvc mockMvc;
 
-    final String ORDER_URL = "/product/orders";
+    final String ORDER_URL = "/orders";
 
     @Test
     void retrieveOrderForList () throws Exception{
@@ -84,7 +84,7 @@ class OrderRetrieveControllerTest {
                 .willReturn(createMockOrderDetailRetrieveResponse());
 
         //when
-        mockMvc.perform(get("/product/orders/"+MOCK_ORDER_ID)
+        mockMvc.perform(get("/orders/"+MOCK_ORDER_ID)
                 .header(HttpHeaders.AUTHORIZATION,MOCK_AUTH_ID))
         //then
                 .andExpect(status().isOk())

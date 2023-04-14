@@ -61,6 +61,12 @@ public class Orders {
             throw new AlreadyCompletedOrderException();
         this.orderStatus = OrderStatus.values()[orderStatus.ordinal()+1];
     }
+    public void associateWithCustomProduct(List<CustomProduct> customProducts){
+        customProducts.forEach(cp ->
+                cp.associateWithOrder(this));
+        this.customProducts = customProducts;
+    }
+
 
     void addCustomProduct(CustomProduct customProduct) {
         this.customProducts.add(customProduct);

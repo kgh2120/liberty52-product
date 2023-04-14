@@ -18,12 +18,12 @@ public class OrderRetrieveController {
 
     private final OrderRetrieveService orderRetrieveService;
 
-    @GetMapping("/product/orders")
+    @GetMapping("/orders")
     public ResponseEntity<List<OrdersRetrieveResponse>> retrieveOrders(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorization){
         return ResponseEntity.ok(orderRetrieveService.retrieveOrders(authorization));
     }
 
-    @GetMapping("/product/orders/{orderId}")
+    @GetMapping("/orders/{orderId}")
     public ResponseEntity<OrderDetailRetrieveResponse> retrieveOrderDetail(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorization,
             @PathVariable("orderId") String orderId){
         return ResponseEntity.ok(orderRetrieveService.retrieveOrderDetail(authorization,orderId));

@@ -9,6 +9,7 @@ import com.liberty52.product.service.entity.Cart;
 import com.liberty52.product.service.repository.CartItemRepository;
 import com.liberty52.product.service.repository.CartRepository;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
