@@ -42,7 +42,7 @@ public class Orders {
     private List<CustomProduct> customProducts = new ArrayList<>();
 
     @JoinColumn(name = "order_destination_id")
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, optional = false)
     private OrderDestination orderDestination;
 
     private Orders(String authId, int deliveryPrice, OrderDestination orderDestination) {
@@ -52,21 +52,18 @@ public class Orders {
         this.orderDestination = orderDestination;
     }
 
-    // 따로 addCustomProduct 를 만들지 않은 이유는
-    // Orders는 이미 결제 완료된 상태이기 때문에 제품이 변하지 않을 것이라고 생각.
     public static Orders create(String authId, int deliveryPrice, OrderDestination orderDestination){
-
         return new Orders(authId,deliveryPrice,orderDestination);
     }
 
-    public void associateWithCustomProduct(List<CustomProduct> customProducts){
-        customProducts.forEach(cp ->
-                cp.associateWithOrder(this));
-        this.customProducts = customProducts;
-    }
     public void changeOrderStatusToNextStep(){
         if(orderStatus.equals(OrderStatus.COMPLETE))
             throw new AlreadyCompletedOrderException();
         this.orderStatus = OrderStatus.values()[orderStatus.ordinal()+1];
     }
+
+    void addCustomProduct(CustomProduct customProduct) {
+        this.customProducts.add(customProduct);
+    }
+
 }

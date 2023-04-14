@@ -86,10 +86,11 @@ public class CustomProduct {
      * Orders만 이 메스드를 호출한다.
      * Visibility: package
      */
-    void associateWithOrder(@NonNull Orders orders){
+    public void associateWithOrder(@NonNull Orders orders){
         Objects.requireNonNull(orders);
         verifyQuantity();
         this.orders = orders;
+        orders.addCustomProduct(this);
         removedFromCart();
     }
 
