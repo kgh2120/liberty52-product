@@ -1,12 +1,15 @@
 package com.liberty52.product.service.entity;
 
 import com.liberty52.product.global.exception.external.AlreadyCompletedOrderException;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,25 +35,34 @@ public class Orders {
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
+
+    private int deliveryPrice;
+
     @OneToMany(mappedBy = "orders")
     private List<CustomProduct> customProducts = new ArrayList<>();
 
-    public Orders(String authId) {
+    @JoinColumn(name = "order_destination_id")
+    @OneToOne(cascade = CascadeType.ALL)
+    private OrderDestination orderDestination;
+
+    private Orders(String authId, int deliveryPrice, OrderDestination orderDestination) {
         this.authId = authId;
-        orderDate = LocalDate.now();
         orderStatus = OrderStatus.ORDERED;
+        this.deliveryPrice = deliveryPrice;
+        this.orderDestination = orderDestination;
     }
 
     // 따로 addCustomProduct 를 만들지 않은 이유는
     // Orders는 이미 결제 완료된 상태이기 때문에 제품이 변하지 않을 것이라고 생각.
-    public static Orders create(String authId, List<CustomProduct> customProducts){
-        Orders orders = new Orders(authId);
-        Assert.notEmpty(customProducts,"주문에서 제품이 없을 수 없습니다.");
+    public static Orders create(String authId, int deliveryPrice, OrderDestination orderDestination){
 
+        return new Orders(authId,deliveryPrice,orderDestination);
+    }
+
+    public void associateWithCustomProduct(List<CustomProduct> customProducts){
         customProducts.forEach(cp ->
-                cp.associateWithOrder(orders));
-        orders.customProducts = customProducts;
-        return orders;
+                cp.associateWithOrder(this));
+        this.customProducts = customProducts;
     }
     public void changeOrderStatusToNextStep(){
         if(orderStatus.equals(OrderStatus.COMPLETE))

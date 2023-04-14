@@ -14,9 +14,10 @@ public enum ProductErrorCode implements ErrorCode{
 
     INVALID_QUANTITY(HttpStatus.BAD_REQUEST, "구입할 상품의 수량이 0이하일 수 없습니다."),
 
-    ALREADY_COMPLETED_ORDER(HttpStatus.BAD_REQUEST, "이미 완료된 거래입니다.")
+    ALREADY_COMPLETED_ORDER(HttpStatus.BAD_REQUEST, "이미 완료된 거래입니다."),
 
-
+    // 만약 전에 주문한 제품을 다시 주문하도록 한다면 삭제
+    CART_ADD_INVALID_ITEM(HttpStatus.BAD_REQUEST, "해당 상품은 장바구니에 담길 수 없습니다. (사유 : 이미 주문된 제품)")
 
     ;
 
