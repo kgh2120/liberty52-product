@@ -32,7 +32,6 @@ public class MonoItemOrderRequestDto {
         private String receiverName;
         @NotBlank
         private String receiverEmail;
-        @NotBlank
         private String receiverPhoneNumber;
         @NotBlank
         private String address1;
