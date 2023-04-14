@@ -52,6 +52,11 @@ public class Orders {
         orders.customProducts = customProducts;
         return orders;
     }
+
+    public static Orders create(String authId) {
+        return new Orders(authId);
+    }
+
     public void changeOrderStatusToNextStep(){
         if(orderStatus.equals(OrderStatus.COMPLETE))
             throw new AlreadyCompletedOrderException();
