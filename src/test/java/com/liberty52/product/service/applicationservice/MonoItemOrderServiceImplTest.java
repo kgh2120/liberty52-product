@@ -19,10 +19,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @AutoConfigureMockMvc
+@Transactional
 class MonoItemOrderServiceImplTest {
     @Autowired
     MonoItemOrderService monoItemOrderService;
