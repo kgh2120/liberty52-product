@@ -15,7 +15,6 @@ import java.util.Objects;
 import java.util.UUID;
 
 import org.springframework.lang.NonNull;
-import org.springframework.util.ObjectUtils;
 
 @Entity
 @Getter
@@ -120,5 +119,13 @@ public class CustomProduct {
 
     public boolean isInOrder() {
         return (this.cart == null) && (this.orders != null);
+    }
+
+    public void modifyCustomPictureUrl(String customPictureUrl) {
+        this.userCustomPictureUrl = customPictureUrl;
+    }
+
+    public void modifyQuantity(int quantity){
+        this.quantity = quantity;
     }
 }
