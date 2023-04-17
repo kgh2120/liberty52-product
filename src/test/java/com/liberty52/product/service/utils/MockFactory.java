@@ -51,7 +51,7 @@ public class MockFactory {
     public static OrdersRetrieveResponse createMockOrderRetrieveResponse(){
         return new OrdersRetrieveResponse(MOCK_ORDER_ID, LocalDate.now().toString(),
                 MOCK_ORDER_STATUS_ORDERED.name(),MOCK_ADDRESS,MOCK_RECEIVER_NAME,MOCK_RECEIVER_EMAIL
-        ,MOCK_RECEIVER_PHONE_NUMBER, MOCK_PRODUCT_REPRESENT_URL,createMockOrderRetrieveProductResponseList());
+        ,MOCK_RECEIVER_PHONE_NUMBER, createMockOrderRetrieveProductResponseList());
     }
     public static List<OrderRetrieveProductResponse> createMockOrderRetrieveProductResponseList(){
         List<OrderRetrieveProductResponse> list = new ArrayList<>();
@@ -67,7 +67,7 @@ public class MockFactory {
     public static OrderDetailRetrieveResponse createMockOrderDetailRetrieveResponse(){
         return new OrderDetailRetrieveResponse(MOCK_ORDER_ID,LocalDate.now().toString(),
                 MOCK_ORDER_STATUS_ORDERED.name(),MOCK_ADDRESS,MOCK_RECEIVER_NAME,MOCK_RECEIVER_EMAIL
-                ,MOCK_RECEIVER_PHONE_NUMBER, MOCK_PRODUCT_REPRESENT_URL,
+                ,MOCK_RECEIVER_PHONE_NUMBER,
                 MOCK_TOTAL_PRODUCT_PRICE,MOCK_DELIVERY_FEE,createMockOrderRetrieveProductResponseList());
     }
 }

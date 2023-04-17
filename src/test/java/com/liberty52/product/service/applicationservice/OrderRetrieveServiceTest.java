@@ -1,5 +1,6 @@
 package com.liberty52.product.service.applicationservice;
 
+import static com.liberty52.product.global.contants.RepresentImageUrl.LIBERTY52_FRAME_REPRESENTATIVE_URL;
 import static com.liberty52.product.service.utils.MockConstants.MOCK_ADDRESS;
 import static com.liberty52.product.service.utils.MockConstants.MOCK_AUTH_ID;
 import static com.liberty52.product.service.utils.MockConstants.MOCK_ORDER_STATUS_ORDERED;
@@ -80,7 +81,7 @@ class OrderRetrieveServiceTest {
         assertThat(response.getReceiverName()).isEqualTo(MOCK_RECEIVER_NAME);
         assertThat(response.getReceiverEmail()).isEqualTo(MOCK_RECEIVER_EMAIL);
         assertThat(response.getReceiverPhoneNumber()).isEqualTo(MOCK_RECEIVER_PHONE_NUMBER);
-        assertThat(response.getProductRepresentUrl()).isEqualTo(MOCK_PRODUCT_REPRESENT_URL);
+        assertThat(response.getProductRepresentUrl()).isEqualTo(LIBERTY52_FRAME_REPRESENTATIVE_URL);
 
         assertThat(response.getAddress()).isEqualTo(MOCK_ADDRESS+" "+MOCK_ADDRESS);
         assertThat(response.getProducts().get(0).getName()).isEqualTo(MOCK_PRODUCT_NAME);

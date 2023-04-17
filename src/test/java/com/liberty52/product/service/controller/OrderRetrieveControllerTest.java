@@ -1,5 +1,6 @@
 package com.liberty52.product.service.controller;
 
+import static com.liberty52.product.global.contants.RepresentImageUrl.LIBERTY52_FRAME_REPRESENTATIVE_URL;
 import static com.liberty52.product.service.utils.MockConstants.*;
 
 import static com.liberty52.product.service.utils.MockFactory.createMockOrderDetailRetrieveResponse;
@@ -70,7 +71,7 @@ class OrderRetrieveControllerTest {
                 .andExpect(jsonPath("$.[0].receiverEmail").value(MOCK_RECEIVER_EMAIL))
                 .andExpect(jsonPath("$.[0].receiverPhoneNumber").value(MOCK_RECEIVER_PHONE_NUMBER))
                 .andExpect(jsonPath("$.[0].receiverName").value(MOCK_RECEIVER_NAME))
-                .andExpect(jsonPath("$.[0].productRepresentUrl").value(MOCK_PRODUCT_REPRESENT_URL))
+                .andExpect(jsonPath("$.[0].productRepresentUrl").value(LIBERTY52_FRAME_REPRESENTATIVE_URL))
                 .andExpect(jsonPath("$.[0].products[0].name").value(MOCK_PRODUCT_NAME))
                 .andExpect(jsonPath("$.[0].products[0].quantity").value(MOCK_QUANTITY))
                 .andExpect(jsonPath("$.[0].products[0].price").value(MOCK_PRICE))
@@ -102,7 +103,7 @@ class OrderRetrieveControllerTest {
                 .andExpect(jsonPath("$.products[0].name").value(MOCK_PRODUCT_NAME))
                 .andExpect(jsonPath("$.products[0].quantity").value(MOCK_QUANTITY))
                 .andExpect(jsonPath("$.products[0].price").value(MOCK_PRICE))
-                .andExpect(jsonPath("$.products[0].productUrl").value(MOCK_PRODUCT_REPRESENT_URL))
+                .andExpect(jsonPath("$.products[0].productUrl").value(LIBERTY52_FRAME_REPRESENTATIVE_URL))
                 .andDo(print());
     }
 

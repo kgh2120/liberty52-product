@@ -1,5 +1,7 @@
 package com.liberty52.product.service.controller.dto;
 
+import static com.liberty52.product.global.contants.RepresentImageUrl.LIBERTY52_FRAME_REPRESENTATIVE_URL;
+
 import com.querydsl.core.annotations.QueryProjection;
 import java.util.List;
 import lombok.Data;
@@ -25,7 +27,6 @@ public class OrderDetailRetrieveResponse {
     public OrderDetailRetrieveResponse(String orderId, String orderDate, String orderStatus,
             String address,
             String receiverName, String receiverEmail, String receiverPhoneNumber,
-            String productRepresentUrl,
             long totalProductPrice, int deliveryFee,
             List<OrderRetrieveProductResponse> products) {
         this.orderId = orderId;
@@ -35,7 +36,7 @@ public class OrderDetailRetrieveResponse {
         this.receiverName = receiverName;
         this.receiverEmail = receiverEmail;
         this.receiverPhoneNumber = receiverPhoneNumber;
-        this.productRepresentUrl = productRepresentUrl;
+        this.productRepresentUrl = LIBERTY52_FRAME_REPRESENTATIVE_URL;
         this.products = products;
         this.deliveryFee = deliveryFee;
         this.totalProductPrice = totalProductPrice;

@@ -56,7 +56,6 @@ public class OrderQueryDslRepositoryImpl implements OrderQueryDslRepository{
                         orderDestination.receiverName,
                         orderDestination.receiverEmail,
                         orderDestination.receiverPhoneNumber,
-                        customProduct.thumbnailPictureUrl,
                         list(new QOrderRetrieveProductResponse(
                                 product.name, customProduct.quantity, product.price
                         ))
@@ -81,15 +80,15 @@ public class OrderQueryDslRepositoryImpl implements OrderQueryDslRepository{
                                 orderDestination.receiverName,
                                 orderDestination.receiverEmail,
                                 orderDestination.receiverPhoneNumber,
-                                customProduct.thumbnailPictureUrl,
                                 sum(product.price),
                                 orders.deliveryPrice,
                                 list(new QOrderRetrieveProductResponse(
                                         product.name, customProduct.quantity, product.price,
-                                        customProduct.modelingPictureUrl
+                                        customProduct.userCustomPictureUrl
                                 ))
                         )
                         ))).get(orderId));
+
     }
 
 
