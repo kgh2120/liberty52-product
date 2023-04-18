@@ -22,9 +22,9 @@ public class MockConstants {
     public static final int MOCK_LIST_SIZE = 3;
     public static final OrderStatus MOCK_ORDER_STATUS_ORDERED = OrderStatus.ORDERED;
 
-    public static final long MOCK_TOTAL_PRODUCT_PRICE = 1000000L;
+    public static final long MOCK_TOTAL_PRODUCT_PRICE = MOCK_PRICE * MOCK_LIST_SIZE;
     public static final int MOCK_DELIVERY_FEE = 0;
-    public static final long MOCK_TOTAL_PRICE = 1000000L;
+    public static final long MOCK_TOTAL_PRICE = MOCK_TOTAL_PRODUCT_PRICE + MOCK_DELIVERY_FEE;
 
 
 

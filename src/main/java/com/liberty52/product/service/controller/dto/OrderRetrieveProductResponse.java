@@ -1,6 +1,7 @@
 package com.liberty52.product.service.controller.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,8 @@ public class OrderRetrieveProductResponse {
 
     private String productUrl;
 
+    private List<String> options;
+
 
     @QueryProjection
     public OrderRetrieveProductResponse(String name, int quantity, Long price) {
@@ -25,10 +28,11 @@ public class OrderRetrieveProductResponse {
     }
 
     @QueryProjection
-    public OrderRetrieveProductResponse(String name, int quantity, Long price, String productUrl) {
+    public OrderRetrieveProductResponse(String name, int quantity, Long price, String productUrl, List<String> options) {
         this.name = name;
         this.quantity = quantity;
         this.price = price;
         this.productUrl = productUrl;
+        this.options = options;
     }
 }

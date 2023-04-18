@@ -61,13 +61,13 @@ public class MockFactory {
         return list;
     }
     public static OrderRetrieveProductResponse createMockOrderRetrieveProductResponse(){
-        return new OrderRetrieveProductResponse(MOCK_PRODUCT_NAME,MOCK_QUANTITY,MOCK_PRICE,MOCK_PRODUCT_REPRESENT_URL);
+        return new OrderRetrieveProductResponse(MOCK_PRODUCT_NAME,MOCK_QUANTITY,MOCK_PRICE,MOCK_PRODUCT_REPRESENT_URL,null);
     }
 
     public static OrderDetailRetrieveResponse createMockOrderDetailRetrieveResponse(){
         return new OrderDetailRetrieveResponse(MOCK_ORDER_ID,LocalDate.now().toString(),
                 MOCK_ORDER_STATUS_ORDERED.name(),MOCK_ADDRESS,MOCK_RECEIVER_NAME,MOCK_RECEIVER_EMAIL
                 ,MOCK_RECEIVER_PHONE_NUMBER,
-                MOCK_TOTAL_PRODUCT_PRICE,MOCK_DELIVERY_FEE,createMockOrderRetrieveProductResponseList());
+                MOCK_DELIVERY_FEE,createMockOrderRetrieveProductResponseList());
     }
 }

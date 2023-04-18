@@ -63,28 +63,30 @@ class OrderQueryDslRepositoryImplTest {
         assertThat(responses.get(0).getReceiverEmail()).isEqualTo(MOCK_RECEIVER_EMAIL);
         assertThat(responses.get(0).getReceiverPhoneNumber()).isEqualTo(MOCK_RECEIVER_PHONE_NUMBER);
         assertThat(responses.get(0).getReceiverName()).isEqualTo(MOCK_RECEIVER_NAME);
+        assertThat(responses.get(0).getProducts().get(0).getPrice()).isEqualTo(MOCK_PRICE + 1300000);
     }
 
     @Test
     void retrieveOrderDetailTest () throws Exception{
         //given   //when
-        OrderDetailRetrieveResponse response = orderQueryDslRepositoryImpl.retrieveOrderDetail(
+        Orders orders = orderQueryDslRepositoryImpl.retrieveOrderDetail(
                 MOCK_AUTH_ID, orderId).get();
-       //then
+        OrderDetailRetrieveResponse response = new OrderDetailRetrieveResponse(
+                orders);
+        //then
         assertThat(response.getOrderId()).isEqualTo(orderId);
         assertThat(response.getOrderDate()).isEqualTo(LocalDate.now().toString());
         assertThat(response.getDeliveryFee()).isEqualTo(0);
         assertThat(response.getOrderStatus()).isEqualTo(MOCK_ORDER_STATUS_ORDERED.name());
-        assertThat(response.getTotalPrice()).isEqualTo(MOCK_PRICE);
-        assertThat(response.getTotalProductPrice()).isEqualTo(MOCK_PRICE);
+        assertThat(response.getTotalPrice()).isEqualTo(MOCK_PRICE + 1300000);
+        assertThat(response.getTotalProductPrice()).isEqualTo(MOCK_PRICE + 1300000);
         assertThat(response.getReceiverName()).isEqualTo(MOCK_RECEIVER_NAME);
         assertThat(response.getReceiverEmail()).isEqualTo(MOCK_RECEIVER_EMAIL);
         assertThat(response.getReceiverPhoneNumber()).isEqualTo(MOCK_RECEIVER_PHONE_NUMBER);
         assertThat(response.getProductRepresentUrl()).isEqualTo(LIBERTY52_FRAME_REPRESENTATIVE_URL);
-
         assertThat(response.getAddress()).isEqualTo(MOCK_ADDRESS+" "+MOCK_ADDRESS);
         assertThat(response.getProducts().get(0).getName()).isEqualTo(MOCK_PRODUCT_NAME);
-        assertThat(response.getProducts().get(0).getPrice()).isEqualTo(MOCK_PRICE);
+        assertThat(response.getProducts().get(0).getPrice()).isEqualTo(MOCK_PRICE + 1300000);
         assertThat(response.getProducts().get(0).getQuantity()).isEqualTo(MOCK_QUANTITY);
         assertThat(response.getProducts().get(0).getProductUrl()).isEqualTo(MOCK_PRODUCT_REPRESENT_URL);
 
