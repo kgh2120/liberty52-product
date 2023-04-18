@@ -2,15 +2,12 @@ package com.liberty52.product.service.controller;
 
 import com.liberty52.product.service.applicationservice.CartItemRemoveService;
 import com.liberty52.product.service.controller.dto.CartItemListRemoveRequestDto;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import com.liberty52.product.service.controller.dto.GuestCartItemListRemoveDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,5 +25,15 @@ public class CartItemRemoveController {
     public void cartItemListRemove(@RequestHeader(HttpHeaders.AUTHORIZATION) String authId,
                                    @RequestBody @Validated CartItemListRemoveRequestDto dto) {
         cartItemRemoveService.removeCartItemList(authId, dto);
+    }
+
+    @DeleteMapping("/guest/carts/custom-products")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void guestCartItemListRemove(@RequestHeader(HttpHeaders.AUTHORIZATION)
+                                        String guestId,
+                                        @RequestBody
+                                        @Validated
+                                        CartItemListRemoveRequestDto dto) {
+        cartItemRemoveService.removeGuestCartItemList(guestId, dto);
     }
 }

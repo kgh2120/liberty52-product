@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -24,26 +26,39 @@ public class CartItemRemoveServiceImpl implements CartItemRemoveService {
 
     @Override
     public void removeCartItem(String authId, String cartItemId) {
-        CustomProduct cartItem = cartItemRepository.findById(cartItemId).orElseThrow(() -> new ResourceNotFoundException(RESOURCE_NAME_CART_ITEM, PARAM_NAME_ID, cartItemId));
-        if(!authId.equals(cartItem.getAuthId()))
-            throw new NotYourResourceException(RESOURCE_NAME_CART_ITEM, authId);
-        if (cartItem.isInOrder())
-            throw new UnRemovableResourceException(RESOURCE_NAME_ORDER_ITEM, cartItemId);
+        CustomProduct cartItem = validAndGetCartItem(authId, cartItemId);
         productCartOptionRepository.deleteAll(cartItem.getOptions());
         cartItemRepository.delete(cartItem);
     }
 
     @Override
     public void removeCartItemList(String authId, CartItemListRemoveRequestDto dto) {
-        dto.getIds().stream()
-                .map(id -> cartItemRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(RESOURCE_NAME_CART_ITEM, PARAM_NAME_ID, id)))
-                .forEach(cp -> {
-                    if(!authId.equals((cp.getAuthId())))
-                        throw new NotYourResourceException(RESOURCE_NAME_CART_ITEM, authId);
-                    if (cp.isInOrder())
-                        throw new UnRemovableResourceException(RESOURCE_NAME_ORDER_ITEM, cp.getId());
-                    productCartOptionRepository.deleteAll(cp.getOptions());
-                    cartItemRepository.delete(cp);
-                });
+        removeCartItems(authId, dto.getIds());
+    }
+
+    @Override
+    public void removeGuestCartItemList(String guestId, CartItemListRemoveRequestDto dto) {
+        removeCartItems(guestId, dto.getIds());
+    }
+
+    private CustomProduct validAndGetCartItem(String authId, String cartItemId) {
+        CustomProduct cartItem = cartItemRepository.findById(cartItemId).orElseThrow(() -> new ResourceNotFoundException(RESOURCE_NAME_CART_ITEM, PARAM_NAME_ID, cartItemId));
+        validCartItem(authId, cartItem);
+        return cartItem;
+    }
+
+    private void validCartItem(String authId, CustomProduct cartItem) {
+        if (!authId.equals(cartItem.getAuthId()))
+            throw new NotYourResourceException(RESOURCE_NAME_CART_ITEM, authId);
+        if (cartItem.isInOrder())
+            throw new UnRemovableResourceException(RESOURCE_NAME_ORDER_ITEM, cartItem.getId());
+    }
+
+    private void removeCartItems(String ownerId, List<String> customProductIds) {
+        customProductIds.forEach(id -> {
+                CustomProduct customProduct = validAndGetCartItem(ownerId, id);
+                productCartOptionRepository.deleteAll(customProduct.getOptions());
+                cartItemRepository.delete(customProduct);
+            });
     }
 }

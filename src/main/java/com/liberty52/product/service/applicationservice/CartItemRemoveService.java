@@ -6,4 +6,6 @@ public interface CartItemRemoveService {
     void removeCartItem(String authId, String cartItemId);
 
     void removeCartItemList(String authId, CartItemListRemoveRequestDto dto);
+
+    void removeGuestCartItemList(String guestId, CartItemListRemoveRequestDto dto);
 }
