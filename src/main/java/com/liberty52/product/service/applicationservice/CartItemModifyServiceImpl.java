@@ -2,8 +2,7 @@ package com.liberty52.product.service.applicationservice;
 
 import com.liberty52.product.global.adapter.S3Uploader;
 import com.liberty52.product.global.exception.external.CustomProductNotFoundExcpetion;
-import com.liberty52.product.global.exception.external.NotFoundAuthIdException;
-import com.liberty52.product.global.exception.external.NotYourResource;
+import com.liberty52.product.global.exception.external.NotYourResourceException;
 import com.liberty52.product.global.exception.external.OptionDetailNotFoundException;
 import com.liberty52.product.global.exception.external.OrderItemCannotModifiedException;
 import com.liberty52.product.service.controller.dto.CartModifyRequestDto;
@@ -39,7 +38,7 @@ public class CartItemModifyServiceImpl implements CartItemModifyService{
     }
 
     if(!customProduct.getCart().getAuthId().equals(authId)){
-      throw new NotYourResource("customProduct",authId);
+      throw new NotYourResourceException("customProduct",authId);
     }
 
     customProduct.modifyQuantity(dto.getQuantity());
