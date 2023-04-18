@@ -30,6 +30,9 @@ public class Product {
     @OneToMany(mappedBy = "product")
     private List<ProductOption> productOptions = new ArrayList<>();
 
+    @OneToMany(mappedBy = "product")
+    private List<Review> reviews = new ArrayList<>();
+
     @Builder
     private Product(String name, ProductState state, Long price) {
         this.name = name;
@@ -46,5 +49,9 @@ public class Product {
                 .state(state)
                 .price(price)
                 .build();
+    }
+
+    public void addReview(Review review) {
+        this.reviews.add(review);
     }
 }
