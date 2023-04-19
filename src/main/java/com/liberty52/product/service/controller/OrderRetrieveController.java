@@ -29,4 +29,10 @@ public class OrderRetrieveController {
         return ResponseEntity.ok(orderRetrieveService.retrieveOrderDetail(authorization,orderId));
     }
 
+    @GetMapping("/guest/orders/{orderId}")
+    public ResponseEntity<OrderDetailRetrieveResponse> retrieveGuestOrderDetail(@RequestHeader(HttpHeaders.AUTHORIZATION) String guestId,
+            @PathVariable("orderId") String orderId){
+        return ResponseEntity.ok(orderRetrieveService.retrieveOrderDetail(guestId,orderId));
+    }
+
 }

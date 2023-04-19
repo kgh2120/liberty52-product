@@ -51,6 +51,7 @@ class OrderRetrieveControllerTest {
     MockMvc mockMvc;
 
     final String ORDER_URL = "/orders";
+    final String GUEST_PREFIX = "/guest";
 
     @Test
     void retrieveOrderForList () throws Exception{
@@ -84,7 +85,7 @@ class OrderRetrieveControllerTest {
                 .willReturn(createMockOrderDetailRetrieveResponse());
 
         //when
-        mockMvc.perform(get("/orders/"+MOCK_ORDER_ID)
+        mockMvc.perform(get(ORDER_URL+"/"+MOCK_ORDER_ID)
                 .header(HttpHeaders.AUTHORIZATION,MOCK_AUTH_ID))
         //then
                 .andExpect(status().isOk())
@@ -123,9 +124,54 @@ class OrderRetrieveControllerTest {
                 .andExpect(jsonPath("$.errorName").value("CANNOT_ACCESS_ORDER"))
                 .andExpect(jsonPath("$.errorMessage").value("해당 주문에 접근할 수 없습니다."))
                 .andDo(print());
+    }
 
+    @Test
+    void retrieveGuestOrderDetail () throws Exception{
+        //given
+        given(orderRetrieveService.retrieveOrderDetail(MOCK_AUTH_ID, MOCK_ORDER_ID))
+                .willReturn(createMockOrderDetailRetrieveResponse());
 
+        //when
+        mockMvc.perform(get(GUEST_PREFIX+ORDER_URL+"/"+MOCK_ORDER_ID)
+                        .header(HttpHeaders.AUTHORIZATION,MOCK_AUTH_ID))
+                //then
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.orderId").value(MOCK_ORDER_ID))
+                .andExpect(jsonPath("$.orderDate").value(LocalDate.now().toString()))
+                .andExpect(jsonPath("$.orderStatus").value(MOCK_ORDER_STATUS_ORDERED.name()))
+                .andExpect(jsonPath("$.address").value(MOCK_ADDRESS))
+                .andExpect(jsonPath("$.receiverEmail").value(MOCK_RECEIVER_EMAIL))
+                .andExpect(jsonPath("$.receiverPhoneNumber").value(MOCK_RECEIVER_PHONE_NUMBER))
+                .andExpect(jsonPath("$.receiverName").value(MOCK_RECEIVER_NAME))
+                .andExpect(jsonPath("$.totalProductPrice").value(MOCK_TOTAL_PRODUCT_PRICE))
+                .andExpect(jsonPath("$.deliveryFee").value(MOCK_DELIVERY_FEE))
+                .andExpect(jsonPath("$.totalPrice").value(MOCK_TOTAL_PRICE))
+                .andExpect(jsonPath("$.products[0].name").value(MOCK_PRODUCT_NAME))
+                .andExpect(jsonPath("$.products[0].quantity").value(MOCK_QUANTITY))
+                .andExpect(jsonPath("$.products[0].price").value(MOCK_PRICE))
+                .andExpect(jsonPath("$.products[0].productUrl").value(MOCK_PRODUCT_REPRESENT_URL))
+                .andDo(print());
+    }
 
+    @Test
+    void retrieveGuestOrderDetail_throw_cannot_access () throws Exception{
+        //given
+        given(orderRetrieveService.retrieveOrderDetail(MOCK_AUTH_ID, MOCK_ORDER_ID))
+                .willThrow(CannotAccessOrderException.class);
+        given(exceptionHandler.handleGlobalException(any(),any()))
+                .willReturn(
+                        ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                .body(ErrorResponse.createErrorResponse(new CannotAccessOrderException(), ORDER_URL+"/"+MOCK_ORDER_ID))
+                );
+
+        //when         //then
+        mockMvc.perform(get(GUEST_PREFIX+ORDER_URL+"/"+MOCK_ORDER_ID)
+                        .header(HttpHeaders.AUTHORIZATION,MOCK_AUTH_ID))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorName").value("CANNOT_ACCESS_ORDER"))
+                .andExpect(jsonPath("$.errorMessage").value("해당 주문에 접근할 수 없습니다."))
+                .andDo(print());
     }
 
 
