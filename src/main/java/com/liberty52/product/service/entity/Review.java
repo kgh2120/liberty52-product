@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -22,9 +23,9 @@ public class Review {
     private Integer rating;
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
-    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reply> replies = new ArrayList<>();
-    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReviewImage> reviewImages = new ArrayList<>();
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "product_id")
@@ -33,6 +34,21 @@ public class Review {
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "order_id")
     private Orders order;
+
+    public static final int CONTENT_MAX_LENGTH = 1000;
+    public static final int CONTENT_MIN_LENGTH = 1;
+    public static final int RATING_MAX_VALUE = 5;
+    public static final int RATING_MIN_VALUE = 1;
+    public static final int IMAGES_MAX_COUNT = 10;
+
+    public static Review create(int rating, String content) {
+        Review review = new Review();
+        review.rating = rating;
+        review.validRating();
+        review.content = content;
+        review.validContent();
+        return review;
+    }
 
     public void associate(Product product) {
         this.product = product;
@@ -53,20 +69,35 @@ public class Review {
     }
 
     private void validRating() {
-        if (this.rating < 0 || this.rating > 5) {
+        if (this.rating < RATING_MIN_VALUE || this.rating > RATING_MAX_VALUE) {
             throw new InvalidRatingException();
         }
     }
 
     private void validContent() {
-        if(this.content.length() > 1000) {
+        if(this.content.length() < CONTENT_MIN_LENGTH || this.content.length() > CONTENT_MAX_LENGTH) {
             throw new InvalidTextSize();
         }
     }
 
     private void validImages() {
-        if(this.reviewImages.size() > 10) {
+        if(this.reviewImages.size() > IMAGES_MAX_COUNT) {
             throw new InvalidReviewImageSize();
         }
+    }
+
+    public void modify(Integer rating, String content) {
+        this.rating = rating;
+        this.content = content;
+        validRating();
+        validContent();
+    }
+
+    public void removeImagesByUrl(Set<String> urls) {
+        this.reviewImages.removeIf(img -> urls.contains(img.getUrl()));
+    }
+
+    public boolean isImageAddable() {
+        return this.reviewImages.size() + 1 <= IMAGES_MAX_COUNT;
     }
 }

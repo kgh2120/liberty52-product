@@ -1,14 +1,8 @@
 package com.liberty52.product.global.config;
 
 import com.liberty52.product.service.applicationservice.MonoItemOrderService;
-import com.liberty52.product.service.entity.OptionDetail;
-import com.liberty52.product.service.entity.Product;
-import com.liberty52.product.service.entity.ProductOption;
-import com.liberty52.product.service.entity.ProductState;
-import com.liberty52.product.service.repository.CartItemRepository;
-import com.liberty52.product.service.repository.OptionDetailRepository;
-import com.liberty52.product.service.repository.ProductOptionRepository;
-import com.liberty52.product.service.repository.ProductRepository;
+import com.liberty52.product.service.entity.*;
+import com.liberty52.product.service.repository.*;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -27,16 +21,24 @@ public class DBInitConfig {
     @Component
     @Transactional
     @RequiredArgsConstructor
-    static class DBInitService {
+    public static class DBInitService {
         private final MonoItemOrderService monoItemOrderService;
         private final CartItemRepository customProductRepository;
         private final ProductRepository productRepository;
         private final ProductOptionRepository productOptionRepository;
-        private static final String LIBERTY = "Liberty 52_Frame";
         private final OptionDetailRepository optionDetailRepository;
+        private final CartRepository cartRepository;
+        private final CustomProductOptionRepository customProductOptionRepository;
+        private final OrdersRepository ordersRepository;
+        public static final String AUTH_ID = "authId";
+        public static final String LIBERTY = "Liberty 52_Frame";
+        private static Orders order;
+        private static Product product;
+        private final ReviewRepository reviewRepository;
 
         public void init() {
             Product product = productRepository.save(Product.create(LIBERTY, ProductState.ON_SAIL, 10000000L));
+            DBInitService.product = product;
 
             ProductOption option1 = ProductOption.create("거치 방식", true);
             option1.associate(product);
@@ -78,6 +80,51 @@ public class DBInitConfig {
             materialOption4.associate(option3);
             materialOption4 = optionDetailRepository.save(materialOption4);
 
+            // Add Cart & CartItems
+            Cart cart = cartRepository.save(Cart.create(AUTH_ID));
+
+            final String imageUrl = "imageUrl";
+            CustomProduct customProduct = CustomProduct.create(imageUrl, 1, AUTH_ID);
+            customProduct.associateWithProduct(product);
+            customProduct.associateWithCart(cart);
+            customProduct = customProductRepository.save(customProduct);
+
+            CustomProductOption customProductOption = CustomProductOption.create();
+            customProductOption.associate(customProduct);
+            customProductOption.associate(detailEasel);
+            customProductOption = customProductOptionRepository.save(customProductOption);
+
+            // Add Order
+            Orders order = ordersRepository.save(Orders.create(AUTH_ID, 10000, OrderDestination.create("receiver", "email", "01012341234", "경기도 어딘가", "101동 101호", "12345")));
+            DBInitService.order = order;
+
+            customProduct = CustomProduct.create(imageUrl, 1, AUTH_ID);
+            customProduct.associateWithProduct(product);
+            customProduct.associateWithOrder(order);
+            customProduct = customProductRepository.save(customProduct);
+
+            customProductOption = CustomProductOption.create();
+            customProductOption.associate(customProduct);
+            customProductOption.associate(detailEasel);
+            customProductOption = customProductOptionRepository.save(customProductOption);
+
+            // Add Review
+            Review review = Review.create(3, "good");
+            review.associate(order);
+            review.associate(product);
+            ReviewImage.create(review, imageUrl);
+            reviewRepository.save(review);
+
+
         }
+
+        public static Orders getOrder() {
+            return order;
+        }
+
+        public static Product getProduct() {
+            return product;
+        }
+
     }
 }
