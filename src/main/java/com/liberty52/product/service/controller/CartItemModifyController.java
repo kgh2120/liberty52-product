@@ -2,11 +2,11 @@ package com.liberty52.product.service.controller;
 
 import com.liberty52.product.service.applicationservice.CartItemModifyService;
 import com.liberty52.product.service.controller.dto.CartModifyRequestDto;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -19,10 +19,18 @@ public class CartItemModifyController {
 
   private final CartItemModifyService cartItemModifyService;
 
-  @PatchMapping("/carts/custom-products/{customProductId}")
+  @PatchMapping("/carts/custom-products")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void modifyCartItem(@RequestHeader(HttpHeaders.AUTHORIZATION) String authId, @RequestPart CartModifyRequestDto dto,
-      @RequestPart(value = "file",required = false) MultipartFile imageFile, @PathVariable String customProductId) {
-    cartItemModifyService.modifyCartItem(authId,dto,imageFile,customProductId);
+  public void modifyCartItemList(@RequestHeader(HttpHeaders.AUTHORIZATION) String authId, @RequestPart List<CartModifyRequestDto> dto,
+      @RequestPart(value = "file",required = false) List<MultipartFile> imageFile) {
+    cartItemModifyService.modifyCartItemList(authId,dto,imageFile);
   }
+
+  @PatchMapping("/guest/carts/custom-products")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void modifyGuestCartItemList(@RequestHeader(HttpHeaders.AUTHORIZATION) String guestId, @RequestPart List<CartModifyRequestDto> dto,
+      @RequestPart(value = "file",required = false) List<MultipartFile> imageFile) {
+    cartItemModifyService.modifyGuestCartItemList(guestId,dto,imageFile);
+  }
+
 }
