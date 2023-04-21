@@ -27,7 +27,7 @@ public class Orders {
     @Id
     private String id = UUID.randomUUID().toString();
 
-    @Column(unique = true, updatable = false)
+    @Column(updatable = false, nullable = false)
     private String authId;
 
     private LocalDate orderDate = LocalDate.now();
