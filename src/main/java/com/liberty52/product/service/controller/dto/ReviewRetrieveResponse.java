@@ -46,7 +46,8 @@ public class ReviewRetrieveResponse {
 
     public void setReviewAuthor( Map<String, AuthClientDataResponse> reviewAuthorId){
         contents.forEach(c -> {
-            c.author = reviewAuthorId.get(c.authorId).getAuthorName();
+            c.authorName = reviewAuthorId.get(c.authorId).getAuthorName();
+            c.authorProfileUrl = reviewAuthorId.get(c.authorId).getAuthorProfileUrl();
             c.setReplyAuthor(reviewAuthorId);
         });
     }
@@ -65,7 +66,8 @@ public class ReviewRetrieveResponse {
         private Boolean isYours;
         @JsonIgnore
         private String authorId;
-        private String author; // openfeign으로 채울 값
+        private String authorName; // openfeign으로 채울 값
+        private String authorProfileUrl;
         private List<ReplyContent> replies;
 
         public ReviewContent(String reviewId, Integer rating, String content, List<String> imageUrls,

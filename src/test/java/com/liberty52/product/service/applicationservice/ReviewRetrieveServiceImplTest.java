@@ -4,7 +4,6 @@ import static com.liberty52.product.service.utils.MockConstants.MOCK_AUTHOR_NAME
 import static com.liberty52.product.service.utils.MockConstants.MOCK_AUTHOR_PROFILE_URL;
 import static org.assertj.core.api.Assertions.*;
 
-import com.liberty52.product.global.adapter.AuthClient;
 import com.liberty52.product.global.config.DBInitConfig.DBInitService;
 import com.liberty52.product.service.controller.dto.ReviewRetrieveResponse;
 import com.liberty52.product.service.controller.dto.ReviewRetrieveResponse.ReplyContent;
@@ -15,12 +14,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 
 
 @ActiveProfiles("test,dev")
@@ -59,7 +54,8 @@ class ReviewRetrieveServiceImplTest {
 
         ReviewContent content = response.getContents().get(0);
         assertThat(content.getContent()).isEqualTo("good");
-        assertThat(content.getAuthor()).isEqualTo(MOCK_AUTHOR_NAME);
+        assertThat(content.getAuthorName()).isEqualTo(MOCK_AUTHOR_NAME);
+        assertThat(content.getAuthorProfileUrl()).isEqualTo(MOCK_AUTHOR_PROFILE_URL);
         assertThat(content.getRating()).isSameAs(3);
         assertThat(content.getImageUrls().size()).isSameAs(1);
 
