@@ -17,7 +17,13 @@ public class CartItemRetriveController {
 
     @GetMapping("/carts")
     @ResponseStatus(HttpStatus.OK)
-    public List<CartItemResponse> retriveCartItem(@RequestHeader(HttpHeaders.AUTHORIZATION) String authId) {
-        return cartItemRetriveService.retriveCartItem(authId);
+    public List<CartItemResponse> retriveAuthCartItem(@RequestHeader(HttpHeaders.AUTHORIZATION) String authId) {
+        return cartItemRetriveService.retriveAuthCartItem(authId);
+    }
+
+    @GetMapping("/guest/carts")
+    @ResponseStatus(HttpStatus.OK)
+    public List<CartItemResponse> retriveGuestCartItem(@RequestHeader(HttpHeaders.AUTHORIZATION) String guestId) {
+        return cartItemRetriveService.retriveGuestCartItem(guestId);
     }
 }

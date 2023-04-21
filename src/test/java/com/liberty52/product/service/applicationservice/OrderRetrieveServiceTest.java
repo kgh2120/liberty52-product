@@ -50,8 +50,8 @@ class OrderRetrieveServiceTest {
     void afterEach(){
         em.clear();
     }
-    
-    
+
+
     @Test
     void retrieveOrdersTest () throws Exception{
 //        //given
@@ -65,7 +65,7 @@ class OrderRetrieveServiceTest {
 //        assertThat(responses.get(0).getReceiverPhoneNumber()).isEqualTo(MOCK_RECEIVER_PHONE_NUMBER);
 //        assertThat(responses.get(0).getReceiverName()).isEqualTo(MOCK_RECEIVER_NAME);
     }
-    
+
     @Test
     void retrieveOrderDetailTest () throws Exception{
 //        //given
