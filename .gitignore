@@ -43,3 +43,6 @@ out/
 ### secret
 
 /src/main/resources/bootstrap.yml
+
+# trash
+spy.log

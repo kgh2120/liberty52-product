@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import org.hibernate.annotations.BatchSize;
 
 @Entity
 @Getter
@@ -25,6 +26,7 @@ public class Review {
     private String content;
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reply> replies = new ArrayList<>();
+    @BatchSize(size = 10)
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReviewImage> reviewImages = new ArrayList<>();
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -99,5 +101,18 @@ public class Review {
 
     public boolean isImageAddable() {
         return this.reviewImages.size() + 1 <= IMAGES_MAX_COUNT;
+    }
+
+    @Override
+    public String toString() {
+        return "Review{" +
+                "id='" + id + '\'' +
+                ", rating=" + rating +
+                ", content='" + content + '\'' +
+                ", replies=" + replies +
+                ", reviewImages=" + reviewImages +
+                ", product=" + product +
+                ", order=" + order +
+                '}';
     }
 }

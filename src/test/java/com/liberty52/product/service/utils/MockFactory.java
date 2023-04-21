@@ -5,6 +5,7 @@ import static com.liberty52.product.service.utils.MockConstants.*;
 import com.liberty52.product.service.controller.dto.OrderDetailRetrieveResponse;
 import com.liberty52.product.service.controller.dto.OrderRetrieveProductResponse;
 import com.liberty52.product.service.controller.dto.OrdersRetrieveResponse;
+import com.liberty52.product.service.controller.dto.ReviewRetrieveResponse;
 import com.liberty52.product.service.entity.*;
 
 import java.time.LocalDate;
@@ -70,4 +71,25 @@ public class MockFactory {
                 ,MOCK_RECEIVER_PHONE_NUMBER,
                 MOCK_DELIVERY_FEE,createMockOrderRetrieveProductResponseList());
     }
+
+    public static ReviewRetrieveResponse createMockReviewRetrieveResponse(){
+        return new ReviewRetrieveResponse(List.of(createMockReview()), 1,1,1, MOCK_AUTH_ID);
+    }
+
+    public static Review createMockReview(){
+        Review review = Review.create(3, "good");
+        review.associate(createOrder(MOCK_AUTH_ID,null));
+        review.associate(createProduct(MOCK_PRODUCT_NAME,MOCK_PRODUCT_STATE_ON_SAIL,MOCK_PRICE));
+
+        ReviewImage.create(review,MOCK_PRODUCT_REPRESENT_URL);
+
+        for(int i = 0; i<3; i++){
+            Reply reply = Reply.create("맛있따"+i,MOCK_AUTH_ID);
+            reply.associate(review);
+        }
+
+        return review;
+    }
+
+
 }

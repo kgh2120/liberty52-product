@@ -25,6 +25,15 @@ public class Reply {
     @JoinColumn(name = "review_id")
     private Review review;
 
+    private Reply(String content, String authId) {
+        this.content = content;
+        this.authId = authId;
+    }
+
+    public static Reply create(String content, String authId){
+        return new Reply(content,authId);
+    }
+
     public void associate(Review review) {
         this.review = review;
         review.addReply(this);

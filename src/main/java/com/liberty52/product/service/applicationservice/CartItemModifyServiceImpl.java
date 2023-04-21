@@ -1,5 +1,7 @@
 package com.liberty52.product.service.applicationservice;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 import com.liberty52.product.global.adapter.S3Uploader;
 import com.liberty52.product.global.exception.external.CustomProductNotFoundExcpetion;
 import com.liberty52.product.global.exception.external.NotYourResourceException;
@@ -16,6 +18,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
@@ -57,7 +60,7 @@ public class CartItemModifyServiceImpl implements CartItemModifyService {
   }
 
   private void modifyOptionsDetail(CartModifyRequestDto dto, CustomProduct customProduct, MultipartFile imageFile) {
-    if (imageFile.getSize() != 0) {
+    if (!isEmpty(imageFile) && imageFile.getSize() != 0) {
       String customPictureUrl = uploadImage(imageFile);
       customProduct.modifyCustomPictureUrl(customPictureUrl);
     }

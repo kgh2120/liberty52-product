@@ -4,6 +4,7 @@ import com.liberty52.product.service.applicationservice.MonoItemOrderService;
 import com.liberty52.product.service.entity.*;
 import com.liberty52.product.service.repository.*;
 import jakarta.annotation.PostConstruct;
+import java.lang.reflect.Field;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,8 +38,19 @@ public class DBInitConfig {
         private final ReviewRepository reviewRepository;
 
         public void init() {
-            Product product = productRepository.save(Product.create(LIBERTY, ProductState.ON_SAIL, 10000000L));
-            DBInitService.product = product;
+            try {
+                Product product = Product.create(LIBERTY, ProductState.ON_SAIL, 10000000L);
+                Field id = product.getClass().getDeclaredField("id");
+                id.setAccessible(true);
+                id.set(product, "LIB-001");
+
+                productRepository.save(product);
+                DBInitService.product = product;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
 
             ProductOption option1 = ProductOption.create("거치 방식", true);
             option1.associate(product);
@@ -113,7 +125,21 @@ public class DBInitConfig {
             review.associate(order);
             review.associate(product);
             ReviewImage.create(review, imageUrl);
+
+            for(int i = 0; i<3; i++){
+                Reply reply = Reply.create("맛있따"+i,AUTH_ID);
+                reply.associate(review);
+            }
             reviewRepository.save(review);
+
+
+            Orders order2 = ordersRepository.save(Orders.create(AUTH_ID+2, 10000, OrderDestination.create("receiver", "email", "01012341234", "경기도 어딘가", "101동 101호", "12345")));
+
+            Review noPhotoReview = Review.create(3, "good");
+            noPhotoReview.associate(order2);
+            noPhotoReview.associate(product);
+
+            reviewRepository.save(noPhotoReview);
 
 
         }
