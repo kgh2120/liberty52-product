@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Optional;
-import java.util.function.Supplier;
+import java.time.LocalDate;
+
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +21,6 @@ public class CartItemCreateServiceImpl implements CartItemCreateService{
 
     private final S3Uploader s3Uploader;
     private final ProductRepository productRepository;
-    private final ProductOptionRepository productOptionRepository;
     private final OptionDetailRepository optionDetailRepository;
     private final CartItemRepository cartItemRepository;
     private final CartRepository cartRepository;
@@ -29,9 +28,18 @@ public class CartItemCreateServiceImpl implements CartItemCreateService{
 
 
     @Override
-    public void createCartItem(String authId, MultipartFile imageFile, CartItemRequest dto) {
+    public void createAuthCartItem(String authId, MultipartFile imageFile, CartItemRequest dto) {
         Cart cart = cartRepository.findByAuthId(authId).orElseGet(() -> createCart(authId));
+        createCartItem(cart, authId, imageFile, dto);
+    }
 
+    private Cart createCart(String authId) {
+        Cart cart = Cart.create(authId);
+        cart = cartRepository.save(cart);
+        return cart;
+    }
+
+    private void createCartItem(Cart cart, String authId, MultipartFile imageFile, CartItemRequest dto) {
         CustomProduct customProduct = CustomProduct.createCartItem(authId, dto.getQuantity(), uploadImage(imageFile));
         customProduct.associateWithCart(cart);
 
@@ -47,23 +55,27 @@ public class CartItemCreateServiceImpl implements CartItemCreateService{
             customProductOption.associate(customProduct);
             customProductOptionRepository.save(customProductOption);
         }
-
-
     }
 
-    private Cart createCart(String authId) {
-        Cart cart = Cart.create(authId);
+    @Override
+    public void createGuestCartItem(String guestId, MultipartFile imageFile, CartItemRequest dto) {
+        LocalDate today = LocalDate.now();
+        Cart cart = cartRepository.findByAuthIdAndExpiryDateGreaterThanEqual(guestId, today).orElseGet(() -> createGuestCart(guestId));
+        cart.updateExpiryDate(today.plusDays(7));
+        createCartItem(cart, guestId, imageFile, dto);
+    }
+
+    private Cart createGuestCart(String guestId) {
+        Cart cart = Cart.create(guestId);
         cart = cartRepository.save(cart);
         return cart;
     }
 
-
     private String uploadImage(MultipartFile multipartFile) {
         if(multipartFile == null) {
-            return ""; //수정해야 할 부분
+            return null;
         }
         return s3Uploader.upload(multipartFile);
     }
-
 
 }
