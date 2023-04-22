@@ -28,11 +28,13 @@ public class ReviewRemoveServiceTest {
     private Orders order;
     private Review review;
 
+    String reviewerId;
     @BeforeEach
     void beforeEach() {
         product = DBInitConfig.DBInitService.getProduct();
         order = DBInitConfig.DBInitService.getOrder();
 
+        reviewerId = order.getAuthId();
         review = Review.create(4, "content");
         review.associate(order);
         review.associate(product);
@@ -45,10 +47,10 @@ public class ReviewRemoveServiceTest {
         Review reviewBefore = reviewRepository.findById(review.getId()).orElse(null);
         Assertions.assertNotNull(reviewBefore);
 
-        Assertions.assertThrows(ReviewNotFoundException.class, () -> reviewRemoveService.removeReview("authId", "123"));
+        Assertions.assertThrows(ReviewNotFoundException.class, () -> reviewRemoveService.removeReview(reviewerId, "123"));
         Assertions.assertThrows(NoYourReviewException.class, () -> reviewRemoveService.removeReview("123", review.getId()));
 
-        reviewRemoveService.removeReview("authId", review.getId());
+        reviewRemoveService.removeReview(reviewerId, review.getId());
         Review reviewAfter = reviewRepository.findById(review.getId()).orElse(null);
         Assertions.assertNull(reviewAfter);
 

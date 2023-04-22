@@ -1,11 +1,14 @@
 package com.liberty52.product.global.config;
 
+import static com.liberty52.product.global.contants.RepresentImageUrl.LIBERTY52_FRAME_REPRESENTATIVE_URL;
+
 import com.liberty52.product.service.applicationservice.MonoItemOrderService;
 import com.liberty52.product.service.entity.*;
 import com.liberty52.product.service.repository.*;
 import jakarta.annotation.PostConstruct;
 import java.lang.reflect.Field;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +40,8 @@ public class DBInitConfig {
         private static Product product;
         private final ReviewRepository reviewRepository;
 
+        private final Environment env;
+
         public void init() {
             try {
                 Product product = Product.create(LIBERTY, ProductState.ON_SAIL, 10000000L);
@@ -46,9 +51,7 @@ public class DBInitConfig {
 
                 productRepository.save(product);
                 DBInitService.product = product;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+
 
 
 
@@ -95,7 +98,7 @@ public class DBInitConfig {
             // Add Cart & CartItems
             Cart cart = cartRepository.save(Cart.create(AUTH_ID));
 
-            final String imageUrl = "imageUrl";
+            final String imageUrl = env.getProperty("product.representative-url.liberty52-frame");
             CustomProduct customProduct = CustomProduct.create(imageUrl, 1, AUTH_ID);
             customProduct.associateWithProduct(product);
             customProduct.associateWithCart(cart);
@@ -132,16 +135,25 @@ public class DBInitConfig {
             }
             reviewRepository.save(review);
 
+            Orders guestOrder = Orders.create("GUEST-001", 10000,
+                    OrderDestination.create("receiver", "email", "01012341234", "경기도 어딘가",
+                            "101동 101호", "12345"));
 
-            Orders order2 = ordersRepository.save(Orders.create(AUTH_ID+2, 10000, OrderDestination.create("receiver", "email", "01012341234", "경기도 어딘가", "101동 101호", "12345")));
+            Field guestOrderId = guestOrder.getClass().getDeclaredField("id");
+            guestOrderId.setAccessible(true);
+            guestOrderId.set(guestOrder,"GORDER-001");
+
+            ordersRepository.save(guestOrder);
 
             Review noPhotoReview = Review.create(3, "good");
-            noPhotoReview.associate(order2);
+            noPhotoReview.associate(guestOrder);
             noPhotoReview.associate(product);
 
             reviewRepository.save(noPhotoReview);
 
-
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         public static Orders getOrder() {
