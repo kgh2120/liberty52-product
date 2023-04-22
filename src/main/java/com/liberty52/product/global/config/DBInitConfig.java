@@ -31,7 +31,7 @@ public class DBInitConfig {
         private final CartRepository cartRepository;
         private final CustomProductOptionRepository customProductOptionRepository;
         private final OrdersRepository ordersRepository;
-        public static final String AUTH_ID = "authId";
+        public static final String AUTH_ID = "TESTER-001";
         public static final String LIBERTY = "Liberty 52_Frame";
         private static Orders order;
         private static Product product;
