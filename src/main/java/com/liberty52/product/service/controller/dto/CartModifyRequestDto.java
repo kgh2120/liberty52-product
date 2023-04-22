@@ -13,9 +13,7 @@ public class CartModifyRequestDto {
   @Min(1)
   private int quantity;
 
-  private String customProductId;
-
-  public static CartModifyRequestDto create(List<String> options,int quantity,String id){
-    return new CartModifyRequestDto(options,quantity,id);
+  public static CartModifyRequestDto create(List<String> options,int quantity){
+    return new CartModifyRequestDto(options,quantity);
   }
 }
