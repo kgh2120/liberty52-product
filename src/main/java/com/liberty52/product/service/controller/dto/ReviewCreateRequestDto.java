@@ -19,12 +19,15 @@ public class ReviewCreateRequestDto {
   @NotEmpty
   @Size(min = 1, max = 1000)
   private String content;
+  @NotEmpty
+  String orderId;
 
-  public static ReviewCreateRequestDto createForTest(String productName,Integer rating, String content) {
+  public static ReviewCreateRequestDto createForTest(String productName,Integer rating, String content,String orderId) {
     ReviewCreateRequestDto dto = new ReviewCreateRequestDto();
     dto.productName = productName;
     dto.rating = rating;
     dto.content = content;
+    dto.orderId = orderId;
     return dto;
   }
 }

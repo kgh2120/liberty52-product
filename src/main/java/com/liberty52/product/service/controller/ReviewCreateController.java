@@ -23,11 +23,11 @@ public class ReviewCreateController {
 
   private final ReviewCreateService reviewCreateService;
 
-  @PostMapping("/reviews/{orderId}")
+  @PostMapping("/reviews")
   @ResponseStatus(HttpStatus.CREATED)
   public void reviewCreate( @RequestHeader(HttpHeaders.AUTHORIZATION) String reviewerId, @Validated @RequestPart ReviewCreateRequestDto dto,
-      @RequestPart(value = "file",required = false) List<MultipartFile> imageFile, @PathVariable String orderId) {
-    reviewCreateService.createReview(reviewerId,dto,imageFile,orderId);
+      @RequestPart(value = "images",required = false) List<MultipartFile> images) {
+    reviewCreateService.createReview(reviewerId,dto,images);
   }
 
   @PostMapping("/reviews/{reviewId}/replies")

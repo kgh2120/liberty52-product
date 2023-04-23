@@ -7,6 +7,7 @@ import com.liberty52.product.global.exception.external.NotYourResourceException;
 import com.liberty52.product.global.exception.external.OrderNotFoundException;
 import com.liberty52.product.global.exception.external.ProductNotFoundException;
 import com.liberty52.product.global.exception.external.ResourceNotFoundException;
+import com.liberty52.product.global.exception.external.ReviewAlreadyExistByOrderException;
 import com.liberty52.product.service.controller.dto.ReplyCreateRequestDto;
 import com.liberty52.product.service.controller.dto.ReviewCreateRequestDto;
 import com.liberty52.product.service.entity.Orders;
@@ -23,7 +24,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -36,28 +36,30 @@ public class ReviewCreateServiceImpl implements ReviewCreateService {
   private final S3UploaderImpl s3Uploader;
 
   @Override
-  public void createReview(String reviewerId, ReviewCreateRequestDto dto,
-      List<MultipartFile> imageFiles, String orderId) {
+  public void createReview(String reviewerId, ReviewCreateRequestDto dto, List<MultipartFile> images) {
     Product product = productRepository.findByName(dto.getProductName())
         .orElseThrow(() -> new ProductNotFoundException(dto.getProductName()));
 
-    Orders order = ordersRepository.findById(orderId)
+    Orders order = ordersRepository.findById(dto.getOrderId())
         .orElseThrow(OrderNotFoundException::new);
 
-    customProductRepository.findByOrderIdAndProductId(orderId,
-            product.getId())//해당 order가  해당 product를 구매했는지 확인
+    customProductRepository.findByOrderIdAndProductId(dto.getOrderId(), product.getId())
         .orElseThrow(CustomProductNotFoundExcpetion::new);
 
     if (!(order.getAuthId().equals(reviewerId))) {
       throw new NotYourResourceException(reviewerId, order.getAuthId());
     }
 
+    if (reviewRepository.findByOrder(order).isPresent()) {
+      throw new ReviewAlreadyExistByOrderException();
+    }
+
     Review review = Review.create(dto.getRating(), dto.getContent());
     review.associate(product);
     review.associate(order);
 
-    if (imageFiles != null){
-      addImage(imageFiles, review);
+    if (images != null){
+      addImage(images, review);
     }
     reviewRepository.save(review);
   }

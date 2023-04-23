@@ -74,10 +74,10 @@ class ReviewCreateServiceImplTest {
     String content = "is very nice review";
     testImageList.add(imageFile);
 
-    ReviewCreateRequestDto dto = ReviewCreateRequestDto.createForTest(productName, rating, content);
+    ReviewCreateRequestDto dto = ReviewCreateRequestDto.createForTest(productName, rating, content,order.getId());
 
-    reviewCreateService.createReview(reviewerId,dto, testImageList, order.getId());
-    Review review = reviewRepository.findByOrderId(order.getId()).get();
+    reviewCreateService.createReview(reviewerId,dto,testImageList);
+    Review review = reviewRepository.findByOrder(order).get();
 
     Assertions.assertEquals(rating, review.getRating());
     Assertions.assertEquals(content, review.getContent());
@@ -92,7 +92,7 @@ class ReviewCreateServiceImplTest {
     String content = "is very nice reply";
     ReplyCreateRequestDto dto = ReplyCreateRequestDto.createForTest(content);
 
-    Review review = reviewRepository.findByOrderId(order.getId()).get();
+    Review review = reviewRepository.findByOrder(order).get();
     reviewCreateService.createReply(reviewerId, dto, review.getId());
 
     Reply reply = Reply.create(content, reviewerId);
