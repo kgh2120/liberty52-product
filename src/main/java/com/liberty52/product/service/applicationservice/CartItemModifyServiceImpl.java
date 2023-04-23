@@ -60,14 +60,16 @@ public class CartItemModifyServiceImpl implements CartItemModifyService{
       customProduct.modifyCustomPictureUrl(customPictureUrl);
     }
     customProduct.modifyQuantity(dto.getQuantity());
-    customProductOptionRepository.deleteAll(customProduct.getOptions());
-    for (String optionDetailName : dto.getOptions()){
-      CustomProductOption customProductOption = CustomProductOption.create();
-      OptionDetail optionDetail = optionDetailRepository.findByName(optionDetailName)
-          .orElseThrow(() -> new OptionDetailNotFoundException(optionDetailName));
-      customProductOption.associate(optionDetail);
-      customProductOption.associate(customProduct);
-      customProductOptionRepository.save(customProductOption);
+    if (!dto.getOptions().isEmpty()){
+      customProductOptionRepository.deleteAll(customProduct.getOptions());
+      for (String optionDetailName : dto.getOptions()){
+        CustomProductOption customProductOption = CustomProductOption.create();
+        OptionDetail optionDetail = optionDetailRepository.findByName(optionDetailName)
+            .orElseThrow(() -> new OptionDetailNotFoundException(optionDetailName));
+        customProductOption.associate(optionDetail);
+        customProductOption.associate(customProduct);
+        customProductOptionRepository.save(customProductOption);
+      }
     }
   }
 
