@@ -16,15 +16,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.jpa.repository.support.QuerydslJpaRepository;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
@@ -70,10 +67,10 @@ class ReviewModifyServiceImplTest {
     }
 
     @Test
-    void modifyReview() {
+    void modifyReviewRatingContent() {
         Integer rating = review.getRating() % 5 + 1;
         String content = UUID.randomUUID().toString();
-        reviewModifyService.modifyReview(authId, review.getId(), ReviewModifyRequestDto.createForTest(rating, content));
+        reviewModifyService.modifyRatingContent(authId, review.getId(), ReviewModifyRequestDto.createForTest(rating, content));
 
         Review review = reviewRepository.findById(this.review.getId()).get();
         Assertions.assertEquals(rating, review.getRating());
@@ -84,17 +81,17 @@ class ReviewModifyServiceImplTest {
     void modifyReviewRatingValidation() {
         Integer invalidRatingOverMaxValue = Review.RATING_MAX_VALUE + 1;
         String content = UUID.randomUUID().toString();
-        Assertions.assertThrows(InvalidRatingException.class, () -> reviewModifyService.modifyReview(authId, review.getId(), ReviewModifyRequestDto.createForTest(invalidRatingOverMaxValue, content)));
+        Assertions.assertThrows(InvalidRatingException.class, () -> reviewModifyService.modifyRatingContent(authId, review.getId(), ReviewModifyRequestDto.createForTest(invalidRatingOverMaxValue, content)));
 
         Integer invalidRatingBelowMinValue = Review.RATING_MIN_VALUE - 1;
-        Assertions.assertThrows(InvalidRatingException.class, () -> reviewModifyService.modifyReview(authId, review.getId(), ReviewModifyRequestDto.createForTest(invalidRatingBelowMinValue, content)));
+        Assertions.assertThrows(InvalidRatingException.class, () -> reviewModifyService.modifyRatingContent(authId, review.getId(), ReviewModifyRequestDto.createForTest(invalidRatingBelowMinValue, content)));
 
         Integer validRating = 1;
         String invalidContentOver = "a".repeat(Review.CONTENT_MAX_LENGTH + 3);
-        Assertions.assertThrows(InvalidTextSize.class, () -> reviewModifyService.modifyReview(authId, review.getId(), ReviewModifyRequestDto.createForTest(validRating, invalidContentOver)));
+        Assertions.assertThrows(InvalidTextSize.class, () -> reviewModifyService.modifyRatingContent(authId, review.getId(), ReviewModifyRequestDto.createForTest(validRating, invalidContentOver)));
 
         String invalidContentBelow = "";
-        Assertions.assertThrows(InvalidTextSize.class, () -> reviewModifyService.modifyReview(authId, review.getId(), ReviewModifyRequestDto.createForTest(validRating, invalidContentBelow)));
+        Assertions.assertThrows(InvalidTextSize.class, () -> reviewModifyService.modifyRatingContent(authId, review.getId(), ReviewModifyRequestDto.createForTest(validRating, invalidContentBelow)));
     }
 
     @Test
@@ -128,5 +125,18 @@ class ReviewModifyServiceImplTest {
         for (ReviewImage reviewImage : review1.getReviewImages()) {
             Assertions.assertFalse(removeList.contains(reviewImage.getUrl()));
         }
+    }
+
+    @Test
+    void modifyReview() {
+        Integer rating = review.getRating() % 5 + 1;
+        String content = UUID.randomUUID().toString();
+        int addCount = Review.IMAGES_MAX_COUNT;
+        reviewModifyService.modifyReview(authId, review.getId(), ReviewModifyRequestDto.createForTest(rating, content), IntStream.range(0, addCount).mapToObj(i -> newImageFile()).toList());
+
+        Review review = reviewRepository.findById(this.review.getId()).get();
+        Assertions.assertEquals(rating, review.getRating());
+        Assertions.assertEquals(content, review.getContent());
+        Assertions.assertEquals(addCount, review.getReviewImages().size());
     }
 }

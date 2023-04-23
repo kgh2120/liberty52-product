@@ -115,4 +115,8 @@ public class Review {
                 ", order=" + order +
                 '}';
     }
+
+    public void clearImages() {
+        this.reviewImages.clear();
+    }
 }

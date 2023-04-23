@@ -23,14 +23,13 @@ import java.util.List;
 public class ReviewModifyServiceImpl implements ReviewModifyService {
     private static final String RESOURCE_NAME_REVIEW = "Review";
     private static final String PARAM_NAME_ID = "ID";
-
     private final ReviewRepository reviewRepository;
     private final S3Uploader s3Uploader;
 
     @Override
-    public void modifyReview(String reviewerId, String reviewId, ReviewModifyRequestDto dto) {
+    public void modifyRatingContent(String reviewerId, String reviewId, ReviewModifyRequestDto dto) {
         Review review = validAndGetReview(reviewerId, reviewId);
-        review.modify(dto.getRating(), dto.getContent()); // already validated by jakarta.validation
+        review.modify(dto.getRating(), dto.getContent());
     }
 
     @Override
@@ -38,17 +37,29 @@ public class ReviewModifyServiceImpl implements ReviewModifyService {
         if(images.size() > Review.IMAGES_MAX_COUNT || images.isEmpty())
             throw new BadRequestException(1 + " <= Size of images <= " + Review.IMAGES_MAX_COUNT);
         Review review = validAndGetReview(reviewerId, reviewId);
-        for (MultipartFile image : images) {
-            if(!review.isImageAddable()) break;
-            String url = s3Uploader.upload(image);
-            ReviewImage.create(review, url);
-        }
+        addImagesInReview(review, images);
     }
 
     @Override
     public void removeImages(String reviewerId, String reviewId, ReviewImagesRemoveRequestDto dto) {
         Review review = validAndGetReview(reviewerId, reviewId);
         review.removeImagesByUrl(new HashSet<>(dto.getUrls()));
+    }
+
+    @Override
+    public <T extends MultipartFile> void modifyReview(String reviewerId, String reviewId, ReviewModifyRequestDto dto, List<T> images) {
+        Review review = validAndGetReview(reviewerId, reviewId);
+        review.modify(dto.getRating(), dto.getContent());
+        review.clearImages();
+        addImagesInReview(review, images);
+    }
+
+    private <T extends MultipartFile> void addImagesInReview(Review review, List<T> images) {
+        for (MultipartFile image : images) {
+            if(!review.isImageAddable()) break;
+            String url = s3Uploader.upload(image);
+            ReviewImage.create(review, url);
+        }
     }
 
     private Review validAndGetReview(String reviewerId, String reviewId) {

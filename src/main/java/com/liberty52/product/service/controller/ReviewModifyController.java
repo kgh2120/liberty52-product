@@ -3,8 +3,6 @@ package com.liberty52.product.service.controller;
 import com.liberty52.product.service.applicationservice.ReviewModifyService;
 import com.liberty52.product.service.controller.dto.ReviewImagesRemoveRequestDto;
 import com.liberty52.product.service.controller.dto.ReviewModifyRequestDto;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -23,8 +21,17 @@ public class ReviewModifyController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void reviewModify(@RequestHeader(HttpHeaders.AUTHORIZATION) String reviewerId,
                              @PathVariable String reviewId,
-                             @Validated @RequestBody ReviewModifyRequestDto dto) {
-        reviewModifyService.modifyReview(reviewerId, reviewId, dto);
+                             @Validated @RequestPart ReviewModifyRequestDto dto,
+                             @RequestPart List<MultipartFile> images) {
+        reviewModifyService.modifyReview(reviewerId, reviewId, dto, images);
+    }
+
+    @PatchMapping("/reviews/{reviewId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void reviewRatingContentModify(@RequestHeader(HttpHeaders.AUTHORIZATION) String reviewerId,
+                                          @PathVariable String reviewId,
+                                          @Validated @RequestBody ReviewModifyRequestDto dto) {
+        reviewModifyService.modifyRatingContent(reviewerId, reviewId, dto);
     }
 
     @PostMapping("/reviews/{reviewId}/images") // 이미지 추가
