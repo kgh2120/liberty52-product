@@ -55,9 +55,6 @@ public class DBInitConfig {
                 productRepository.save(product);
                 DBInitService.product = product;
 
-
-
-
                 ProductOption option1 = ProductOption.create("거치 방식", true);
                 option1.associate(product);
                 option1 = productOptionRepository.save(option1);
@@ -66,14 +63,14 @@ public class DBInitConfig {
                 detailEasel.associate(option1);
                 Field detailEaselId = detailEasel.getClass().getDeclaredField("id");
                 detailEaselId.setAccessible(true);
-                detailEaselId.set(detailEaselId,"OPT-001");
+                detailEaselId.set(detailEasel, "OPT-001");
                 detailEasel = optionDetailRepository.save(detailEasel);
 
                 OptionDetail detailWall = OptionDetail.create("벽걸이형", 100);
                 detailWall.associate(option1);
                 Field detailWallId = detailWall.getClass().getDeclaredField("id");
                 detailWallId.setAccessible(true);
-                detailWallId.set(detailWallId,"OPT-002");
+                detailWallId.set(detailWall, "OPT-002");
                 detailWall = optionDetailRepository.save(detailWall);
 
                 ProductOption option2 = ProductOption.create("기본소재", true);
@@ -83,8 +80,8 @@ public class DBInitConfig {
                 OptionDetail material = OptionDetail.create("1mm 두께 승화전사 인쇄용 알루미늄시트", 100);
                 material.associate(option2);
                 Field materialId = material.getClass().getDeclaredField("id");
-                detailWallId.setAccessible(true);
-                detailWallId.set(detailWallId,"OPT-003");
+                materialId.setAccessible(true);
+                materialId.set(material, "OPT-003");
                 material = optionDetailRepository.save(material);
 
                 ProductOption option3 = ProductOption.create("기본소재 옵션", true);
@@ -95,7 +92,7 @@ public class DBInitConfig {
                 materialOption1.associate(option3);
                 Field materialOption1Id = materialOption1.getClass().getDeclaredField("id");
                 materialOption1Id.setAccessible(true);
-                materialOption1Id.set(detailWallId,"OPT-004");
+                materialOption1Id.set(materialOption1, "OPT-004");
                 materialOption1 = optionDetailRepository.save(materialOption1);
 
                 OptionDetail materialOption2 = OptionDetail.create("무광실버", 100);
@@ -113,11 +110,12 @@ public class DBInitConfig {
                 // Add Cart & CartItems
                 Cart cart = cartRepository.save(Cart.create(AUTH_ID));
 
-            final String imageUrl = env.getProperty("product.representative-url.liberty52-frame");
-            CustomProduct customProduct = CustomProduct.create(imageUrl, 1, AUTH_ID);
-            customProduct.associateWithProduct(product);
-            customProduct.associateWithCart(cart);
-            customProduct = customProductRepository.save(customProduct);
+                final String imageUrl = env.getProperty(
+                        "product.representative-url.liberty52-frame");
+                CustomProduct customProduct = CustomProduct.create(imageUrl, 1, AUTH_ID);
+                customProduct.associateWithProduct(product);
+                customProduct.associateWithCart(cart);
+                customProduct = customProductRepository.save(customProduct);
 
                 CustomProductOption customProductOption = CustomProductOption.create();
                 customProductOption.associate(customProduct);
@@ -125,9 +123,11 @@ public class DBInitConfig {
                 customProductOption = customProductOptionRepository.save(customProductOption);
 
                 // Add Order
-                Orders order = ordersRepository.save(Orders.create(AUTH_ID, PriceConstants.DEFAULT_DELIVERY_PRICE,
-                        OrderDestination.create("receiver", "email", "01012341234", "경기도 어딘가",
-                                "101동 101호", "12345")));
+                Orders order = ordersRepository.save(
+                        Orders.create(AUTH_ID, PriceConstants.DEFAULT_DELIVERY_PRICE,
+                                OrderDestination.create("receiver", "email", "01012341234",
+                                        "경기도 어딘가",
+                                        "101동 101호", "12345")));
                 DBInitService.order = order;
 
                 customProduct = CustomProduct.create(imageUrl, 1, AUTH_ID);
@@ -154,9 +154,11 @@ public class DBInitConfig {
 
                 // Add Order
                 Orders orderSub
-                        = ordersRepository.save(Orders.create(AUTH_ID, PriceConstants.DEFAULT_DELIVERY_PRICE,
-                        OrderDestination.create("receiver", "email", "01012341234", "경기도 어딘가",
-                                "101동 101호", "12345")));
+                        = ordersRepository.save(
+                        Orders.create(AUTH_ID, PriceConstants.DEFAULT_DELIVERY_PRICE,
+                                OrderDestination.create("receiver", "email", "01012341234",
+                                        "경기도 어딘가",
+                                        "101동 101호", "12345")));
                 DBInitService.order = order;
 
                 customProduct = CustomProduct.create(imageUrl, 1, AUTH_ID);
@@ -169,8 +171,8 @@ public class DBInitConfig {
                 customProductOption.associate(detailEasel);
                 customProductOption = customProductOptionRepository.save(customProductOption);
 
-
-                Orders guestOrder = Orders.create("GUEST-001", PriceConstants.DEFAULT_DELIVERY_PRICE,
+                Orders guestOrder = Orders.create("GUEST-001",
+                        PriceConstants.DEFAULT_DELIVERY_PRICE,
                         OrderDestination.create("receiver", "email", "01012341234", "경기도 어딘가",
                                 "101동 101호", "12345"));
 
