@@ -2,6 +2,7 @@ package com.liberty52.product.global.adapter;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.liberty52.product.global.exception.external.FileConvertException;
 import com.liberty52.product.global.exception.external.FileNullException;
@@ -46,6 +47,14 @@ public class S3UploaderImpl implements S3Uploader {
         } catch (IOException e) {
             throw new S3UploaderException();
         }
+    }
+
+    @Override
+    public void delete(String imageUrl) {
+        if (imageUrl == null || imageUrl.isBlank()) {
+            return;
+        }
+        deleteS3(imageUrl);
     }
 
     private String uploadFile(MultipartFile multipartFile) throws IOException {
@@ -109,6 +118,12 @@ public class S3UploaderImpl implements S3Uploader {
         }
 
         return multipartFile.getOriginalFilename().substring(extensionIndex);
+    }
+
+    private void deleteS3(String key) {
+        if (amazonS3Client.doesObjectExist(bucket, key)) {
+            amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, key));
+        }
     }
 
 }

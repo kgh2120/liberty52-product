@@ -35,7 +35,10 @@ public enum ProductErrorCode implements ErrorCode{
 
     // 만약 전에 주문한 제품을 다시 주문하도록 한다면 삭제
     CART_ADD_INVALID_ITEM(HttpStatus.BAD_REQUEST, "해당 상품은 장바구니에 담길 수 없습니다. (사유 : 이미 주문된 제품)"),
-    CANNOT_ACCESS_ORDER(HttpStatus.BAD_REQUEST, "해당 주문에 접근할 수 없습니다.")
+    CANNOT_ACCESS_ORDER(HttpStatus.BAD_REQUEST, "해당 주문에 접근할 수 없습니다."),
+    PAY_FORGERY_REQUEST(HttpStatus.BAD_REQUEST, "결제가 위조된 가능성이 있습니다. 환불처리 후 다시 시도해주세요."),
+
+    CONFIRM_PAYMENT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "결제 시스템에 오류가 발생하여 응답하기 어렵습니다. 관리자에게 문의해주세요."),
 
     ;
 

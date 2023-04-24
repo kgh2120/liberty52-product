@@ -1,7 +1,5 @@
 package com.liberty52.product.service.entity;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
-
 import com.liberty52.product.global.exception.external.CartAddInvalidItemException;
 import com.liberty52.product.global.exception.external.InvalidQuantityException;
 import jakarta.persistence.*;
@@ -9,12 +7,14 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.lang.NonNull;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-import org.springframework.lang.NonNull;
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Entity
 @Getter
@@ -91,8 +91,8 @@ public class CustomProduct {
         removedFromCart();
     }
 
-    public void addCartOption(CustomProductOption productCartOption) {
-        this.options.add(productCartOption);
+    public void addOption(CustomProductOption customProductOption) {
+        this.options.add(customProductOption);
     }
 
     private void verifyItemCanAddCart() {

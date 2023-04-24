@@ -29,7 +29,7 @@ public class CustomProductOption {
 
     public void associate(CustomProduct customProduct) {
         this.customProduct = customProduct;
-        this.customProduct.addCartOption(this);
+        this.customProduct.addOption(this);
     }
 
     public void associate(OptionDetail optionDetail) {
