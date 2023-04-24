@@ -22,7 +22,8 @@ public class OrderRetrieveServiceImpl implements
 
     @Override
     public List<OrdersRetrieveResponse> retrieveOrders(String authId) {
-        return orderQueryDslRepository.retrieveOrders(authId);
+        return orderQueryDslRepository.retrieveOrders(authId)
+                .stream().map(OrdersRetrieveResponse::new).toList();
     }
 
     @Override

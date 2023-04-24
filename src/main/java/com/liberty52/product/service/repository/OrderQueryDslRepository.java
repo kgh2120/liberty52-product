@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface OrderQueryDslRepository {
 
-    List<OrdersRetrieveResponse> retrieveOrders(String authId);
+    List<Orders> retrieveOrders(String authId);
 
     Optional<Orders> retrieveOrderDetail(String authId, String orderId);
 }

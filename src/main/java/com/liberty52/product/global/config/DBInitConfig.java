@@ -140,6 +140,24 @@ public class DBInitConfig {
                 }
                 reviewRepository.save(review);
 
+                // Add Order
+                Orders orderSub
+                        = ordersRepository.save(Orders.create(AUTH_ID, PriceConstants.DEFAULT_DELIVERY_PRICE,
+                        OrderDestination.create("receiver", "email", "01012341234", "경기도 어딘가",
+                                "101동 101호", "12345")));
+                DBInitService.order = order;
+
+                customProduct = CustomProduct.create(imageUrl, 1, AUTH_ID);
+                customProduct.associateWithProduct(product);
+                customProduct.associateWithOrder(orderSub);
+                customProduct = customProductRepository.save(customProduct);
+
+                customProductOption = CustomProductOption.create();
+                customProductOption.associate(customProduct);
+                customProductOption.associate(detailEasel);
+                customProductOption = customProductOptionRepository.save(customProductOption);
+
+
                 Orders guestOrder = Orders.create("GUEST-001", PriceConstants.DEFAULT_DELIVERY_PRICE,
                         OrderDestination.create("receiver", "email", "01012341234", "경기도 어딘가",
                                 "101동 101호", "12345"));

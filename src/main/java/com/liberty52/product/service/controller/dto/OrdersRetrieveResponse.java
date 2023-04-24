@@ -2,6 +2,7 @@ package com.liberty52.product.service.controller.dto;
 
 import static com.liberty52.product.global.contants.RepresentImageUrl.LIBERTY52_FRAME_REPRESENTATIVE_URL;
 
+import com.liberty52.product.service.entity.Orders;
 import com.querydsl.core.annotations.QueryProjection;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -22,7 +23,29 @@ public class OrdersRetrieveResponse {
     private String productRepresentUrl;
     private List<OrderRetrieveProductResponse> products;
 
-    @QueryProjection
+
+    public OrdersRetrieveResponse(Orders orders) {
+        this.orderId = orders.getId();
+        this.orderDate = orders.getOrderDate().toString();
+        this.orderStatus = orders.getOrderStatus().name();
+        this.address = orders.getOrderDestination().getAddress1() + " " + orders.getOrderDestination().getAddress2();
+        this.receiverName = orders.getOrderDestination().getReceiverName();
+        this.receiverEmail = orders.getOrderDestination().getReceiverEmail();
+        this.receiverPhoneNumber = orders.getOrderDestination().getReceiverPhoneNumber();
+        this.productRepresentUrl = LIBERTY52_FRAME_REPRESENTATIVE_URL;
+        this.products = orders.getCustomProducts().stream().map(c ->
+                new OrderRetrieveProductResponse(c.getProduct().getName(), c.getQuantity(),
+                        c.getProduct().getPrice() + c.getOptions()
+                                .stream()
+                                .mapToLong(e
+                                        -> e.getOptionDetail()
+                                        .getPrice())
+                                .sum(),
+                        c.getUserCustomPictureUrl(),
+                        c.getOptions().stream().map(o ->
+                                o.getOptionDetail().getName()).toList())
+        ).toList();
+    }
     public OrdersRetrieveResponse(String orderId, String orderDate, String orderStatus,
             String address,
             String receiverName, String receiverEmail, String receiverPhoneNumber,
