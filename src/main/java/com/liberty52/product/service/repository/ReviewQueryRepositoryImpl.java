@@ -53,7 +53,7 @@ public class ReviewQueryRepositoryImpl implements ReviewQueryRepository{
     }
 
     private List<Review> fetchReviews(String productId, Pageable pageable,boolean isPhotoFilter) {
-        return queryFactory.selectFrom(review)
+        return queryFactory.selectFrom(review).distinct()
                 .leftJoin(reply).on(reply.review.eq(review))
                 .leftJoin(reviewImage).on(reviewImage.review.eq(review))
                 .leftJoin(orders).on(review.order.eq(orders))

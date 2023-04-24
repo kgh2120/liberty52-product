@@ -64,10 +64,16 @@ public class DBInitConfig {
 
                 OptionDetail detailEasel = OptionDetail.create("이젤 거치형", 100);
                 detailEasel.associate(option1);
+                Field detailEaselId = detailEasel.getClass().getDeclaredField("id");
+                detailEaselId.setAccessible(true);
+                detailEaselId.set(detailEaselId,"OPT-001");
                 detailEasel = optionDetailRepository.save(detailEasel);
 
                 OptionDetail detailWall = OptionDetail.create("벽걸이형", 100);
                 detailWall.associate(option1);
+                Field detailWallId = detailWall.getClass().getDeclaredField("id");
+                detailWallId.setAccessible(true);
+                detailWallId.set(detailWallId,"OPT-002");
                 detailWall = optionDetailRepository.save(detailWall);
 
                 ProductOption option2 = ProductOption.create("기본소재", true);
@@ -76,6 +82,9 @@ public class DBInitConfig {
 
                 OptionDetail material = OptionDetail.create("1mm 두께 승화전사 인쇄용 알루미늄시트", 100);
                 material.associate(option2);
+                Field materialId = material.getClass().getDeclaredField("id");
+                detailWallId.setAccessible(true);
+                detailWallId.set(detailWallId,"OPT-003");
                 material = optionDetailRepository.save(material);
 
                 ProductOption option3 = ProductOption.create("기본소재 옵션", true);
@@ -84,6 +93,9 @@ public class DBInitConfig {
 
                 OptionDetail materialOption1 = OptionDetail.create("유광실버", 100);
                 materialOption1.associate(option3);
+                Field materialOption1Id = materialOption1.getClass().getDeclaredField("id");
+                materialOption1Id.setAccessible(true);
+                materialOption1Id.set(detailWallId,"OPT-004");
                 materialOption1 = optionDetailRepository.save(materialOption1);
 
                 OptionDetail materialOption2 = OptionDetail.create("무광실버", 100);
