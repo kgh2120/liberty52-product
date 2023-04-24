@@ -60,15 +60,17 @@ public class MonoItemOrderServiceImpl implements MonoItemOrderService {
         String imgUrl = s3Uploader.upload(imageFile);
 
         // Save CustomProduct
-        CustomProduct customProduct = customProductRepository.save(CustomProduct.create(imgUrl, dto.getQuantity(), authId));
+        CustomProduct customProduct = CustomProduct.create(imgUrl, dto.getQuantity(), authId);
         customProduct.associateWithProduct(product);
         customProduct.associateWithOrder(order);
+        customProduct = customProductRepository.save(customProduct);
 
         // Save CustomProductOption
         for (OptionDetail detail : details) {
-            CustomProductOption customProductOption = customProductOptionRepository.save(CustomProductOption.create());
+            CustomProductOption customProductOption = CustomProductOption.create();
             customProductOption.associate(customProduct);
             customProductOption.associate(detail);
+            customProductOptionRepository.save(customProductOption);
         }
 
         return MonoItemOrderResponseDto.create(order.getId(), order.getOrderDate(), order.getOrderStatus());
