@@ -1,6 +1,7 @@
 package com.liberty52.product.service.applicationservice;
 
 import com.liberty52.product.global.adapter.S3Uploader;
+import com.liberty52.product.global.config.DBInitConfig;
 import com.liberty52.product.global.exception.external.InvalidQuantityException;
 import com.liberty52.product.global.exception.external.ResourceNotFoundException;
 import com.liberty52.product.service.controller.dto.MonoItemOrderRequestDto;
@@ -131,4 +132,10 @@ class MonoItemOrderServiceImplTest {
         return MonoItemOrderRequestDto.DestinationDto.create("receiverName", "receiverEmail", "receiverPhoneNumber", "address1", "address2", "zipCode");
     }
 
+    @Test
+    public void calcTotalPrice() {
+        Orders order = DBInitConfig.DBInitService.getOrder();
+        order.calcTotalAmountAndSet();
+        System.out.println(order.getAmount());
+    }
 }
