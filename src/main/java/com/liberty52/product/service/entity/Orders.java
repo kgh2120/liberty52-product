@@ -108,4 +108,8 @@ public class Orders {
     public void changeOrderStatusToOrdered() {
         this.orderStatus = OrderStatus.ORDERED;
     }
+
+    public void changeOrderStatusToWaitingDeposit() {
+        this.orderStatus = OrderStatus.WAITING_DEPOSIT;
+    }
 }

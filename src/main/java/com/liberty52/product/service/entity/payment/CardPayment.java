@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 @DiscriminatorValue(value = "CARD")
 public class CardPayment extends Payment<CardPayment.CardPaymentInfo> {
 
+    //TODO bean 으로 생성할 것
     private static final ObjectMapper objectMapper;
     static {
         objectMapper = new ObjectMapper();

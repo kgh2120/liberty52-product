@@ -1,6 +1,7 @@
 package com.liberty52.product.service.applicationservice;
 
 import com.liberty52.product.global.adapter.S3Uploader;
+import com.liberty52.product.global.adapter.S3Uploader;
 import com.liberty52.product.global.config.DBInitConfig;
 import com.liberty52.product.global.exception.external.InvalidQuantityException;
 import com.liberty52.product.global.exception.external.ResourceNotFoundException;
@@ -138,4 +139,5 @@ class MonoItemOrderServiceImplTest {
         order.calcTotalAmountAndSet();
         System.out.println(order.getAmount());
     }
+
 }

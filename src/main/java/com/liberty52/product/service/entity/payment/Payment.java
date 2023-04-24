@@ -37,11 +37,11 @@ public abstract class Payment<T extends Payment.PaymentInfo> {
         return CardPayment.of();
     }
 
-    public static Payment<? extends PaymentInfo> vbankOf(Orders orders) {
-        return null;
+    public static Payment<? extends PaymentInfo> vbankOf() {
+        return VBankPayment.of();
     }
 
-    public static Payment<? extends PaymentInfo> naverPayOf(Orders orders){
+    public static Payment<? extends PaymentInfo> naverPayOf(){
         return null;
     }
 

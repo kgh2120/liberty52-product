@@ -8,6 +8,7 @@ import com.liberty52.product.global.exception.external.ResourceNotFoundException
 import com.liberty52.product.service.controller.dto.*;
 import com.liberty52.product.service.entity.*;
 import com.liberty52.product.service.entity.payment.Payment;
+import com.liberty52.product.service.entity.payment.VBankPayment;
 import com.liberty52.product.service.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +36,6 @@ public class MonoItemOrderServiceImpl implements MonoItemOrderService {
     private final OrdersRepository ordersRepository;
     private final OptionDetailRepository optionDetailRepository;
     private final CustomProductOptionRepository customProductOptionRepository;
-    private final PaymentRepository paymentRepository;
     private final ConfirmPaymentMapRepository confirmPaymentMapRepository;
 
     @Override
@@ -67,10 +67,9 @@ public class MonoItemOrderServiceImpl implements MonoItemOrderService {
 
         // Save CustomProductOption
         for (OptionDetail detail : details) {
-            CustomProductOption customProductOption = CustomProductOption.create();
+            CustomProductOption customProductOption = customProductOptionRepository.save(CustomProductOption.create());
             customProductOption.associate(customProduct);
             customProductOption.associate(detail);
-            customProductOptionRepository.save(customProductOption);
         }
 
         return MonoItemOrderResponseDto.create(order.getId(), order.getOrderDate(), order.getOrderStatus());
@@ -78,6 +77,61 @@ public class MonoItemOrderServiceImpl implements MonoItemOrderService {
 
     @Override
     public PreregisterOrderResponseDto preregisterCardPaymentOrders(String authId, PreregisterOrderRequestDto dto, MultipartFile imageFile) {
+        Orders order = saveOrder(authId, dto, imageFile);
+
+        Payment<?> payment = Payment.cardOf();
+        payment.associate(order);
+
+        return PreregisterOrderResponseDto.of(order.getId(), order.getAmount());
+    }
+
+    @Override
+    public PaymentConfirmResponseDto confirmFinalApprovalOfCardPayment(String authId, String orderId) {
+        AtomicInteger secTimeout = new AtomicInteger();
+
+        while (!confirmPaymentMapRepository.containsOrderId(orderId)) {
+            try {
+                Thread.sleep(1000);
+                if(secTimeout.incrementAndGet() > 60) {
+                    log.error("카드 결제 정보를 확인하는 시간이 초과했습니다. 웹훅 서버를 확인해주세요. OrderId: {}", orderId);
+                    throw new InternalServerException(ProductErrorCode.CONFIRM_PAYMENT_ERROR);
+                }
+
+            } catch (InterruptedException e) {
+                log.error("카드 결제 스레드의 문제가 발생하였습니다.");
+                throw new InternalServerException(ProductErrorCode.CONFIRM_PAYMENT_ERROR);
+            }
+        }
+
+        Orders orders = confirmPaymentMapRepository.getAndRemove(orderId);
+
+        return switch (orders.getPayment().getStatus()) {
+            case PAID -> PaymentConfirmResponseDto.of(orderId);
+            case FORGERY -> throw new RequestForgeryPayException();
+            default -> {
+                log.error("주문 결제 상태의 PAID or FORGERY 이외의 상태로 요청되었습니다. 요청주문의 상태: {}", orders.getPayment().getStatus());
+                throw new InternalServerException(ProductErrorCode.CONFIRM_PAYMENT_ERROR);
+            }
+        };
+
+    }
+
+    @Override
+    public PaymentConfirmResponseDto registerVBankPaymentOrders(String authId, PreregisterOrderRequestDto dto, MultipartFile imageFile) {
+        Orders order = saveOrder(authId, dto, imageFile);
+        order.changeOrderStatusToWaitingDeposit();
+
+        Payment<?> payment = Payment.vbankOf();
+        payment.associate(order);
+        payment.setInfo(VBankPayment.VBankPaymentInfo.of(dto.getVBankDto()));
+
+        // 메일 발송
+
+
+        return PaymentConfirmResponseDto.of(order.getId());
+    }
+
+    private Orders saveOrder(String authId, PreregisterOrderRequestDto dto, MultipartFile imageFile) {
         // Valid and get resources
         Product product = productRepository.findByName(dto.getProductDto().getProductName())
                 .orElseThrow(() -> new ResourceNotFoundException(RESOURCE_NAME_PRODUCT, PARAM_NAME_PRODUCT_NAME, dto.getProductDto().getProductName()));
@@ -88,13 +142,13 @@ public class MonoItemOrderServiceImpl implements MonoItemOrderService {
                 .toList();
 
         OrderDestination orderDestination = OrderDestination.create(
-                    dto.getDestinationDto().getReceiverName(),
-                    dto.getDestinationDto().getReceiverEmail(),
-                    dto.getDestinationDto().getReceiverPhoneNumber(),
-                    dto.getDestinationDto().getAddress1(),
-                    dto.getDestinationDto().getAddress2(),
-                    dto.getDestinationDto().getZipCode()
-                );
+                dto.getDestinationDto().getReceiverName(),
+                dto.getDestinationDto().getReceiverEmail(),
+                dto.getDestinationDto().getReceiverPhoneNumber(),
+                dto.getDestinationDto().getAddress1(),
+                dto.getDestinationDto().getAddress2(),
+                dto.getDestinationDto().getZipCode()
+        );
 
         // Save Order
         Orders order = ordersRepository.save(Orders.create(authId, orderDestination)); // OrderDestination will be saved by cascading
@@ -120,43 +174,7 @@ public class MonoItemOrderServiceImpl implements MonoItemOrderService {
         }
 
         order.calcTotalAmountAndSet();
-
-        Payment<?> payment = Payment.cardOf();
-        payment.associate(order);
-
-        return PreregisterOrderResponseDto.of(order.getId(), order.getAmount());
+        return order;
     }
-
-    @Override
-    public ConfirmCardPaymentResponseDto confirmFinalApprovalOfCardPayment(String authId, String orderId) {
-        AtomicInteger secTimeout = new AtomicInteger();
-
-        while (!confirmPaymentMapRepository.containsOrderId(orderId)) {
-            try {
-                Thread.sleep(1000);
-                if(secTimeout.incrementAndGet() > 60) {
-                    log.error("카드 결제 정보를 확인하는 시간이 초과했습니다. 웹훅 서버를 확인해주세요. OrderId: {}", orderId);
-                    throw new InternalServerException(ProductErrorCode.CONFIRM_PAYMENT_ERROR);
-                }
-
-            } catch (InterruptedException e) {
-                log.error("카드 결제 스레드의 문제가 발생하였습니다.");
-                throw new InternalServerException(ProductErrorCode.CONFIRM_PAYMENT_ERROR);
-            }
-        }
-
-        Orders orders = confirmPaymentMapRepository.getAndRemove(orderId);
-
-        return switch (orders.getPayment().getStatus()) {
-            case PAID -> ConfirmCardPaymentResponseDto.of(orderId);
-            case FORGERY -> throw new RequestForgeryPayException();
-            default -> {
-                log.error("주문 결제 상태의 PAID or FORGERY 이외의 상태로 요청되었습니다. 요청주문의 상태: {}", orders.getPayment().getStatus());
-                throw new InternalServerException(ProductErrorCode.CONFIRM_PAYMENT_ERROR);
-            }
-        };
-
-    }
-
 
 }

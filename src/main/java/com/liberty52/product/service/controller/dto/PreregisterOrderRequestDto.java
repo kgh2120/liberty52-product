@@ -15,13 +15,15 @@ public class PreregisterOrderRequestDto {
 
     private PaymentProductDto productDto;
     private DestinationDto destinationDto;
+    private VBankDto vBankDto;
 
     public static PreregisterOrderRequestDto forTest(
             String productName, List<String> options, int quantity, List<String> orderOptions,
             String receiverName, String receiverEmail, String receiverPhoneNumber, String address1, String address2, String zipCode) {
         return new PreregisterOrderRequestDto(
                 PaymentProductDto.forTest(productName, options, quantity, orderOptions),
-                DestinationDto.create(receiverName, receiverEmail, receiverPhoneNumber, address1, address2, zipCode)
+                DestinationDto.create(receiverName, receiverEmail, receiverPhoneNumber, address1, address2, zipCode),
+                null
         );
     }
     @Getter
@@ -56,6 +58,16 @@ public class PreregisterOrderRequestDto {
         public static PreregisterOrderRequestDto.DestinationDto create(String receiverName, String receiverEmail, String receiverPhoneNumber, String address1, String address2, String zipCode) {
             return new PreregisterOrderRequestDto.DestinationDto(receiverName, receiverEmail, receiverPhoneNumber, address1, address2, zipCode);
         }
+    }
+
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class VBankDto {
+        private String vBank;
+        private String vBankAccount;
+        private String depositorBank;
+        private String depositorName;
+        private String depositorAccount;
     }
 
 
