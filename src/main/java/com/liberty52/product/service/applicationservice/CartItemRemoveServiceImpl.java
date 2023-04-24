@@ -41,6 +41,11 @@ public class CartItemRemoveServiceImpl implements CartItemRemoveService {
         removeCartItems(guestId, dto.getIds());
     }
 
+    @Override
+    public void removeGuestCartItem(String guestId, String cartItemId) {
+        removeCartItem(guestId, cartItemId);
+    }
+
     private CustomProduct validAndGetCartItem(String authId, String cartItemId) {
         CustomProduct cartItem = cartItemRepository.findById(cartItemId).orElseThrow(() -> new ResourceNotFoundException(RESOURCE_NAME_CART_ITEM, PARAM_NAME_ID, cartItemId));
         validCartItem(authId, cartItem);

@@ -8,4 +8,6 @@ public interface CartItemRemoveService {
     void removeCartItemList(String authId, CartItemListRemoveRequestDto dto);
 
     void removeGuestCartItemList(String guestId, CartItemListRemoveRequestDto dto);
+
+    void removeGuestCartItem(String guestId, String cartItemId);
 }
