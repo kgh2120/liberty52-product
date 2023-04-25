@@ -1,10 +1,8 @@
 package com.liberty52.product.service.applicationservice;
 
-import com.liberty52.product.global.adapter.S3Uploader;
-import com.liberty52.product.global.adapter.S3Uploader;
 import com.liberty52.product.global.config.DBInitConfig;
-import com.liberty52.product.global.exception.external.InvalidQuantityException;
-import com.liberty52.product.global.exception.external.ResourceNotFoundException;
+import com.liberty52.product.global.exception.external.notfound.ResourceNotFoundException;
+import com.liberty52.product.global.exception.internal.InvalidQuantityException;
 import com.liberty52.product.service.controller.dto.MonoItemOrderRequestDto;
 import com.liberty52.product.service.controller.dto.MonoItemOrderResponseDto;
 import com.liberty52.product.service.controller.dto.PreregisterOrderRequestDto;
@@ -13,7 +11,10 @@ import com.liberty52.product.service.entity.OrderStatus;
 import com.liberty52.product.service.entity.Orders;
 import com.liberty52.product.service.entity.payment.PaymentStatus;
 import com.liberty52.product.service.entity.payment.PaymentType;
-import com.liberty52.product.service.repository.*;
+import com.liberty52.product.service.repository.CartItemRepository;
+import com.liberty52.product.service.repository.OrdersRepository;
+import com.liberty52.product.service.repository.ProductOptionRepository;
+import com.liberty52.product.service.repository.ProductRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,10 +41,6 @@ class MonoItemOrderServiceImplTest {
     ProductOptionRepository productOptionRepository;
     @Autowired
     private OrdersRepository ordersRepository;
-    @Autowired
-    private OptionDetailRepository optionDetailRepository;
-    @Autowired
-    private S3Uploader s3Uploader;
 
     MonoItemOrderServiceImplTest() throws IOException {
     }
@@ -55,7 +52,7 @@ class MonoItemOrderServiceImplTest {
     String orderId;
 
     @Test
-    void save() throws IOException {
+    void save() {
         int quantity = 2;
         int deliveryPrice = 120000;
         MonoItemOrderResponseDto dto = save(productName, detailName, quantity, deliveryPrice);

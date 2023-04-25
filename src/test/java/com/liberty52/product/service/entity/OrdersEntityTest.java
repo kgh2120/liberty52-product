@@ -1,6 +1,6 @@
 package com.liberty52.product.service.entity;
 
-import com.liberty52.product.global.adapter.S3Uploader;
+import com.liberty52.product.global.adapter.s3.S3UploaderApi;
 import com.liberty52.product.service.applicationservice.MonoItemOrderService;
 import com.liberty52.product.service.controller.dto.MonoItemOrderRequestDto;
 import com.liberty52.product.service.controller.dto.MonoItemOrderResponseDto;
@@ -35,7 +35,7 @@ class OrdersEntityTest {
     @Autowired
     private OptionDetailRepository optionDetailRepository;
     @Autowired
-    private S3Uploader s3Uploader;
+    private S3UploaderApi s3Uploader;
 
     private static final String LIBERTY = "Liberty 52_Frame";
     private static final String OPTION_1 = "이젤 거치형";

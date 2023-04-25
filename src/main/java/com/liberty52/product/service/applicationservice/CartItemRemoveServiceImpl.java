@@ -1,8 +1,8 @@
 package com.liberty52.product.service.applicationservice;
 
-import com.liberty52.product.global.exception.external.NotYourResourceException;
-import com.liberty52.product.global.exception.external.ResourceNotFoundException;
-import com.liberty52.product.global.exception.external.UnRemovableResourceException;
+import com.liberty52.product.global.exception.external.forbidden.NotYourCartItemException;
+import com.liberty52.product.global.exception.external.notfound.ResourceNotFoundException;
+import com.liberty52.product.global.exception.external.forbidden.UnRemovableResourceException;
 import com.liberty52.product.service.controller.dto.CartItemListRemoveRequestDto;
 import com.liberty52.product.service.entity.CustomProduct;
 import com.liberty52.product.service.event.internal.ImageRemovedEvent;
@@ -59,7 +59,7 @@ public class CartItemRemoveServiceImpl implements CartItemRemoveService {
 
     private void validCartItem(String authId, CustomProduct cartItem) {
         if (!authId.equals(cartItem.getAuthId()))
-            throw new NotYourResourceException(RESOURCE_NAME_CART_ITEM, authId);
+            throw new NotYourCartItemException(authId);
         if (cartItem.isInOrder())
             throw new UnRemovableResourceException(RESOURCE_NAME_ORDER_ITEM, cartItem.getId());
     }

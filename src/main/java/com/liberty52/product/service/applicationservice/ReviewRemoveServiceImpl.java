@@ -1,7 +1,7 @@
 package com.liberty52.product.service.applicationservice;
 
-import com.liberty52.product.global.exception.external.NotYourReviewException;
-import com.liberty52.product.global.exception.external.ReviewNotFoundException;
+import com.liberty52.product.global.exception.external.forbidden.NotYourReviewException;
+import com.liberty52.product.global.exception.external.notfound.ReviewNotFoundByIdException;
 import com.liberty52.product.service.entity.Review;
 import com.liberty52.product.service.event.internal.ImageRemovedEvent;
 import com.liberty52.product.service.event.internal.dto.ImageRemovedEventDto;
@@ -21,9 +21,9 @@ public class ReviewRemoveServiceImpl implements ReviewRemoveService {
 
     @Override
     public void removeReview(String reviewerId, String reviewId) {
-        Review review = reviewRepository.findById(reviewId).orElseThrow(ReviewNotFoundException::new);
+        Review review = reviewRepository.findById(reviewId).orElseThrow(() -> new ReviewNotFoundByIdException(reviewId));
         if(!reviewerId.equals(review.getOrder().getAuthId())){
-            throw new NotYourReviewException();
+            throw new NotYourReviewException(reviewerId);
         }
         this.reviewRepository.delete(review);
         review.getReviewImages().forEach(ri -> eventPublisher.publishEvent(new ImageRemovedEvent(this, new ImageRemovedEventDto(ri.getUrl()))));

@@ -1,6 +1,6 @@
 package com.liberty52.product.service.event;
 
-import com.liberty52.product.global.adapter.S3Uploader;
+import com.liberty52.product.global.adapter.s3.S3Uploader;
 import com.liberty52.product.global.adapter.kafka.KafkaProducer;
 import com.liberty52.product.service.event.internal.ImageRemovedEvent;
 import com.liberty52.product.service.event.kafka.KafkaEvent;
@@ -12,9 +12,6 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-/**
- *
- */
 public class ApplicationEventHandler {
     private final KafkaProducer kafkaProducer;
     private final S3Uploader s3Uploader;

@@ -1,7 +1,7 @@
 package com.liberty52.product.service.applicationservice;
 
-import com.liberty52.product.global.exception.external.OptionDetailNotFoundException;
-import com.liberty52.product.global.exception.external.ProductNotFoundException;
+import com.liberty52.product.global.exception.external.notfound.OptionDetailNotFoundByNameException;
+import com.liberty52.product.global.exception.external.notfound.ProductNotFoundByNameException;
 import com.liberty52.product.service.controller.dto.CartItemRequest;
 import com.liberty52.product.service.entity.Cart;
 import com.liberty52.product.service.entity.CustomProduct;
@@ -16,7 +16,6 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
@@ -68,10 +67,10 @@ public class CartItemCreateServiceTest {
         Assertions.assertEquals(productCartOptionList.get(1).getOptionDetail().getName(), "1mm 두께 승화전사 인쇄용 알루미늄시트");
         Assertions.assertEquals(productCartOptionList.get(2).getOptionDetail().getName(), "무광실버");
 
-        Assertions.assertThrows(ProductNotFoundException.class, () -> cartItemCreateService.createAuthCartItem("aaa", imageFile, dto2));
+        Assertions.assertThrows(ProductNotFoundByNameException.class, () -> cartItemCreateService.createAuthCartItem("aaa", imageFile, dto2));
 
 
-        Assertions.assertThrows(OptionDetailNotFoundException.class, () -> cartItemCreateService.createAuthCartItem("aaa", imageFile, dto3));
+        Assertions.assertThrows(OptionDetailNotFoundByNameException.class, () -> cartItemCreateService.createAuthCartItem("aaa", imageFile, dto3));
 
 
     }

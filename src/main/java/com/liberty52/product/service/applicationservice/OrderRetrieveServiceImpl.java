@@ -1,11 +1,11 @@
 package com.liberty52.product.service.applicationservice;
 
-import com.liberty52.product.global.exception.external.CannotAccessOrderException;
+import com.liberty52.product.global.exception.external.badrequest.CannotAccessOrderException;
 import com.liberty52.product.service.controller.dto.OrderDetailRetrieveResponse;
 import com.liberty52.product.service.controller.dto.OrdersRetrieveResponse;
 import com.liberty52.product.service.entity.Orders;
 import com.liberty52.product.service.repository.OrderQueryDslRepository;
-import com.liberty52.product.service.repository.OrdersRepository;
+
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -1,7 +1,7 @@
 package com.liberty52.product.service.entity;
 
-import com.liberty52.product.global.exception.external.CartAddInvalidItemException;
-import com.liberty52.product.global.exception.external.InvalidQuantityException;
+import com.liberty52.product.global.exception.external.badrequest.CartAddInvalidItemException;
+import com.liberty52.product.global.exception.internal.InvalidQuantityException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

@@ -1,10 +1,8 @@
 package com.liberty52.product.service.applicationservice;
 
 import com.liberty52.product.global.config.DBInitConfig;
-import com.liberty52.product.global.exception.external.NotYourReviewException;
-import com.liberty52.product.global.exception.external.ReviewNotFoundException;
-import com.liberty52.product.service.entity.Orders;
-import com.liberty52.product.service.entity.Product;
+import com.liberty52.product.global.exception.external.forbidden.NotYourReviewException;
+import com.liberty52.product.global.exception.external.notfound.ReviewNotFoundByIdException;
 import com.liberty52.product.service.entity.Review;
 import com.liberty52.product.service.repository.ReviewRepository;
 import org.junit.jupiter.api.Assertions;
@@ -39,7 +37,7 @@ public class ReviewRemoveServiceTest {
         Review reviewBefore = reviewRepository.findById(review.getId()).orElse(null);
         Assertions.assertNotNull(reviewBefore);
 
-        Assertions.assertThrows(ReviewNotFoundException.class, () -> reviewRemoveService.removeReview(reviewerId, randomString()));
+        Assertions.assertThrows(ReviewNotFoundByIdException.class, () -> reviewRemoveService.removeReview(reviewerId, randomString()));
         Assertions.assertThrows(NotYourReviewException.class, () -> reviewRemoveService.removeReview(randomString(), review.getId()));
 
         reviewRemoveService.removeReview(review.getOrder().getAuthId(), review.getId());

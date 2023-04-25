@@ -1,7 +1,6 @@
 package com.liberty52.product.service.repository;
 
-import com.liberty52.product.global.exception.external.InternalServerException;
-import com.liberty52.product.global.exception.external.ProductErrorCode;
+import com.liberty52.product.global.exception.external.internalservererror.ConfirmPaymentException;
 import com.liberty52.product.service.entity.Orders;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -27,7 +26,7 @@ public class ConfirmPaymentMapRepository {
 
         if (orders == null) {
             log.error("Map.get null 발생 - 요청 주문 ID: {}", orderId);
-            throw new InternalServerException(ProductErrorCode.CONFIRM_PAYMENT_ERROR);
+            throw new ConfirmPaymentException();
         }
 
         return orders;

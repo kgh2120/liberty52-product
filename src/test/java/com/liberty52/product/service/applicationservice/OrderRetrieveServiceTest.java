@@ -15,14 +15,8 @@ import static com.liberty52.product.service.utils.TestInitiator.initDataForTesti
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.liberty52.product.global.exception.external.CannotAccessOrderException;
-import com.liberty52.product.service.controller.dto.OrderDetailRetrieveResponse;
-import com.liberty52.product.service.controller.dto.OrdersRetrieveResponse;
+import com.liberty52.product.global.exception.external.badrequest.CannotAccessOrderException;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.EntityTransaction;
-import java.time.LocalDate;
-import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

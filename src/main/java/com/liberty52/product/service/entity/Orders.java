@@ -1,7 +1,6 @@
 package com.liberty52.product.service.entity;
 
 import com.liberty52.product.global.contants.PriceConstants;
-import com.liberty52.product.global.exception.external.AlreadyCompletedOrderException;
 import com.liberty52.product.service.entity.payment.Payment;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -64,12 +63,6 @@ public class Orders {
 
     public static Orders create(String authId, OrderDestination orderDestination){
         return new Orders(authId, orderDestination);
-    }
-
-    public void changeOrderStatusToNextStep(){
-        if(orderStatus.equals(OrderStatus.COMPLETE))
-            throw new AlreadyCompletedOrderException();
-        this.orderStatus = OrderStatus.values()[orderStatus.ordinal()+1];
     }
 
     public void associateWithCustomProduct(List<CustomProduct> customProducts){

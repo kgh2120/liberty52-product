@@ -1,12 +1,9 @@
 package com.liberty52.product.service.controller;
 
-import static com.liberty52.product.global.contants.RepresentImageUrl.LIBERTY52_FRAME_REPRESENTATIVE_URL;
 import static com.liberty52.product.service.utils.MockConstants.*;
 
 import static com.liberty52.product.service.utils.MockFactory.createMockOrderDetailRetrieveResponse;
-import static com.liberty52.product.service.utils.MockFactory.createMockOrderRetrieveResponse;
 import static com.liberty52.product.service.utils.MockFactory.createMockOrderRetrieveResponseList;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -14,18 +11,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.liberty52.product.global.exception.external.CannotAccessOrderException;
+import com.liberty52.product.global.exception.external.badrequest.CannotAccessOrderException;
 import com.liberty52.product.global.exception.external.ErrorResponse;
 import com.liberty52.product.global.exception.external.RestExceptionHandler;
 import com.liberty52.product.service.applicationservice.OrderRetrieveService;
-import com.liberty52.product.service.controller.dto.OrdersRetrieveResponse;
-import com.netflix.discovery.converters.Auto;
-import jakarta.inject.Inject;
+
 import java.time.LocalDate;
-import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -33,7 +27,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @WebMvcTest(value = {OrderRetrieveController.class, RestExceptionHandler.class})
 class OrderRetrieveControllerTest {

@@ -1,7 +1,7 @@
 package com.liberty52.product.service.applicationservice;
 
-import com.liberty52.product.global.exception.external.NotYourResourceException;
-import com.liberty52.product.global.exception.external.UnRemovableResourceException;
+import com.liberty52.product.global.exception.external.forbidden.NotYourResourceException;
+import com.liberty52.product.global.exception.external.forbidden.UnRemovableResourceException;
 import com.liberty52.product.service.controller.dto.CartItemListRemoveRequestDto;
 import com.liberty52.product.service.entity.*;
 import com.liberty52.product.service.repository.*;

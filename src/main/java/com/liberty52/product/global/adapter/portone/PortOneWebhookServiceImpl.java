@@ -3,7 +3,7 @@ package com.liberty52.product.global.adapter.portone;
 import com.liberty52.product.global.adapter.portone.dto.PortOnePaymentInfo;
 import com.liberty52.product.global.adapter.portone.dto.PortOneToken;
 import com.liberty52.product.global.adapter.portone.dto.PortOneWebhookDto;
-import com.liberty52.product.global.exception.external.ResourceNotFoundException;
+import com.liberty52.product.global.exception.external.notfound.ResourceNotFoundException;
 import com.liberty52.product.service.entity.Orders;
 import com.liberty52.product.service.entity.payment.CardPayment;
 import com.liberty52.product.service.repository.ConfirmPaymentMapRepository;
