@@ -41,6 +41,7 @@ public class DBInitConfig {
         public static final String LIBERTY = "Liberty 52_Frame";
         private static Orders order;
         private static Product product;
+        private static Review review;
         private final ReviewRepository reviewRepository;
 
         private final Environment env;
@@ -201,6 +202,7 @@ public class DBInitConfig {
                 // 아래 save가 없어도 DB엔 정상적으로 들어가지만, 테스트에선 반영이 안 됨.
                 DBInitService.order = ordersRepository.save(order);
                 DBInitService.product = productRepository.save(product);
+                DBInitService.review = reviewRepository.save(review);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -212,6 +214,9 @@ public class DBInitConfig {
 
         public static Product getProduct() {
             return product;
+        }
+        public static Review getReview() {
+            return review;
         }
 
     }

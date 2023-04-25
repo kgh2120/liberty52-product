@@ -1,7 +1,7 @@
 package com.liberty52.product.service.applicationservice;
 
 import com.liberty52.product.global.config.DBInitConfig;
-import com.liberty52.product.global.exception.external.NoYourReviewException;
+import com.liberty52.product.global.exception.external.NotYourReviewException;
 import com.liberty52.product.global.exception.external.ReviewNotFoundException;
 import com.liberty52.product.service.entity.Orders;
 import com.liberty52.product.service.entity.Product;
@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @SpringBootTest
 @Transactional
 public class ReviewRemoveServiceTest {
@@ -24,22 +26,12 @@ public class ReviewRemoveServiceTest {
     @Autowired
     ReviewRemoveService reviewRemoveService;
 
-    private Product product;
-    private Orders order;
     private Review review;
 
     String reviewerId;
     @BeforeEach
     void beforeEach() {
-        product = DBInitConfig.DBInitService.getProduct();
-        order = DBInitConfig.DBInitService.getOrder();
-
-        reviewerId = order.getAuthId();
-        review = Review.create(4, "content");
-        review.associate(order);
-        review.associate(product);
-        reviewRepository.save(review);
-
+        review = DBInitConfig.DBInitService.getReview();
     }
 
     @Test
@@ -47,12 +39,15 @@ public class ReviewRemoveServiceTest {
         Review reviewBefore = reviewRepository.findById(review.getId()).orElse(null);
         Assertions.assertNotNull(reviewBefore);
 
-        Assertions.assertThrows(ReviewNotFoundException.class, () -> reviewRemoveService.removeReview(reviewerId, "123"));
-        Assertions.assertThrows(NoYourReviewException.class, () -> reviewRemoveService.removeReview("123", review.getId()));
+        Assertions.assertThrows(ReviewNotFoundException.class, () -> reviewRemoveService.removeReview(reviewerId, randomString()));
+        Assertions.assertThrows(NotYourReviewException.class, () -> reviewRemoveService.removeReview(randomString(), review.getId()));
 
-        reviewRemoveService.removeReview(reviewerId, review.getId());
+        reviewRemoveService.removeReview(review.getOrder().getAuthId(), review.getId());
         Review reviewAfter = reviewRepository.findById(review.getId()).orElse(null);
         Assertions.assertNull(reviewAfter);
+    }
 
+    private String randomString() {
+        return UUID.randomUUID().toString();
     }
 }

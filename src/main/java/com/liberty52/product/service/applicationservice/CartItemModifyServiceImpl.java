@@ -9,10 +9,13 @@ import com.liberty52.product.service.controller.dto.CartModifyRequestDto;
 import com.liberty52.product.service.entity.CustomProduct;
 import com.liberty52.product.service.entity.CustomProductOption;
 import com.liberty52.product.service.entity.OptionDetail;
+import com.liberty52.product.service.event.internal.ImageRemovedEvent;
+import com.liberty52.product.service.event.internal.dto.ImageRemovedEventDto;
 import com.liberty52.product.service.repository.CustomProductOptionRepository;
 import com.liberty52.product.service.repository.CustomProductRepository;
 import com.liberty52.product.service.repository.OptionDetailRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class CartItemModifyServiceImpl implements CartItemModifyService{
 
   private final S3Uploader s3Uploader;
+  private final ApplicationEventPublisher eventPublisher;
   private final CustomProductRepository customProductRepository;
   private final OptionDetailRepository optionDetailRepository;
 
@@ -55,10 +59,6 @@ public class CartItemModifyServiceImpl implements CartItemModifyService{
   }
 
   private void modifyOptionsDetail(CartModifyRequestDto dto, CustomProduct customProduct,MultipartFile imageFile) {
-    if (imageFile != null){
-      String customPictureUrl = uploadImage(imageFile);
-      customProduct.modifyCustomPictureUrl(customPictureUrl);
-    }
     customProduct.modifyQuantity(dto.getQuantity());
     if (!dto.getOptions().isEmpty()){
       customProductOptionRepository.deleteAll(customProduct.getOptions());
@@ -70,6 +70,12 @@ public class CartItemModifyServiceImpl implements CartItemModifyService{
         customProductOption.associate(customProduct);
         customProductOptionRepository.save(customProductOption);
       }
+    }
+    if (imageFile != null){
+      String url = customProduct.getUserCustomPictureUrl();
+      String customPictureUrl = uploadImage(imageFile);
+      customProduct.modifyCustomPictureUrl(customPictureUrl);
+      eventPublisher.publishEvent(new ImageRemovedEvent(this, new ImageRemovedEventDto(url)));
     }
   }
 

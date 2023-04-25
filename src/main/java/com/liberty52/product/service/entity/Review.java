@@ -119,4 +119,8 @@ public class Review {
     public void clearImages() {
         this.reviewImages.clear();
     }
+
+    public void removeImage(ReviewImage reviewImage) {
+        this.reviewImages.remove(reviewImage);
+    }
 }

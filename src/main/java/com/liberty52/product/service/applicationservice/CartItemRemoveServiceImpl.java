@@ -5,18 +5,23 @@ import com.liberty52.product.global.exception.external.ResourceNotFoundException
 import com.liberty52.product.global.exception.external.UnRemovableResourceException;
 import com.liberty52.product.service.controller.dto.CartItemListRemoveRequestDto;
 import com.liberty52.product.service.entity.CustomProduct;
+import com.liberty52.product.service.event.internal.ImageRemovedEvent;
+import com.liberty52.product.service.event.internal.dto.ImageRemovedEventDto;
 import com.liberty52.product.service.repository.CartItemRepository;
 import com.liberty52.product.service.repository.CustomProductOptionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class CartItemRemoveServiceImpl implements CartItemRemoveService {
+    private final ApplicationEventPublisher eventPublisher;
     private final CartItemRepository cartItemRepository;
     private final CustomProductOptionRepository productCartOptionRepository;
     private static final String RESOURCE_NAME_CART_ITEM = "CartItem(CustomProduct in Cart)";
@@ -60,10 +65,13 @@ public class CartItemRemoveServiceImpl implements CartItemRemoveService {
     }
 
     private void removeCartItems(String ownerId, List<String> customProductIds) {
+        List<String> urlsWillBeDeleted = new ArrayList<>();
         customProductIds.forEach(id -> {
-                CustomProduct customProduct = validAndGetCartItem(ownerId, id);
-                productCartOptionRepository.deleteAll(customProduct.getOptions());
-                cartItemRepository.delete(customProduct);
-            });
+            CustomProduct customProduct = validAndGetCartItem(ownerId, id);
+            productCartOptionRepository.deleteAll(customProduct.getOptions());
+            cartItemRepository.delete(customProduct);
+            urlsWillBeDeleted.add(customProduct.getUserCustomPictureUrl());
+        });
+        urlsWillBeDeleted.forEach(url -> eventPublisher.publishEvent(new ImageRemovedEvent(this, new ImageRemovedEventDto(url))));
     }
 }
