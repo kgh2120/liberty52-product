@@ -1,9 +1,10 @@
 package com.liberty52.product.service.entity;
 
 import com.liberty52.product.global.adapter.s3.S3UploaderApi;
+import com.liberty52.product.global.contants.PriceConstants;
 import com.liberty52.product.service.applicationservice.MonoItemOrderService;
-import com.liberty52.product.service.controller.dto.MonoItemOrderRequestDto;
-import com.liberty52.product.service.controller.dto.MonoItemOrderResponseDto;
+import com.liberty52.product.service.controller.dto.PreregisterOrderRequestDto;
+import com.liberty52.product.service.controller.dto.PreregisterOrderResponseDto;
 import com.liberty52.product.service.repository.OptionDetailRepository;
 import com.liberty52.product.service.repository.OrdersRepository;
 import com.liberty52.product.service.repository.ProductRepository;
@@ -42,7 +43,7 @@ class OrdersEntityTest {
     private static final String OPTION_2 = "1mm 두께 승화전사 인쇄용 알루미늄시트";
     private static final String OPTION_3 = "유광실버";
     private static final int QUANTITY = 2;
-    private static final int DELIVERY_PRICE = 150_000;
+    private static final int DELIVERY_PRICE = PriceConstants.DEFAULT_DELIVERY_PRICE;
 
     String authId = UUID.randomUUID().toString();
     MockMultipartFile imageFile = new MockMultipartFile("image", "test.png", "image/jpeg", new FileInputStream("src/test/resources/static/test.jpg"));
@@ -52,15 +53,13 @@ class OrdersEntityTest {
 
     @Test
     void test_getTotalAmount() {
-        MonoItemOrderRequestDto requestDto = MonoItemOrderRequestDto.createForTest(
-                LIBERTY,
-                List.of(OPTION_1, OPTION_2, OPTION_3),
-                QUANTITY,
-                DELIVERY_PRICE,
-                createDestinationDto());
+        PreregisterOrderRequestDto requestDto = PreregisterOrderRequestDto.forTest(
+                LIBERTY, List.of(OPTION_1, OPTION_2, OPTION_3), QUANTITY, List.of(),
+                "receiverName", "receiverEmail", "receiverPhoneNumber", "address1", "address2", "zipCode"
+        );
 
-        MonoItemOrderResponseDto save = monoItemOrderService.save(authId, imageFile, requestDto);
-        orderId = save.getId();
+        PreregisterOrderResponseDto save = monoItemOrderService.preregisterCardPaymentOrders(authId, requestDto, imageFile);
+        orderId = save.getMerchantId();
 
         Orders orders = ordersRepository.findById(orderId).get();
 
@@ -80,10 +79,6 @@ class OrdersEntityTest {
         expected *= QUANTITY;
         expected += DELIVERY_PRICE;
         return expected;
-    }
-
-    private MonoItemOrderRequestDto.DestinationDto createDestinationDto() {
-        return MonoItemOrderRequestDto.DestinationDto.create("receiverName", "receiverEmail", "receiverPhoneNumber", "address1", "address2", "zipCode");
     }
 
     @AfterEach
