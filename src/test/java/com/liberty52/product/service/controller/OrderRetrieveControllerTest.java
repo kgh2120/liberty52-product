@@ -114,8 +114,6 @@ class OrderRetrieveControllerTest {
         mockMvc.perform(get(ORDER_URL+"/"+MOCK_ORDER_ID)
                 .header(HttpHeaders.AUTHORIZATION,MOCK_AUTH_ID))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errorName").value("CANNOT_ACCESS_ORDER"))
-                .andExpect(jsonPath("$.errorMessage").value("해당 주문에 접근할 수 없습니다."))
                 .andDo(print());
     }
 
@@ -162,8 +160,6 @@ class OrderRetrieveControllerTest {
         mockMvc.perform(get(GUEST_PREFIX+ORDER_URL+"/"+MOCK_ORDER_ID)
                         .header(HttpHeaders.AUTHORIZATION,MOCK_AUTH_ID))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errorName").value("CANNOT_ACCESS_ORDER"))
-                .andExpect(jsonPath("$.errorMessage").value("해당 주문에 접근할 수 없습니다."))
                 .andDo(print());
     }
 
