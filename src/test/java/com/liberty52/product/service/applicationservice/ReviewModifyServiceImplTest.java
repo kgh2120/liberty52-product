@@ -1,5 +1,6 @@
 package com.liberty52.product.service.applicationservice;
 
+import com.liberty52.product.MockS3Test;
 import com.liberty52.product.global.config.DBInitConfig;
 import com.liberty52.product.global.exception.internal.InvalidRatingException;
 import com.liberty52.product.global.exception.internal.InvalidTextSize;
@@ -16,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,10 +30,13 @@ import java.util.stream.IntStream;
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-class ReviewModifyServiceImplTest {
+class ReviewModifyServiceImplTest extends MockS3Test {
 
     @Autowired
     private ReviewRepository reviewRepository;
+
+    @Autowired
+    ApplicationEventPublisher eventPublisher;
 
     @Autowired
     private ReviewModifyService reviewModifyService;
@@ -42,8 +47,6 @@ class ReviewModifyServiceImplTest {
     private List<ReviewImage> images;
 
     String authId = DBInitConfig.DBInitService.AUTH_ID;
-    MockMultipartFile imageFile = newImageFile();
-
 
     private MockMultipartFile newImageFile() {
         try {

@@ -1,22 +1,13 @@
 package com.liberty52.product.service.applicationservice;
 
+import com.liberty52.product.MockS3Test;
 import com.liberty52.product.service.controller.dto.ReplyCreateRequestDto;
 import com.liberty52.product.service.controller.dto.ReviewCreateRequestDto;
-import com.liberty52.product.service.entity.CustomProduct;
-import com.liberty52.product.service.entity.OrderDestination;
-import com.liberty52.product.service.entity.Orders;
-import com.liberty52.product.service.entity.Product;
-import com.liberty52.product.service.entity.Reply;
-import com.liberty52.product.service.entity.Review;
+import com.liberty52.product.service.entity.*;
 import com.liberty52.product.service.repository.CustomProductRepository;
 import com.liberty52.product.service.repository.OrdersRepository;
 import com.liberty52.product.service.repository.ProductRepository;
 import com.liberty52.product.service.repository.ReviewRepository;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -27,10 +18,16 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-class ReviewCreateServiceImplTest {
+class ReviewCreateServiceImplTest extends MockS3Test {
   @Autowired
   private OrdersRepository ordersRepository;
   @Autowired

@@ -1,5 +1,6 @@
 package com.liberty52.product.service.applicationservice;
 
+import com.liberty52.product.MockS3Test;
 import com.liberty52.product.global.exception.external.notfound.OptionDetailNotFoundByNameException;
 import com.liberty52.product.global.exception.external.notfound.ProductNotFoundByNameException;
 import com.liberty52.product.service.controller.dto.CartItemRequest;
@@ -22,7 +23,7 @@ import java.util.List;
 
 @SpringBootTest
 @Transactional
-public class CartItemCreateServiceTest {
+public class CartItemCreateServiceTest extends MockS3Test {
 
     @Autowired
     CartItemCreateService cartItemCreateService;
@@ -32,7 +33,6 @@ public class CartItemCreateServiceTest {
 
     @Autowired
     CartRepository cartRepository;
-
 
     @Test
     void 장바구니생성() throws IOException {

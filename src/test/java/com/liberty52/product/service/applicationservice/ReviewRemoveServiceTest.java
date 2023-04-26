@@ -1,22 +1,26 @@
 package com.liberty52.product.service.applicationservice;
 
+import com.liberty52.product.MockS3Test;
 import com.liberty52.product.global.config.DBInitConfig;
 import com.liberty52.product.global.exception.external.forbidden.NotYourReviewException;
 import com.liberty52.product.global.exception.external.notfound.ReviewNotFoundByIdException;
 import com.liberty52.product.service.entity.Review;
 import com.liberty52.product.service.repository.ReviewRepository;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
 @SpringBootTest
 @Transactional
-public class ReviewRemoveServiceTest {
+public class ReviewRemoveServiceTest extends MockS3Test {
 
     @Autowired
     ReviewRepository reviewRepository;
@@ -24,9 +28,13 @@ public class ReviewRemoveServiceTest {
     @Autowired
     ReviewRemoveService reviewRemoveService;
 
+    @Autowired
+    ApplicationEventPublisher eventPublisher;
+
     private Review review;
 
     String reviewerId;
+
     @BeforeEach
     void beforeEach() {
         review = DBInitConfig.DBInitService.getReview();

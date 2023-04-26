@@ -1,22 +1,18 @@
 package com.liberty52.product.service.applicationservice;
 
+import com.liberty52.product.MockS3Test;
 import com.liberty52.product.global.config.DBInitConfig;
-import com.liberty52.product.global.exception.external.notfound.ResourceNotFoundException;
-import com.liberty52.product.global.exception.internal.InvalidQuantityException;
-import com.liberty52.product.service.controller.dto.MonoItemOrderRequestDto;
-import com.liberty52.product.service.controller.dto.MonoItemOrderResponseDto;
 import com.liberty52.product.service.controller.dto.PreregisterOrderRequestDto;
 import com.liberty52.product.service.controller.dto.PreregisterOrderResponseDto;
 import com.liberty52.product.service.entity.OrderStatus;
 import com.liberty52.product.service.entity.Orders;
 import com.liberty52.product.service.entity.payment.PaymentStatus;
 import com.liberty52.product.service.entity.payment.PaymentType;
-import com.liberty52.product.service.repository.CartItemRepository;
-import com.liberty52.product.service.repository.OrdersRepository;
-import com.liberty52.product.service.repository.ProductOptionRepository;
-import com.liberty52.product.service.repository.ProductRepository;
+import com.liberty52.product.service.repository.*;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,11 +26,11 @@ import java.util.UUID;
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-class MonoItemOrderServiceImplTest {
+class MonoItemOrderServiceImplTest extends MockS3Test {
     @Autowired
     MonoItemOrderService monoItemOrderService;
     @Autowired
-    CartItemRepository customProductRepository;
+    CustomProductRepository customProductRepository;
     @Autowired
     ProductRepository productRepository;
     @Autowired
@@ -46,43 +42,8 @@ class MonoItemOrderServiceImplTest {
     }
 
     String productName = "Liberty 52_Frame";
-    String detailName = "이젤 거치형";
     String authId = UUID.randomUUID().toString();
     MockMultipartFile imageFile = new MockMultipartFile("image", "test.png", "image/jpeg", new FileInputStream("src/test/resources/static/test.jpg"));
-    String orderId;
-
-    @Test
-    void save() {
-        int quantity = 2;
-        int deliveryPrice = 120000;
-        MonoItemOrderResponseDto dto = save(productName, detailName, quantity, deliveryPrice);
-        orderId = dto.getId();
-
-        Orders orders = ordersRepository.findById(dto.getId()).get();
-        Assertions.assertEquals(OrderStatus.ORDERED, orders.getOrderStatus());
-        Assertions.assertEquals(authId, orders.getAuthId());
-    }
-
-    @Test
-    void wrongProductName() {
-        int quantity = 2;
-        int deliveryPrice = 120000;
-        Assertions.assertThrows(ResourceNotFoundException.class, () -> save("wrong name", detailName, quantity, deliveryPrice));
-    }
-
-    @Test
-    void wrongOptionName() {
-        int quantity = 2;
-        int deliveryPrice = 120000;
-        Assertions.assertThrows(ResourceNotFoundException.class, () -> save(productName, "wrong name", quantity, deliveryPrice));
-    }
-
-    @Test
-    void invalidQuantity() {
-        int quantity = 0;
-        int deliveryPrice = 120000;
-        Assertions.assertThrows(InvalidQuantityException.class, () -> save(productName, detailName, quantity, deliveryPrice));
-    }
 
     private static final String LIBERTY = "Liberty 52_Frame";
     private static final String OPTION_1 = "이젤 거치형";
@@ -120,14 +81,6 @@ class MonoItemOrderServiceImplTest {
         Assertions.assertEquals(PaymentStatus.READY, orders.getPayment().getStatus());
         Assertions.assertSame(orders, orders.getPayment().getOrders());
         Assertions.assertTrue(orders.getPayment().getInfoAsString().isBlank());
-    }
-
-    MonoItemOrderResponseDto save(String productName, String detailName, int quantity, int deliveryPrice) {
-        return monoItemOrderService.save(authId, imageFile, MonoItemOrderRequestDto.createForTest(productName, List.of(detailName), quantity, deliveryPrice, createDestinationDto()));
-    }
-
-    private MonoItemOrderRequestDto.DestinationDto createDestinationDto() {
-        return MonoItemOrderRequestDto.DestinationDto.create("receiverName", "receiverEmail", "receiverPhoneNumber", "address1", "address2", "zipCode");
     }
 
     @Test

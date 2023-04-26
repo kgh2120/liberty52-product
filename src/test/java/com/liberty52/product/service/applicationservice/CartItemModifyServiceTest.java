@@ -1,16 +1,13 @@
 package com.liberty52.product.service.applicationservice;
 
+import com.liberty52.product.MockS3Test;
 import com.liberty52.product.service.controller.dto.CartModifyRequestDto;
 import com.liberty52.product.service.entity.Cart;
 import com.liberty52.product.service.entity.CustomProduct;
 import com.liberty52.product.service.entity.CustomProductOption;
 import com.liberty52.product.service.entity.Product;
-import com.liberty52.product.service.repository.CartItemRepository;
-import com.liberty52.product.service.repository.CartRepository;
-import com.liberty52.product.service.repository.CustomProductOptionRepository;
-import com.liberty52.product.service.repository.OptionDetailRepository;
-import com.liberty52.product.service.repository.ProductOptionRepository;
-import com.liberty52.product.service.repository.ProductRepository;
+import com.liberty52.product.service.repository.*;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,23 +15,24 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-class CartItemModifyServiceTest {
+class CartItemModifyServiceTest extends MockS3Test {
 
   @Autowired
-  MonoItemOrderService monoItemOrderService;
-  @Autowired
-  CartItemRepository customProductRepository;
+  CustomProductRepository customProductRepository;
   @Autowired
   ProductRepository productRepository;
   @Autowired
@@ -46,6 +44,8 @@ class CartItemModifyServiceTest {
   OptionDetailRepository optionDetailRepository;
   @Autowired
   CartRepository cartRepository;
+  @Autowired
+  ApplicationEventPublisher eventPublisher;
 
   @Autowired
   CartItemModifyService cartItemModifyService;

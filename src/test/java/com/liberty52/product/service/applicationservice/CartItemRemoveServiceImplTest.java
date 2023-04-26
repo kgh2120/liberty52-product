@@ -1,5 +1,6 @@
 package com.liberty52.product.service.applicationservice;
 
+import com.liberty52.product.MockS3Test;
 import com.liberty52.product.global.exception.external.forbidden.NotYourResourceException;
 import com.liberty52.product.global.exception.external.forbidden.UnRemovableResourceException;
 import com.liberty52.product.service.controller.dto.CartItemListRemoveRequestDto;
@@ -21,7 +22,7 @@ import java.util.stream.IntStream;
 
 @SpringBootTest
 @Transactional
-class CartItemRemoveServiceImplTest {
+class CartItemRemoveServiceImplTest extends MockS3Test {
     @Autowired
     CartItemRemoveService cartItemRemoveService;
     @Autowired
