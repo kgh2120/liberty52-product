@@ -29,9 +29,6 @@ public class CartItemCreateServiceTest extends MockS3Test {
     CartItemCreateService cartItemCreateService;
 
     @Autowired
-    CartItemRepository cartItemRepository;
-
-    @Autowired
     CartRepository cartRepository;
 
     @Test

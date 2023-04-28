@@ -73,7 +73,7 @@ public class MockFactory {
     }
 
     public static ReviewRetrieveResponse createMockReviewRetrieveResponse(){
-        return new ReviewRetrieveResponse(List.of(createMockReview()), 1,1,1, MOCK_AUTH_ID);
+        return new ReviewRetrieveResponse(List.of(createMockReview()), 1,1,1,1, MOCK_AUTH_ID);
     }
 
     public static Review createMockReview(){

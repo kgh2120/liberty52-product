@@ -22,7 +22,7 @@ public class CartItemCreateServiceImpl implements CartItemCreateService{
     private final S3UploaderApi s3Uploader;
     private final ProductRepository productRepository;
     private final OptionDetailRepository optionDetailRepository;
-    private final CartItemRepository cartItemRepository;
+    private final CustomProductRepository customProductRepository;
     private final CartRepository cartRepository;
     private final CustomProductOptionRepository customProductOptionRepository;
 
@@ -45,7 +45,7 @@ public class CartItemCreateServiceImpl implements CartItemCreateService{
 
         Product product = productRepository.findByName(dto.getProductName()).orElseThrow(() -> new ProductNotFoundByNameException(dto.getProductName())); //예외처리 해야함
         customProduct.associateWithProduct(product);
-        cartItemRepository.save(customProduct);
+        customProductRepository.save(customProduct);
 
         for (String optionDetailName :dto.getOptions()){
             CustomProductOption customProductOption = CustomProductOption.create();

@@ -17,11 +17,6 @@ import java.util.List;
 @Transactional
 public class CartItemRetriveServiceImpl implements CartItemRetriveService {
 
-    private final ProductRepository productRepository;
-    private final ProductOptionRepository productOptionRepository;
-    private final OptionDetailRepository optionDetailRepository;
-    private final CartItemRepository cartItemRepository;
-    private final CustomProductOptionRepository productCartOptionRepository;
     private final CartRepository cartRepository;
 
     @Override
