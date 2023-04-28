@@ -29,6 +29,7 @@ public class ReviewQueryRepositoryImpl implements ReviewQueryRepository{
     private final String currentPage = "currentPage";
     private final String startPage = "startPage";
     private final String lastPage = "lastPage";
+    private final String totalLastPage = "totalLastPage";
 
     public ReviewQueryRepositoryImpl(EntityManager em){
         this.em = em;
@@ -48,7 +49,8 @@ public class ReviewQueryRepositoryImpl implements ReviewQueryRepository{
         return new ReviewRetrieveResponse(reviews,
                 pageInfo.get(startPage),
                 pageInfo.get(currentPage),
-                pageInfo.get(lastPage)
+                pageInfo.get(lastPage),
+                pageInfo.get(totalLastPage)
                 ,authorId);
     }
 
@@ -80,7 +82,7 @@ public class ReviewQueryRepositoryImpl implements ReviewQueryRepository{
 
     private Map<String,Long> getPageInfo(Pageable pageable, String productId){
         long currentPage = pageable.getPageNumber() +1;
-        long startPage = 10 * (currentPage/10) +1 ;
+        long startPage =  currentPage %10 ==0 ? (currentPage/10-1)*10+1 : (currentPage/10)*10 +1;
         Long total = getTotalCount(productId);
         long totalLastPage = total%pageable.getPageSize() == 0 ? total / pageable.getPageSize() :
                 total / pageable.getPageSize()+1;
@@ -90,12 +92,13 @@ public class ReviewQueryRepositoryImpl implements ReviewQueryRepository{
         returnMap.put(this.startPage,startPage);
         returnMap.put(this.currentPage,currentPage);
         returnMap.put(this.lastPage,lastPage);
+        returnMap.put(this.totalLastPage, totalLastPage);
         return returnMap;
     }
 
     private ReviewRetrieveResponse noReviewExistCase(String authorId,
             List<Review> reviews) {
-        return new ReviewRetrieveResponse(reviews, 0, 0, 0, authorId);
+        return new ReviewRetrieveResponse(reviews, 0, 0, 0, 0,authorId);
     }
 
 }

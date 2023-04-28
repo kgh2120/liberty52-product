@@ -17,13 +17,14 @@ public class ReviewRetrieveResponse {
     private long currentPage;
     private long startPage;
     private long lastPage;
+    private long totalLastPage;
 
     @JsonIgnore
     private Set<String> authorIds = new HashSet<>();
 
 
     public ReviewRetrieveResponse(List<Review> reviews, long currentPage, long startPage,
-            long lastPage, String authorId) {
+            long lastPage, long totalLastPage, String authorId) {
 
         contents = reviews.stream().map(r -> {
             String orderAuthId = r.getOrder().getAuthId();
@@ -42,6 +43,7 @@ public class ReviewRetrieveResponse {
         this.currentPage = currentPage;
         this.startPage = startPage;
         this.lastPage = lastPage;
+        this.totalLastPage = totalLastPage;
     }
 
     public void setReviewAuthor( Map<String, AuthClientDataResponse> reviewAuthorId){
