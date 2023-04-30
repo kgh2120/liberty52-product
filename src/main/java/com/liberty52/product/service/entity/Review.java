@@ -4,6 +4,7 @@ import com.liberty52.product.global.exception.internal.InvalidRatingException;
 import com.liberty52.product.global.exception.internal.InvalidReviewImageSize;
 import com.liberty52.product.global.exception.internal.InvalidTextSize;
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,6 +37,8 @@ public class Review {
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "order_id")
     private Orders order;
+
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     public static final int CONTENT_MAX_LENGTH = 1000;
     public static final int CONTENT_MIN_LENGTH = 1;

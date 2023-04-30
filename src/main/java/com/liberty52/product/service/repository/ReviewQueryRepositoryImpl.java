@@ -60,6 +60,7 @@ public class ReviewQueryRepositoryImpl implements ReviewQueryRepository{
                 .leftJoin(reviewImage).on(reviewImage.review.eq(review))
                 .leftJoin(orders).on(review.order.eq(orders))
                 .where(review.product.id.eq(productId), photoFilter(isPhotoFilter))
+                .orderBy(review.createdAt.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
