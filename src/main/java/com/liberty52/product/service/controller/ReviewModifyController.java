@@ -22,7 +22,7 @@ public class ReviewModifyController {
     public void reviewModify(@RequestHeader(HttpHeaders.AUTHORIZATION) String reviewerId,
                              @PathVariable String reviewId,
                              @Validated @RequestPart ReviewModifyRequestDto dto,
-                             @RequestPart List<MultipartFile> images) {
+                             @RequestPart(required = false) List<MultipartFile> images) {
         reviewModifyService.modifyReview(reviewerId, reviewId, dto, images);
     }
 

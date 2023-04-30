@@ -62,6 +62,7 @@ public class ReviewModifyServiceImpl implements ReviewModifyService {
     }
 
     private <T extends MultipartFile> void addImagesInReview(Review review, List<T> images) {
+        if (images==null) return;
         for (MultipartFile image : images) {
             if(!review.isImageAddable()) break;
             String url = s3Uploader.upload(image);
