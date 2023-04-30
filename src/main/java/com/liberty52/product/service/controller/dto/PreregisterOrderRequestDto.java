@@ -15,9 +15,9 @@ public class PreregisterOrderRequestDto {
 
     private PaymentProductDto productDto;
     private DestinationDto destinationDto;
-    private VBankDto vBankDto;
+    private VbankDto vbankDto;
 
-    public static PreregisterOrderRequestDto forTest(
+    public static PreregisterOrderRequestDto forTestCard(
             String productName, List<String> options, int quantity, List<String> orderOptions,
             String receiverName, String receiverEmail, String receiverPhoneNumber, String address1, String address2, String zipCode) {
         return new PreregisterOrderRequestDto(
@@ -26,6 +26,17 @@ public class PreregisterOrderRequestDto {
                 null
         );
     }
+    public static PreregisterOrderRequestDto forTestVBank(
+            String productName, List<String> options, int quantity, List<String> orderOptions,
+            String receiverName, String receiverEmail, String receiverPhoneNumber, String address1, String address2, String zipCode,
+            String vBankInfo, String depositorName) {
+        return new PreregisterOrderRequestDto(
+                PaymentProductDto.forTest(productName, options, quantity, orderOptions),
+                DestinationDto.create(receiverName, receiverEmail, receiverPhoneNumber, address1, address2, zipCode),
+                VbankDto.forTest(vBankInfo, depositorName, false)
+        );
+    }
+
     @Getter
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     public static class PaymentProductDto {
@@ -62,12 +73,14 @@ public class PreregisterOrderRequestDto {
 
     @Getter
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class VBankDto {
-        private String vBank;
-        private String vBankAccount;
-        private String depositorBank;
+    public static class VbankDto {
+        private String vbankInfo;
         private String depositorName;
-        private String depositorAccount;
+        private Boolean isApplyCashReceipt;
+
+        public static VbankDto forTest(String vBankInfo, String depositorName, Boolean isApplyCashReceipt) {
+            return new VbankDto(vBankInfo, depositorName, isApplyCashReceipt);
+        }
     }
 
 

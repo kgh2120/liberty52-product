@@ -9,10 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.lang.NonNull;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
 
@@ -51,6 +48,15 @@ public class CustomProduct {
     @JoinColumn(name = "order_id")
     private Orders orders;
 
+    public Map<String, String> getOptionsMap() {
+        Map<String, String> optionsMap = new HashMap<>();
+        for (CustomProductOption option : this.options) {
+            String optTypeName = option.getOptionDetail().getProductOption().getName();
+            String optName = option.getOptionDetail().getName();
+            optionsMap.put(optTypeName, optName);
+        }
+        return optionsMap;
+    }
 
     public static CustomProduct createCartItem(String authId, int quantity, String image) {
         return new CustomProduct(image, quantity, authId);

@@ -1,5 +1,8 @@
 package com.liberty52.product.service.entity.payment;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.liberty52.product.service.entity.Orders;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -33,6 +36,13 @@ public abstract class Payment<T extends Payment.PaymentInfo> {
 
     protected String info = "";
 
+    protected static final ObjectMapper objectMapper;
+    static {
+        objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+    }
+
     public static Payment<? extends PaymentInfo> cardOf() {
         return CardPayment.of();
     }
@@ -44,14 +54,6 @@ public abstract class Payment<T extends Payment.PaymentInfo> {
     public static Payment<? extends PaymentInfo> naverPayOf(){
         return null;
     }
-
-//    protected static Payment<? extends PaymentInfo> of(PaymentType type, Orders orders) {
-//        Payment<? extends PaymentInfo> payment = new Payment<>();
-//        payment.type = type;
-//        payment.orders = orders;
-//        orders.setPayment(payment);
-//        return payment;
-//    }
 
     public void associate(Orders orders) {
         this.orders = orders;

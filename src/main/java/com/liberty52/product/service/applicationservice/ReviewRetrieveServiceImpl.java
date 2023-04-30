@@ -1,10 +1,8 @@
 package com.liberty52.product.service.applicationservice;
 
-import com.liberty52.product.global.adapter.AuthClient;
-import com.liberty52.product.service.controller.dto.AuthClientDataResponse;
+import com.liberty52.product.global.adapter.cloud.AuthServiceClient;
 import com.liberty52.product.service.controller.dto.ReviewRetrieveResponse;
 import com.liberty52.product.service.repository.ReviewQueryRepository;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,7 +16,7 @@ public class ReviewRetrieveServiceImpl implements
         ReviewRetrieveService {
 
     private final ReviewQueryRepository reviewQueryRepository;
-    private final AuthClient authClient;
+    private final AuthServiceClient authServiceClient;
 
 
 
@@ -33,6 +31,6 @@ public class ReviewRetrieveServiceImpl implements
     }
 
     private void setAuthorDataFromAuthService(ReviewRetrieveResponse response) {
-        response.setReviewAuthor(authClient.retrieveAuthData(response.getAuthorIds()));
+        response.setReviewAuthor(authServiceClient.retrieveAuthData(response.getAuthorIds()));
     }
 }

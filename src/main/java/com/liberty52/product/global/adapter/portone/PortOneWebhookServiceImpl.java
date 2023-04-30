@@ -49,6 +49,7 @@ public class PortOneWebhookServiceImpl implements PortOneWebhookService {
     public void validateAmountAndSave(PortOneWebhookDto dto, PortOnePaymentInfo paymentInfo) {
         Orders order = ordersRepository.findById(dto.getMerchant_uid())
                 .orElseThrow(() -> new ResourceNotFoundException("Order", "ID", dto.getMerchant_uid()));
+        log.info("GET WEBHOOK DATA - Order ID: {}", order.getId());
 
         if (Objects.equals(order.getAmount(), paymentInfo.getAmount())) {
             order.changeOrderStatusToOrdered();

@@ -1,9 +1,6 @@
 package com.liberty52.product.service.entity.payment;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.liberty52.product.global.adapter.portone.dto.PortOnePaymentInfo;
 import com.liberty52.product.global.util.Utils;
 import jakarta.persistence.DiscriminatorValue;
@@ -18,14 +15,6 @@ import java.time.LocalDateTime;
 @Entity
 @DiscriminatorValue(value = "CARD")
 public class CardPayment extends Payment<CardPayment.CardPaymentInfo> {
-
-    //TODO bean 으로 생성할 것
-    private static final ObjectMapper objectMapper;
-    static {
-        objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-    }
 
     public CardPayment() {
         super();

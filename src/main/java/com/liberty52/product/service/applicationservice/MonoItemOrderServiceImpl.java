@@ -1,12 +1,15 @@
 package com.liberty52.product.service.applicationservice;
 
 import com.liberty52.product.global.adapter.s3.S3UploaderApi;
+import com.liberty52.product.global.event.Events;
+import com.liberty52.product.global.event.events.OrderRequestDepositEvent;
 import com.liberty52.product.global.exception.external.badrequest.RequestForgeryPayException;
 import com.liberty52.product.global.exception.external.internalservererror.ConfirmPaymentException;
 import com.liberty52.product.global.exception.external.notfound.ResourceNotFoundException;
 import com.liberty52.product.service.controller.dto.*;
 import com.liberty52.product.service.entity.*;
 import com.liberty52.product.service.entity.payment.Payment;
+import com.liberty52.product.service.entity.payment.VBank;
 import com.liberty52.product.service.entity.payment.VBankPayment;
 import com.liberty52.product.service.repository.*;
 import jakarta.transaction.Transactional;
@@ -36,6 +39,7 @@ public class MonoItemOrderServiceImpl implements MonoItemOrderService {
     private final OptionDetailRepository optionDetailRepository;
     private final CustomProductOptionRepository customProductOptionRepository;
     private final ConfirmPaymentMapRepository confirmPaymentMapRepository;
+    private final VBankRepository vBankRepository;
 
     @Override
     @Deprecated
@@ -86,18 +90,18 @@ public class MonoItemOrderServiceImpl implements MonoItemOrderService {
 
     @Override
     public PaymentConfirmResponseDto confirmFinalApprovalOfCardPayment(String authId, String orderId) {
-        AtomicInteger secTimeout = new AtomicInteger();
+        AtomicInteger secTimeout = new AtomicInteger(0);
 
         while (!confirmPaymentMapRepository.containsOrderId(orderId)) {
             try {
+                log.info("DELAY WEBHOOK - OrderID: {}, Delay Time: {}", orderId, secTimeout.get());
                 Thread.sleep(1000);
                 if(secTimeout.incrementAndGet() > 60) {
                     log.error("카드 결제 정보를 확인하는 시간이 초과했습니다. 웹훅 서버를 확인해주세요. OrderId: {}", orderId);
                     throw new ConfirmPaymentException();
                 }
-
             } catch (InterruptedException e) {
-                log.error("카드 결제 스레드의 문제가 발생하였습니다.");
+                log.error("카드결제 검증요청 스레드에 문제가 발생하였습니다. OrderId: {}", orderId);
                 throw new ConfirmPaymentException();
             }
         }
@@ -112,22 +116,33 @@ public class MonoItemOrderServiceImpl implements MonoItemOrderService {
                 throw new ConfirmPaymentException();
             }
         };
-
     }
 
     @Override
-    public PaymentConfirmResponseDto registerVBankPaymentOrders(String authId, PreregisterOrderRequestDto dto, MultipartFile imageFile) {
+    public PaymentVBankResponseDto registerVBankPaymentOrders(String authId, PreregisterOrderRequestDto dto, MultipartFile imageFile) {
         Orders order = saveOrder(authId, dto, imageFile);
         order.changeOrderStatusToWaitingDeposit();
 
+        if (!vBankRepository.existsByAccount(dto.getVbankDto().getVbankInfo())) {
+            throw new ResourceNotFoundException("VBANK", "ACCOUNT", dto.getVbankDto().getVbankInfo());
+        }
+
         Payment<?> payment = Payment.vbankOf();
         payment.associate(order);
-        payment.setInfo(VBankPayment.VBankPaymentInfo.of(dto.getVBankDto()));
+        payment.setInfo(VBankPayment.VBankPaymentInfo.ofWaitingDeposit(dto.getVbankDto()));
 
-        // 메일 발송
+        Events.raise(new OrderRequestDepositEvent(dto.getDestinationDto().getReceiverEmail(), dto.getDestinationDto().getReceiverName(), order));
 
+        return PaymentVBankResponseDto.of(order.getId());
+    }
 
-        return PaymentConfirmResponseDto.of(order.getId());
+    @Override
+    public VBankInfoListResponseDto getVBankInfoList() {
+        List<VBank> vbanks = vBankRepository.findAll();
+
+        return VBankInfoListResponseDto.of(
+            vbanks.stream().map(vBank -> VBankInfoListResponseDto.VBankInfoDto.of(vBank.getAccount())).toList()
+        );
     }
 
     private Orders saveOrder(String authId, PreregisterOrderRequestDto dto, MultipartFile imageFile) {
@@ -173,6 +188,8 @@ public class MonoItemOrderServiceImpl implements MonoItemOrderService {
         }
 
         order.calcTotalAmountAndSet();
+        order.calcTotalQuantityAndSet();
+
         return order;
     }
 

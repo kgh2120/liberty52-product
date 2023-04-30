@@ -1,17 +1,19 @@
 package com.liberty52.product.global.config;
 
-import static com.liberty52.product.global.contants.RepresentImageUrl.LIBERTY52_FRAME_REPRESENTATIVE_URL;
-
 import com.liberty52.product.global.contants.PriceConstants;
+import com.liberty52.product.global.contants.ProductConstants;
 import com.liberty52.product.service.applicationservice.MonoItemOrderService;
 import com.liberty52.product.service.entity.*;
+import com.liberty52.product.service.entity.payment.VBank;
 import com.liberty52.product.service.repository.*;
 import jakarta.annotation.PostConstruct;
-import java.lang.reflect.Field;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.lang.reflect.Field;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -43,6 +45,7 @@ public class DBInitConfig {
         private static Product product;
         private static Review review;
         private final ReviewRepository reviewRepository;
+        private final VBankRepository vBankRepository;
 
         private final Environment env;
 
@@ -56,7 +59,7 @@ public class DBInitConfig {
                 productRepository.save(product);
                 DBInitService.product = product;
 
-                ProductOption option1 = ProductOption.create("거치 방식", true);
+                ProductOption option1 = ProductOption.create(ProductConstants.PROD_OPT_1, true);
                 option1.associate(product);
                 option1 = productOptionRepository.save(option1);
 
@@ -74,7 +77,7 @@ public class DBInitConfig {
                 detailWallId.set(detailWall, "OPT-002");
                 detailWall = optionDetailRepository.save(detailWall);
 
-                ProductOption option2 = ProductOption.create("기본소재", true);
+                ProductOption option2 = ProductOption.create(ProductConstants.PROD_OPT_2, true);
                 option2.associate(product);
                 option2 = productOptionRepository.save(option2);
 
@@ -85,7 +88,7 @@ public class DBInitConfig {
                 materialId.set(material, "OPT-003");
                 material = optionDetailRepository.save(material);
 
-                ProductOption option3 = ProductOption.create("기본소재 옵션", true);
+                ProductOption option3 = ProductOption.create(ProductConstants.PROD_OPT_3, true);
                 option3.associate(product);
                 option3 = productOptionRepository.save(option3);
 
@@ -201,6 +204,10 @@ public class DBInitConfig {
                     reviewRepository.save(noPhotoReview);
                 }
 
+
+                VBank vBank_hana = VBank.of("하나은행 1234123412341234 리버티");
+                VBank vBank_kb = VBank.of("국민은행 4321432143214321 리버티");
+                vBankRepository.saveAll(List.of(vBank_hana, vBank_kb));
 
                 // 아래 save가 없어도 DB엔 정상적으로 들어가지만, 테스트에선 반영이 안 됨.
                 DBInitService.order = ordersRepository.save(order);

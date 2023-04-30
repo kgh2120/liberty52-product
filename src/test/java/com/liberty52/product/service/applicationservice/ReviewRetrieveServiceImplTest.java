@@ -1,9 +1,7 @@
 package com.liberty52.product.service.applicationservice;
 
-import static com.liberty52.product.service.utils.MockConstants.MOCK_AUTHOR_NAME;
-import static com.liberty52.product.service.utils.MockConstants.MOCK_AUTHOR_PROFILE_URL;
-import static org.assertj.core.api.Assertions.*;
-
+import com.liberty52.product.TestBeanConfig;
+import com.liberty52.product.global.adapter.cloud.AuthServiceClient;
 import com.liberty52.product.global.config.DBInitConfig.DBInitService;
 import com.liberty52.product.service.controller.dto.ReviewRetrieveResponse;
 import com.liberty52.product.service.controller.dto.ReviewRetrieveResponse.ReplyContent;
@@ -14,17 +12,24 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
+
+import static com.liberty52.product.service.utils.MockConstants.MOCK_AUTHOR_NAME;
+import static com.liberty52.product.service.utils.MockConstants.MOCK_AUTHOR_PROFILE_URL;
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 @ActiveProfiles("test,dev")
 @SpringBootTest
+@Import({TestBeanConfig.class})
 class ReviewRetrieveServiceImplTest {
 
     @Autowired
     ReviewRetrieveService reviewRetrieveService;
-
+    @Autowired
+    AuthServiceClient authServiceClient;
 
 
     Orders order;
@@ -49,8 +54,11 @@ class ReviewRetrieveServiceImplTest {
         //then
         assertThat(response.getCurrentPage()).isSameAs(1L);
         assertThat(response.getStartPage()).isSameAs(1L);
-        assertThat(response.getLastPage()).isSameAs(1L);
-        assertThat(response.getContents().size()).isSameAs(2);
+//        assertThat(response.getLastPage()).isSameAs(1L);
+//        assertThat(response.getContents().size()).isSameAs(2);
+        // 추가
+        assertThat(response.getLastPage()).isSameAs(3L);
+        assertThat(response.getContents().size()).isSameAs(5);
 
         ReviewContent content = response.getContents().get(0);
         assertThat(content.getContent()).isEqualTo("good");

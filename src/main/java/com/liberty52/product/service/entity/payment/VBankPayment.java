@@ -1,15 +1,10 @@
 package com.liberty52.product.service.entity.payment;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.liberty52.product.service.controller.dto.PreregisterOrderRequestDto;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -17,13 +12,7 @@ import java.time.LocalDateTime;
 @DiscriminatorValue(value = "VBANK")
 public class VBankPayment extends Payment<VBankPayment.VBankPaymentInfo> {
 
-    //TODO bean 으로 생성할 것
-    private static final ObjectMapper objectMapper;
-    static {
-        objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-    }
+
 
     public VBankPayment() {
         super();
@@ -61,23 +50,31 @@ public class VBankPayment extends Payment<VBankPayment.VBankPaymentInfo> {
     }
 
     @Getter
+    @ToString
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     public static class VBankPaymentInfo extends PaymentInfo {
-        private String vBank;
-        private String vBankAccount;
+        private String vbankInfo;
         private String depositorBank;
         private String depositorName;
         private String depositorAccount;
+        private Boolean isApplyCashReceipt;
         private LocalDateTime paidAt;
 
-        public static VBankPaymentInfo of(String vBank, String vBankAccount, String depositorBank, String depositorName, String depositorAccount) {
-            return new VBankPaymentInfo(vBank, vBankAccount, depositorBank, depositorName, depositorAccount, LocalDateTime.now());
+        public static VBankPaymentInfo of(String vBankInfo, String depositorBank, String depositorName, String depositorAccount, Boolean isApplyCashReceipt) {
+            return new VBankPaymentInfo(vBankInfo, depositorBank, depositorName, depositorAccount, isApplyCashReceipt, LocalDateTime.now());
         }
 
-        public static VBankPaymentInfo of(PreregisterOrderRequestDto.VBankDto dto) {
-            return new VBankPaymentInfo(
-                    dto.getVBank(), dto.getVBankAccount(), dto.getDepositorBank(), dto.getDepositorName(), dto.getDepositorAccount(), LocalDateTime.now()
-            );
+        public static VBankPaymentInfo ofWaitingDeposit(PreregisterOrderRequestDto.VbankDto dto) {
+            VBankPaymentInfo info = new VBankPaymentInfo();
+            info.vbankInfo = dto.getVbankInfo();
+            info.depositorName = dto.getDepositorName();
+            info.isApplyCashReceipt = dto.getIsApplyCashReceipt();
+            return info;
+        }
+
+        public static VBankPaymentInfo ofPaid() {
+            return null;
         }
     }
 }

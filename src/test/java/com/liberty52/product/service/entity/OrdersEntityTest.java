@@ -53,7 +53,7 @@ class OrdersEntityTest {
 
     @Test
     void test_getTotalAmount() {
-        PreregisterOrderRequestDto requestDto = PreregisterOrderRequestDto.forTest(
+        PreregisterOrderRequestDto requestDto = PreregisterOrderRequestDto.forTestCard(
                 LIBERTY, List.of(OPTION_1, OPTION_2, OPTION_3), QUANTITY, List.of(),
                 "receiverName", "receiverEmail", "receiverPhoneNumber", "address1", "address2", "zipCode"
         );

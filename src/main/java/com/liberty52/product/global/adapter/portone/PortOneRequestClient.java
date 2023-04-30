@@ -6,6 +6,7 @@ import com.liberty52.product.global.adapter.portone.dto.*;
 import com.liberty52.product.global.adapter.portone.exception.PortOne4xxResponseException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
@@ -20,19 +21,18 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class PortOneRequestClient {
 
-    //TODO Config 서버로 암호화하여 Value 로 가져올 것.
-    private final String PORT_ONE_API_KEY = "3300384714738658";
-    //TODO Config 서버로 암호화하여 Value 로 가져올 것.
-    private final String PORT_ONE_SECRET_KEY = "NxQ4Ou0zVJhR2S4EJrng7OhW4j2LJmZlD3RtMExszd5R1sEQdEdp8loRLAV5LYmhWo2Wc8NXaNQU7coX";
+    @Value("${portone.api-key}")
+    private String PORT_ONE_API_KEY;
+    @Value("${portone.secret-key}")
+    private String PORT_ONE_SECRET_KEY;
     private final WebClient webClient;
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public PortOneToken getAccessToken() {
         try {
             PortOneTokenResponseDto responseDto = webClient.post()
                     .uri("/users/getToken")
                     .accept(MediaType.APPLICATION_JSON)
-                    .bodyValue(objectMapper.writeValueAsString(
+                    .bodyValue(new ObjectMapper().writeValueAsString(
                             PortOneTokenRequestDto.of(PORT_ONE_API_KEY, PORT_ONE_SECRET_KEY)
                     ))
                     .retrieve()

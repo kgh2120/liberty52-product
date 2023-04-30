@@ -46,7 +46,7 @@ class PortOneWebhookServiceImplTest {
 
     void test_confirmCardPayment_multiThread() throws InterruptedException {
         PreregisterOrderResponseDto dto = monoItemOrderService.preregisterCardPaymentOrders(AUTH_ID,
-                PreregisterOrderRequestDto.forTest(
+                PreregisterOrderRequestDto.forTestCard(
                         LIBERTY, List.of(OPTION_1, OPTION_2, OPTION_3), 2, List.of(),
                         "receiverName", "receiverEmail", "receiverPhoneNumber", "address1", "address2", "zipCode"),
                 imageFile);

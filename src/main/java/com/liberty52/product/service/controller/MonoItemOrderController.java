@@ -42,4 +42,20 @@ public class MonoItemOrderController {
         return monoItemOrderService.confirmFinalApprovalOfCardPayment(authId, orderId);
     }
 
+    @PostMapping("/orders/payment/vbank")
+    @ResponseStatus(HttpStatus.CREATED)
+    public PaymentVBankResponseDto registerVBankPaymentOrders(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authId,
+            @RequestPart("dto") @Validated PreregisterOrderRequestDto dto,
+            @RequestPart("imageFile") MultipartFile imageFile
+    ) {
+        return monoItemOrderService.registerVBankPaymentOrders(authId, dto, imageFile);
+    }
+
+    @GetMapping("/orders/payment/vbank")
+    @ResponseStatus(HttpStatus.OK)
+    public VBankInfoListResponseDto getVBankInfoList() {
+        return monoItemOrderService.getVBankInfoList();
+    }
+
 }

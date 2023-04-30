@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -32,6 +33,8 @@ public class Orders {
     private int deliveryPrice = PriceConstants.DEFAULT_DELIVERY_PRICE;
 
     private Long amount;
+
+    private Integer totalQuantity;
 
     @OneToMany(mappedBy = "orders")
     private List<CustomProduct> customProducts = new ArrayList<>();
@@ -92,6 +95,14 @@ public class Orders {
         totalAmount.getAndAdd(this.deliveryPrice);
 
         this.amount = totalAmount.get();
+    }
+
+    public void calcTotalQuantityAndSet() {
+        AtomicInteger quantity = new AtomicInteger();
+
+        this.customProducts.forEach(customProduct -> quantity.getAndAdd(customProduct.getQuantity()));
+
+        this.totalQuantity = quantity.get();
     }
 
     public void setPayment(Payment<?> payment) {
