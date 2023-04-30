@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Transactional
 @Repository
-public class ReviewQueryRepositoryImpl implements ReviewQueryRepository{
+public class ReviewQueryDslRepositoryImpl implements ReviewQueryDslRepository {
 
     private final EntityManager em;
     private final JPAQueryFactory queryFactory;
@@ -31,7 +31,7 @@ public class ReviewQueryRepositoryImpl implements ReviewQueryRepository{
     private final String lastPage = "lastPage";
     private final String totalLastPage = "totalLastPage";
 
-    public ReviewQueryRepositoryImpl(EntityManager em){
+    public ReviewQueryDslRepositoryImpl(EntityManager em){
         this.em = em;
         this.queryFactory = new JPAQueryFactory(this.em);
     }
@@ -52,6 +52,17 @@ public class ReviewQueryRepositoryImpl implements ReviewQueryRepository{
                 pageInfo.get(lastPage),
                 pageInfo.get(totalLastPage)
                 ,authorId);
+    }
+
+    @Override
+    public List<Review> retrieveReviewByWriterId(String writerId) {
+        return queryFactory
+                .selectFrom(review)
+                .leftJoin(orders).on(orders.eq(review.order)).fetchJoin()
+                .leftJoin(reviewImage).on(reviewImage.review.eq(review))
+                .where(orders.authId.eq(writerId))
+                .fetch();
+
     }
 
     private List<Review> fetchReviews(String productId, Pageable pageable,boolean isPhotoFilter) {

@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Transactional
 @SpringBootTest
-class ReviewQueryRepositoryImplTest {
+class ReviewQueryDslRepositoryImplTest {
 
 
     @Autowired
@@ -33,7 +33,7 @@ class ReviewQueryRepositoryImplTest {
     Product product;
 
     @Autowired
-    ReviewQueryRepository reviewQueryRepository;
+    ReviewQueryDslRepository reviewQueryDslRepository;
 
     @BeforeEach
     void beforeEach(){
@@ -49,7 +49,7 @@ class ReviewQueryRepositoryImplTest {
     @Test
     void photoFilterTest_Filtering () throws Exception{
         //given
-        ReviewRetrieveResponse response = reviewQueryRepository.retrieveReview(
+        ReviewRetrieveResponse response = reviewQueryDslRepository.retrieveReview(
                 product.getId(), order.getAuthId(), PageRequest.of(0, 3), true);
         //when
         assertThat(response.getContents().size()).isSameAs(1);
@@ -58,7 +58,7 @@ class ReviewQueryRepositoryImplTest {
     void photoFilterTest_NotFiltering () throws Exception{
         //given
         PageRequest request = PageRequest.of(0, 10);
-        ReviewRetrieveResponse response = reviewQueryRepository.retrieveReview(
+        ReviewRetrieveResponse response = reviewQueryDslRepository.retrieveReview(
                 product.getId(), order.getAuthId(), request, false);
 
         assertThat(response.getContents().size()).isSameAs(10);

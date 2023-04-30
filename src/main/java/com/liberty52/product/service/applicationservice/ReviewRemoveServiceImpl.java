@@ -5,7 +5,9 @@ import com.liberty52.product.global.exception.external.notfound.ReviewNotFoundBy
 import com.liberty52.product.service.entity.Review;
 import com.liberty52.product.service.event.internal.ImageRemovedEvent;
 import com.liberty52.product.service.event.internal.dto.ImageRemovedEventDto;
+import com.liberty52.product.service.repository.ReviewQueryDslRepository;
 import com.liberty52.product.service.repository.ReviewRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ public class ReviewRemoveServiceImpl implements ReviewRemoveService {
 
     private final ReviewRepository reviewRepository;
     private final ApplicationEventPublisher eventPublisher;
+    private final ReviewQueryDslRepository reviewQueryDslRepository;
 
     @Override
     public void removeReview(String reviewerId, String reviewId) {
@@ -27,5 +30,15 @@ public class ReviewRemoveServiceImpl implements ReviewRemoveService {
         }
         this.reviewRepository.delete(review);
         review.getReviewImages().forEach(ri -> eventPublisher.publishEvent(new ImageRemovedEvent(this, new ImageRemovedEventDto(ri.getUrl()))));
+    }
+
+    @Override
+    public void removeAllReview(String reviewerId) {
+
+        List<Review> reviews = reviewQueryDslRepository.retrieveReviewByWriterId(reviewerId);
+        for (Review review : reviews) {
+            review.getReviewImages().forEach(ri -> eventPublisher.publishEvent(new ImageRemovedEvent(this, new ImageRemovedEventDto(ri.getUrl()))));
+        }
+        reviewRepository.deleteAll(reviews);
     }
 }
