@@ -2,7 +2,6 @@ package com.liberty52.product.service.controller;
 
 import com.liberty52.product.service.applicationservice.CartItemRemoveService;
 import com.liberty52.product.service.controller.dto.CartItemListRemoveRequestDto;
-import com.liberty52.product.service.controller.dto.GuestCartItemListRemoveDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -27,19 +26,4 @@ public class CartItemRemoveController {
         cartItemRemoveService.removeCartItemList(authId, dto);
     }
 
-    @DeleteMapping("/guest/carts/custom-products/{customProductId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void guestCartItemRemove(@RequestHeader(HttpHeaders.AUTHORIZATION) String guestId, @PathVariable String customProductId) {
-        cartItemRemoveService.removeGuestCartItem(guestId, customProductId);
-    }
-
-    @DeleteMapping("/guest/carts/custom-products")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void guestCartItemListRemove(@RequestHeader(HttpHeaders.AUTHORIZATION)
-                                        String guestId,
-                                        @RequestBody
-                                        @Validated
-                                        CartItemListRemoveRequestDto dto) {
-        cartItemRemoveService.removeGuestCartItemList(guestId, dto);
-    }
 }

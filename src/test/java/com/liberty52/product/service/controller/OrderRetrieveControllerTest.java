@@ -1,23 +1,10 @@
 package com.liberty52.product.service.controller;
 
-import static com.liberty52.product.service.utils.MockConstants.*;
-
-import static com.liberty52.product.service.utils.MockFactory.createMockOrderDetailRetrieveResponse;
-import static com.liberty52.product.service.utils.MockFactory.createMockOrderRetrieveResponseList;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import com.liberty52.product.global.exception.external.badrequest.CannotAccessOrderException;
 import com.liberty52.product.global.exception.external.ErrorResponse;
 import com.liberty52.product.global.exception.external.RestExceptionHandler;
+import com.liberty52.product.global.exception.external.badrequest.CannotAccessOrderException;
 import com.liberty52.product.service.applicationservice.OrderRetrieveService;
-
-import java.time.LocalDate;
-
+import com.liberty52.product.service.controller.guest.GuestOrderRetrieveController;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +15,25 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(value = {OrderRetrieveController.class, RestExceptionHandler.class})
+import java.time.LocalDate;
+
+import static com.liberty52.product.service.utils.MockConstants.*;
+import static com.liberty52.product.service.utils.MockFactory.createMockOrderDetailRetrieveResponse;
+import static com.liberty52.product.service.utils.MockFactory.createMockOrderRetrieveResponseList;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@WebMvcTest(value = {OrderRetrieveController.class, GuestOrderRetrieveController.class, RestExceptionHandler.class})
 class OrderRetrieveControllerTest {
 
     @InjectMocks
     OrderRetrieveController orderRetrieveController;
+    @InjectMocks
+    GuestOrderRetrieveController guestOrderRetrieveController;
 
     @MockBean
     OrderRetrieveService orderRetrieveService;

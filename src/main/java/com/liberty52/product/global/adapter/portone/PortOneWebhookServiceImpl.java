@@ -28,7 +28,7 @@ public class PortOneWebhookServiceImpl implements PortOneWebhookService {
     @Override
     public void hookPortOnePaymentInfo(PortOneWebhookDto dto) {
         if (dto.getStatus().equals("paid")) {
-            PortOneToken token = this.getAccessToken();
+            PortOneToken token = getAccessToken();
 
             PortOnePaymentInfo paymentInfo = getPaymentInfo(token.getAccessToken(), dto.getImp_uid());
 

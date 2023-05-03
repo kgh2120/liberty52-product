@@ -21,9 +21,4 @@ public class CartItemRetriveController {
         return cartItemRetriveService.retriveAuthCartItem(authId);
     }
 
-    @GetMapping("/guest/carts")
-    @ResponseStatus(HttpStatus.OK)
-    public List<CartItemResponse> retriveGuestCartItem(@RequestHeader(HttpHeaders.AUTHORIZATION) String guestId) {
-        return cartItemRetriveService.retriveGuestCartItem(guestId);
-    }
 }
