@@ -1,6 +1,7 @@
 package com.liberty52.product.service.entity;
 
 import com.liberty52.product.global.contants.PriceConstants;
+import com.liberty52.product.global.util.Utils;
 import com.liberty52.product.service.entity.payment.Payment;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -36,6 +37,8 @@ public class Orders {
 
     private Integer totalQuantity;
 
+    private String orderNum;
+
     @OneToMany(mappedBy = "orders")
     private List<CustomProduct> customProducts = new ArrayList<>();
 
@@ -47,9 +50,11 @@ public class Orders {
     @JoinColumn(updatable = false)
     private Payment payment;
 
+    @Deprecated
     private Orders(String authId, int deliveryPrice, OrderDestination orderDestination) {
         this.authId = authId;
         orderStatus = OrderStatus.ORDERED;
+        this.orderNum = Utils.OrderNumberBuilder.createOrderNum();
         this.deliveryPrice = deliveryPrice;
         this.orderDestination = orderDestination;
     }
@@ -57,9 +62,11 @@ public class Orders {
     private Orders(String authId, OrderDestination orderDestination) {
         this.authId = authId;
         this.orderStatus = OrderStatus.READY;
+        this.orderNum = Utils.OrderNumberBuilder.createOrderNum();
         this.orderDestination = orderDestination;
     }
 
+    @Deprecated
     public static Orders create(String authId, int deliveryPrice, OrderDestination orderDestination){
         return new Orders(authId,deliveryPrice,orderDestination);
     }
@@ -116,4 +123,5 @@ public class Orders {
     public void changeOrderStatusToWaitingDeposit() {
         this.orderStatus = OrderStatus.WAITING_DEPOSIT;
     }
+
 }

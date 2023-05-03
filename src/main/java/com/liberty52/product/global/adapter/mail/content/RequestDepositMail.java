@@ -55,12 +55,10 @@ public class RequestDepositMail {
                     "\t\t<td style=\"font-size:14px\">%s</td>\n" +
                     "\t</tr>\n" +
                     "\t<tr height=\"10\"><td colspan=\"2\"></td></tr>\n" +
-                    "\t<!-- <tr>\n" +
+                    "\t<tr>\n" +
                     "\t\t<td style=\"color:#777;font-size:14px;width:100px;padding-right:10px\">주문번호</td>\n" +
-                    "\t\t<td style=\"font-size:14px\">\n" +
-                    "\t\t\t<a href=\"https://bloomsburylab.com/shop_mypage/?m2=order&amp;idx=108796077\" style=\"color:#212121;text-decoration:underline\" target=\"_blank\" data-saferedirecturl=\"https://www.google.com/url?q=https://bloomsburylab.com/shop_mypage/?m2%%3Dorder%%26idx%%3D108796077&amp;source=gmail&amp;ust=1682589049683000&amp;usg=AOvVaw3mkWZMIaNfV8BwA9k3OmX3\">202304170732044</a>\n" +
-                    "\t\t</td>\n" +
-                    "\t</tr> -->\n" +
+                    "\t\t<td style=\"font-size:14px\">%s</td>\n" +
+                    "\t</tr>\n" +
                     "\t<tr height=\"10\"><td colspan=\"2\"></td></tr>\n" +
                     "\t<tr>\n" +
                     "\t\t<td style=\"color:#777;font-size:14px;width:100px;padding-right:10px\">주문일자</td>\n" +

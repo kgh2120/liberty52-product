@@ -24,6 +24,7 @@ public class MailContentMaker {
     public static String makeOrderRequestDepositContent(String authName, Orders order) {
         String vBankInfo = ((VBankPayment.VBankPaymentInfo)(order.getPayment().getInfoAsDto())).getVbankInfo();
         String customerName = authName;
+        String orderNum = order.getOrderNum();
         String orderedDate = order.getOrderDate().format(DATE_FORMAT);
         String receiverName = order.getOrderDestination().getReceiverName();
         String receiverPhone = order.getOrderDestination().getReceiverPhoneNumber();
@@ -53,7 +54,7 @@ public class MailContentMaker {
         return String.format(
                 RequestDepositMail.ORDER_REQUEST_DEPOSIT_VBANK,
                 vBankInfo,
-                customerName, orderedDate,
+                customerName, orderNum, orderedDate,
                 receiverName, receiverPhone, address1, address2,
                 productList,
                 orderAmount, orderQuantity, deliveryPrice, finalAmount
