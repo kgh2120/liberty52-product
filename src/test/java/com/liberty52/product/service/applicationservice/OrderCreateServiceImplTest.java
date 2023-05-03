@@ -29,9 +29,9 @@ import java.util.UUID;
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-class MonoItemOrderServiceImplTest extends MockS3Test {
+class OrderCreateServiceImplTest extends MockS3Test {
     @Autowired
-    MonoItemOrderService monoItemOrderService;
+    OrderCreateService orderCreateService;
     @Autowired
     CustomProductRepository customProductRepository;
     @Autowired
@@ -41,7 +41,7 @@ class MonoItemOrderServiceImplTest extends MockS3Test {
     @Autowired
     private OrdersRepository ordersRepository;
 
-    MonoItemOrderServiceImplTest() throws IOException {
+    OrderCreateServiceImplTest() throws IOException {
     }
 
     String productName = "Liberty 52_Frame";
@@ -56,7 +56,7 @@ class MonoItemOrderServiceImplTest extends MockS3Test {
 
     @Test
     void test_preregisterCardPaymentOrders() {
-        PreregisterOrderResponseDto dto = monoItemOrderService.preregisterCardPaymentOrders(authId,
+        PreregisterOrderResponseDto dto = orderCreateService.preregisterCardPaymentOrders(authId,
                 PreregisterOrderRequestDto.forTestCard(
                         LIBERTY, List.of(OPTION_1, OPTION_2, OPTION_3), 2, List.of(),
                         "receiverName", "receiverEmail", "receiverPhoneNumber", "address1", "address2", "zipCode"),
@@ -101,7 +101,7 @@ class MonoItemOrderServiceImplTest extends MockS3Test {
                 "receiverName", "receiverEmail", "receiverPhoneNumber", "address1", "address2", "zipCode",
                 "하나은행 1234123412341234 리버티", "tester"
         );
-        PaymentVBankResponseDto responseDto = monoItemOrderService.registerVBankPaymentOrders("AUTH_ID", requestDto, imageFile);
+        PaymentVBankResponseDto responseDto = orderCreateService.registerVBankPaymentOrders("AUTH_ID", requestDto, imageFile);
 
         String orderId = responseDto.getOrderId();
 

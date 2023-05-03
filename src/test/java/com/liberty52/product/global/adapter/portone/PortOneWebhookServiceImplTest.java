@@ -1,7 +1,7 @@
 package com.liberty52.product.global.adapter.portone;
 
 import com.liberty52.product.global.adapter.portone.dto.PortOneWebhookDto;
-import com.liberty52.product.service.applicationservice.MonoItemOrderServiceImpl;
+import com.liberty52.product.service.applicationservice.OrderCreateService;
 import com.liberty52.product.service.controller.dto.PreregisterOrderRequestDto;
 import com.liberty52.product.service.controller.dto.PreregisterOrderResponseDto;
 import com.liberty52.product.service.repository.OrdersRepository;
@@ -27,7 +27,7 @@ class PortOneWebhookServiceImplTest {
     @Autowired
     private PortOneWebhookServiceImpl portOneWebhookService;
     @Autowired
-    private MonoItemOrderServiceImpl monoItemOrderService;
+    private OrderCreateService orderCreateService;
     @Autowired
     private OrdersRepository ordersRepository;
 
@@ -45,7 +45,7 @@ class PortOneWebhookServiceImplTest {
     }
 
     void test_confirmCardPayment_multiThread() throws InterruptedException {
-        PreregisterOrderResponseDto dto = monoItemOrderService.preregisterCardPaymentOrders(AUTH_ID,
+        PreregisterOrderResponseDto dto = orderCreateService.preregisterCardPaymentOrders(AUTH_ID,
                 PreregisterOrderRequestDto.forTestCard(
                         LIBERTY, List.of(OPTION_1, OPTION_2, OPTION_3), 2, List.of(),
                         "receiverName", "receiverEmail", "receiverPhoneNumber", "address1", "address2", "zipCode"),
@@ -63,7 +63,7 @@ class PortOneWebhookServiceImplTest {
         });
         executorService.submit(() -> {
             System.out.println("S2");
-            monoItemOrderService.confirmFinalApprovalOfCardPayment(AUTH_ID, orderId);
+            orderCreateService.confirmFinalApprovalOfCardPayment(AUTH_ID, orderId);
             cl.countDown();
         });
         cl.await();

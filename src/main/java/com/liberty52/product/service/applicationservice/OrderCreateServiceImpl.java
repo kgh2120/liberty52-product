@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
-public class MonoItemOrderServiceImpl implements MonoItemOrderService {
+public class OrderCreateServiceImpl implements OrderCreateService {
 
     private static final String RESOURCE_NAME_PRODUCT = "Product";
     private static final String PARAM_NAME_PRODUCT_NAME = "name";
@@ -139,7 +139,6 @@ public class MonoItemOrderServiceImpl implements MonoItemOrderService {
     @Override
     public VBankInfoListResponseDto getVBankInfoList() {
         List<VBank> vbanks = vBankRepository.findAll();
-
         return VBankInfoListResponseDto.of(
             vbanks.stream().map(vBank -> VBankInfoListResponseDto.VBankInfoDto.of(vBank.getAccount())).toList()
         );
@@ -168,10 +167,7 @@ public class MonoItemOrderServiceImpl implements MonoItemOrderService {
         Orders order = ordersRepository.save(Orders.create(authId, orderDestination)); // OrderDestination will be saved by cascading
 
         // Upload Image
-        String imgUrl = "";
-        if (imageFile != null) {
-            imgUrl = s3Uploader.upload(imageFile);
-        }
+        String imgUrl = s3Uploader.upload(imageFile);
 
         // Save CustomProduct
         CustomProduct customProduct = CustomProduct.create(imgUrl, dto.getProductDto().getQuantity(), authId);

@@ -2,7 +2,7 @@ package com.liberty52.product.service.entity;
 
 import com.liberty52.product.global.adapter.s3.S3UploaderApi;
 import com.liberty52.product.global.contants.PriceConstants;
-import com.liberty52.product.service.applicationservice.MonoItemOrderService;
+import com.liberty52.product.service.applicationservice.OrderCreateService;
 import com.liberty52.product.service.controller.dto.PreregisterOrderRequestDto;
 import com.liberty52.product.service.controller.dto.PreregisterOrderResponseDto;
 import com.liberty52.product.service.repository.OptionDetailRepository;
@@ -28,7 +28,7 @@ import java.util.UUID;
 class OrdersEntityTest {
 
     @Autowired
-    private MonoItemOrderService monoItemOrderService;
+    private OrderCreateService orderCreateService;
     @Autowired
     private OrdersRepository ordersRepository;
     @Autowired
@@ -58,7 +58,7 @@ class OrdersEntityTest {
                 "receiverName", "receiverEmail", "receiverPhoneNumber", "address1", "address2", "zipCode"
         );
 
-        PreregisterOrderResponseDto save = monoItemOrderService.preregisterCardPaymentOrders(authId, requestDto, imageFile);
+        PreregisterOrderResponseDto save = orderCreateService.preregisterCardPaymentOrders(authId, requestDto, imageFile);
         orderId = save.getMerchantId();
 
         Orders orders = ordersRepository.findById(orderId).get();

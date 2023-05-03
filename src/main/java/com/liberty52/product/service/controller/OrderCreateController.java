@@ -1,6 +1,6 @@
 package com.liberty52.product.service.controller;
 
-import com.liberty52.product.service.applicationservice.MonoItemOrderService;
+import com.liberty52.product.service.applicationservice.OrderCreateService;
 import com.liberty52.product.service.controller.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -11,8 +11,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
-public class MonoItemOrderController {
-    private final MonoItemOrderService monoItemOrderService;
+public class OrderCreateController {
+    private final OrderCreateService orderCreateService;
 
     @Deprecated
     @PostMapping("/orders/custom-products")
@@ -21,7 +21,7 @@ public class MonoItemOrderController {
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authId,
             @RequestPart("imageFile") MultipartFile imageFile,
             @RequestPart("dto") @Validated MonoItemOrderRequestDto dto) {
-        return monoItemOrderService.save(authId, imageFile, dto);
+        return orderCreateService.save(authId, imageFile, dto);
     }
 
     @PostMapping("/orders/payment/card/prepare")
@@ -31,7 +31,7 @@ public class MonoItemOrderController {
             @RequestPart("dto") @Validated PreregisterOrderRequestDto dto,
             @RequestPart("imageFile") MultipartFile imageFile
     ) {
-        return monoItemOrderService.preregisterCardPaymentOrders(authId, dto, imageFile);
+        return orderCreateService.preregisterCardPaymentOrders(authId, dto, imageFile);
     }
 
     @GetMapping("/orders/payment/card/confirm/{orderId}")
@@ -40,7 +40,7 @@ public class MonoItemOrderController {
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authId,
             @PathVariable("orderId") String orderId
     ) {
-        return monoItemOrderService.confirmFinalApprovalOfCardPayment(authId, orderId);
+        return orderCreateService.confirmFinalApprovalOfCardPayment(authId, orderId);
     }
 
     @PostMapping("/orders/payment/vbank")
@@ -50,13 +50,13 @@ public class MonoItemOrderController {
             @RequestPart("dto") @Validated PreregisterOrderRequestDto dto,
             @RequestPart("imageFile") MultipartFile imageFile
     ) {
-        return monoItemOrderService.registerVBankPaymentOrders(authId, dto, imageFile);
+        return orderCreateService.registerVBankPaymentOrders(authId, dto, imageFile);
     }
 
     @GetMapping("/orders/payment/vbank")
     @ResponseStatus(HttpStatus.OK)
     public VBankInfoListResponseDto getVBankInfoList() {
-        return monoItemOrderService.getVBankInfoList();
+        return orderCreateService.getVBankInfoList();
     }
 
 }
