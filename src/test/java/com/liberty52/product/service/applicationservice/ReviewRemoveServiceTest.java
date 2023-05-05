@@ -4,7 +4,9 @@ import com.liberty52.product.MockS3Test;
 import com.liberty52.product.global.config.DBInitConfig;
 import com.liberty52.product.global.exception.external.forbidden.NotYourReviewException;
 import com.liberty52.product.global.exception.external.notfound.ReviewNotFoundByIdException;
+import com.liberty52.product.service.entity.Reply;
 import com.liberty52.product.service.entity.Review;
+import com.liberty52.product.service.repository.ReplyRepository;
 import com.liberty52.product.service.repository.ReviewRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -31,13 +33,18 @@ public class ReviewRemoveServiceTest extends MockS3Test {
     @Autowired
     ApplicationEventPublisher eventPublisher;
 
+    @Autowired
+    ReplyRepository replyRepository;
+
     private Review review;
+    private Reply reply;
 
     String reviewerId;
 
     @BeforeEach
     void beforeEach() {
         review = DBInitConfig.DBInitService.getReview();
+        reply = review.getReplies().get(0);
     }
 
     @Test
@@ -51,7 +58,26 @@ public class ReviewRemoveServiceTest extends MockS3Test {
         reviewRemoveService.removeReview(review.getOrder().getAuthId(), review.getId());
         Review reviewAfter = reviewRepository.findById(review.getId()).orElse(null);
         Assertions.assertNull(reviewAfter);
+
+        System.out.println(reviewBefore.getReplies().size());
+        for(Reply reply : reviewBefore.getReplies()){
+            System.out.println(reply.getContent());
+        }
     }
+
+    @Test
+    void 리뷰답변삭제(){
+        Reply replyBefore = replyRepository.findById(reply.getId()).orElse(null);
+        Assertions.assertNotNull(replyBefore);
+
+        reviewRemoveService.removeReply("adminId", "ADMIN", reply.getId());
+        Review reviewAfter = reviewRepository.findById(review.getId()).orElse(null);
+        Reply replyAfter = replyRepository.findById(reply.getId()).orElse(null);
+        Assertions.assertNull(replyAfter);
+        Assertions.assertEquals(reviewAfter.getReplies().size(), 2);
+
+    }
+
 
     private String randomString() {
         return UUID.randomUUID().toString();

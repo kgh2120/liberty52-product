@@ -126,4 +126,8 @@ public class Review {
     public void removeImage(ReviewImage reviewImage) {
         this.reviewImages.remove(reviewImage);
     }
+
+    public void removeReply(Reply reply) {
+        replies.remove(reply);
+    }
 }

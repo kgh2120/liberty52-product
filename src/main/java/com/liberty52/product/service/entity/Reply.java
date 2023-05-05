@@ -47,4 +47,9 @@ public class Reply {
         reply.validContent();
         return reply;
     }
+
+    public void removeReview() {
+        review.removeReply(this);
+        review = null;
+    }
 }
