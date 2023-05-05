@@ -5,42 +5,23 @@ import com.liberty52.product.global.contants.PriceConstants;
 import com.liberty52.product.global.contants.ProductConstants;
 import com.liberty52.product.global.contants.VBankConstants;
 import com.liberty52.product.service.applicationservice.OrderCreateService;
-import com.liberty52.product.service.controller.dto.PreregisterOrderRequestDto.VbankDto;
-import com.liberty52.product.service.entity.Cart;
-import com.liberty52.product.service.entity.CustomProduct;
-import com.liberty52.product.service.entity.CustomProductOption;
-import com.liberty52.product.service.entity.OptionDetail;
-import com.liberty52.product.service.entity.OrderDestination;
-import com.liberty52.product.service.entity.Orders;
-import com.liberty52.product.service.entity.Product;
-import com.liberty52.product.service.entity.ProductOption;
-import com.liberty52.product.service.entity.ProductState;
-import com.liberty52.product.service.entity.Reply;
-import com.liberty52.product.service.entity.Review;
-import com.liberty52.product.service.entity.ReviewImage;
+import com.liberty52.product.service.entity.*;
 import com.liberty52.product.service.entity.payment.CardPayment;
 import com.liberty52.product.service.entity.payment.Payment;
 import com.liberty52.product.service.entity.payment.Payment.PaymentInfo;
 import com.liberty52.product.service.entity.payment.VBank;
 import com.liberty52.product.service.entity.payment.VBankPayment;
-import com.liberty52.product.service.repository.CartItemRepository;
-import com.liberty52.product.service.repository.CartRepository;
-import com.liberty52.product.service.repository.CustomProductOptionRepository;
-import com.liberty52.product.service.repository.OptionDetailRepository;
-import com.liberty52.product.service.repository.OrdersRepository;
-import com.liberty52.product.service.repository.ProductOptionRepository;
-import com.liberty52.product.service.repository.ProductRepository;
-import com.liberty52.product.service.repository.ReviewRepository;
-import com.liberty52.product.service.repository.VBankRepository;
+import com.liberty52.product.service.repository.*;
 import jakarta.annotation.PostConstruct;
-import java.lang.reflect.Field;
-import java.util.List;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.lang.reflect.Field;
+import java.util.List;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -177,8 +158,7 @@ public class DBInitConfig {
                         UUID.randomUUID().toString());
                 payment.associate(order);
                 payment.setInfo(CardPayment.CardPaymentInfo.of(info));
-                order.calcTotalAmountAndSet();
-                order.calcTotalQuantityAndSet();
+                order.calculateTotalValueAndSet();
 
                 // Add Review
                 Review review = Review.create(3, "good");
@@ -213,8 +193,7 @@ public class DBInitConfig {
                 Payment<? extends PaymentInfo> vbank = Payment.vbankOf();
                 vbank.setInfo(VBankPayment.VBankPaymentInfo.of("하나은행 1234123412341234 리버티","하나은행", "김테스터", "138-978554-10547",false));
                 vbank.associate(orderSub);
-                orderSub.calcTotalAmountAndSet();
-                orderSub.calcTotalQuantityAndSet();
+                orderSub.calculateTotalValueAndSet();
 
                 for (int i = 0; i < 10; i++) {
                     Orders guestOrder = Orders.create("GUEST-00"+i,
@@ -244,8 +223,7 @@ public class DBInitConfig {
 
                     reviewRepository.save(noPhotoReview);
 
-                    guestOrder.calcTotalAmountAndSet();
-                    guestOrder.calcTotalQuantityAndSet();
+                    guestOrder.calculateTotalValueAndSet();
                     ordersRepository.save(guestOrder);
                 }
 

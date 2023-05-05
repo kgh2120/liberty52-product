@@ -23,12 +23,12 @@ import lombok.extern.slf4j.Slf4j;
 public class Orders {
 
     @Id
-    private String id = UUID.randomUUID().toString();
+    private final String id = UUID.randomUUID().toString();
 
     @Column(updatable = false, nullable = false)
     private String authId;
 
-    private LocalDate orderDate = LocalDate.now();
+    private final LocalDate orderDate = LocalDate.now();
 
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
@@ -77,18 +77,28 @@ public class Orders {
         return new Orders(authId, orderDestination);
     }
 
-    public void associateWithCustomProduct(List<CustomProduct> customProducts){
-        customProducts.forEach(cp ->
-                cp.associateWithOrder(this));
-        this.customProducts = customProducts;
-    }
-
     void addCustomProduct(CustomProduct customProduct) {
         this.customProducts.add(customProduct);
     }
 
+    public void setPayment(Payment<?> payment) {
+        this.payment = payment;
+    }
 
-    public void calcTotalAmountAndSet() {
+    public void changeOrderStatusToOrdered() {
+        this.orderStatus = OrderStatus.ORDERED;
+    }
+
+    public void changeOrderStatusToWaitingDeposit() {
+        this.orderStatus = OrderStatus.WAITING_DEPOSIT;
+    }
+
+    public void calculateTotalValueAndSet() {
+        this.calcTotalAmountAndSet();
+        this.calcTotalQuantityAndSet();
+    }
+
+    private void calcTotalAmountAndSet() {
         AtomicLong totalAmount = new AtomicLong();
 
         this.customProducts.forEach(customProduct -> {
@@ -106,7 +116,7 @@ public class Orders {
         this.amount = totalAmount.get();
     }
 
-    public void calcTotalQuantityAndSet() {
+    private void calcTotalQuantityAndSet() {
         AtomicInteger quantity = new AtomicInteger();
 
         this.customProducts.forEach(customProduct -> quantity.getAndAdd(customProduct.getQuantity()));
@@ -114,16 +124,5 @@ public class Orders {
         this.totalQuantity = quantity.get();
     }
 
-    public void setPayment(Payment<?> payment) {
-        this.payment = payment;
-    }
-
-    public void changeOrderStatusToOrdered() {
-        this.orderStatus = OrderStatus.ORDERED;
-    }
-
-    public void changeOrderStatusToWaitingDeposit() {
-        this.orderStatus = OrderStatus.WAITING_DEPOSIT;
-    }
 
 }

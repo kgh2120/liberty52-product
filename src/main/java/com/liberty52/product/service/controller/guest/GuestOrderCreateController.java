@@ -3,8 +3,8 @@ package com.liberty52.product.service.controller.guest;
 import com.liberty52.product.service.applicationservice.OrderCreateService;
 import com.liberty52.product.service.controller.dto.PaymentConfirmResponseDto;
 import com.liberty52.product.service.controller.dto.PaymentVBankResponseDto;
-import com.liberty52.product.service.controller.dto.PreregisterOrderRequestDto;
-import com.liberty52.product.service.controller.dto.PreregisterOrderResponseDto;
+import com.liberty52.product.service.controller.dto.OrderCreateRequestDto;
+import com.liberty52.product.service.controller.dto.PaymentCardResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -20,12 +20,12 @@ public class GuestOrderCreateController {
 
     @PostMapping("/guest/orders/payment/card/prepare")
     @ResponseStatus(HttpStatus.CREATED)
-    public PreregisterOrderResponseDto preregisterCardPaymentOrdersByGuest(
+    public PaymentCardResponseDto preregisterCardPaymentOrdersByGuest(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String guestId,
-            @RequestPart("dto") @Validated PreregisterOrderRequestDto dto,
+            @RequestPart("dto") @Validated OrderCreateRequestDto dto,
             @RequestPart("imageFile") MultipartFile imageFile
     ) {
-        return orderCreateService.preregisterCardPaymentOrders(guestId, dto, imageFile);
+        return orderCreateService.createCardPaymentOrders(guestId, dto, imageFile);
     }
 
     @GetMapping("/guest/orders/payment/card/confirm/{orderId}")
@@ -41,10 +41,10 @@ public class GuestOrderCreateController {
     @ResponseStatus(HttpStatus.CREATED)
     public PaymentVBankResponseDto registerVBankPaymentOrdersByGuest(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String guestId,
-            @RequestPart("dto") @Validated PreregisterOrderRequestDto dto,
+            @RequestPart("dto") @Validated OrderCreateRequestDto dto,
             @RequestPart("imageFile") MultipartFile imageFile
     ) {
-        return orderCreateService.registerVBankPaymentOrders(guestId, dto, imageFile);
+        return orderCreateService.createVBankPaymentOrders(guestId, dto, imageFile);
     }
 
 }

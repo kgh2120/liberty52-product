@@ -11,29 +11,55 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class PreregisterOrderRequestDto {
+public class OrderCreateRequestDto {
 
     private PaymentProductDto productDto;
     private DestinationDto destinationDto;
     private VbankDto vbankDto;
+    /** For Cart orders */
+    private List<String> customProductIdList;
 
-    public static PreregisterOrderRequestDto forTestCard(
+    public static OrderCreateRequestDto forTestCard(
             String productName, List<String> options, int quantity, List<String> orderOptions,
             String receiverName, String receiverEmail, String receiverPhoneNumber, String address1, String address2, String zipCode) {
-        return new PreregisterOrderRequestDto(
+        return new OrderCreateRequestDto(
                 PaymentProductDto.forTest(productName, options, quantity, orderOptions),
                 DestinationDto.create(receiverName, receiverEmail, receiverPhoneNumber, address1, address2, zipCode),
-                null
+                null, null
         );
     }
-    public static PreregisterOrderRequestDto forTestVBank(
+    public static OrderCreateRequestDto forTestVBank(
             String productName, List<String> options, int quantity, List<String> orderOptions,
             String receiverName, String receiverEmail, String receiverPhoneNumber, String address1, String address2, String zipCode,
             String vBankInfo, String depositorName) {
-        return new PreregisterOrderRequestDto(
+        return new OrderCreateRequestDto(
                 PaymentProductDto.forTest(productName, options, quantity, orderOptions),
                 DestinationDto.create(receiverName, receiverEmail, receiverPhoneNumber, address1, address2, zipCode),
-                VbankDto.forTest(vBankInfo, depositorName, false)
+                VbankDto.forTest(vBankInfo, depositorName, false),
+                null
+        );
+    }
+
+    public static OrderCreateRequestDto forTestCardByCarts(
+            List<String> customProductIdList,
+            String receiverName, String receiverEmail, String receiverPhoneNumber, String address1, String address2, String zipCode) {
+        return new OrderCreateRequestDto(
+                null,
+                DestinationDto.create(receiverName, receiverEmail, receiverPhoneNumber, address1, address2, zipCode),
+                null,
+                customProductIdList
+        );
+    }
+
+    public static OrderCreateRequestDto forTestVBankByCarts(
+            List<String> customProductIdList,
+            String receiverName, String receiverEmail, String receiverPhoneNumber, String address1, String address2, String zipCode,
+            String vBankInfo, String depositorName) {
+        return new OrderCreateRequestDto(
+                null,
+                DestinationDto.create(receiverName, receiverEmail, receiverPhoneNumber, address1, address2, zipCode),
+                VbankDto.forTest(vBankInfo, depositorName, false),
+                customProductIdList
         );
     }
 
@@ -58,6 +84,7 @@ public class PreregisterOrderRequestDto {
         private String receiverName;
         @NotBlank
         private String receiverEmail;
+        @NotBlank
         private String receiverPhoneNumber;
         @NotBlank
         private String address1;
@@ -66,15 +93,17 @@ public class PreregisterOrderRequestDto {
         @NotBlank
         private String zipCode;
 
-        public static PreregisterOrderRequestDto.DestinationDto create(String receiverName, String receiverEmail, String receiverPhoneNumber, String address1, String address2, String zipCode) {
-            return new PreregisterOrderRequestDto.DestinationDto(receiverName, receiverEmail, receiverPhoneNumber, address1, address2, zipCode);
+        public static OrderCreateRequestDto.DestinationDto create(String receiverName, String receiverEmail, String receiverPhoneNumber, String address1, String address2, String zipCode) {
+            return new OrderCreateRequestDto.DestinationDto(receiverName, receiverEmail, receiverPhoneNumber, address1, address2, zipCode);
         }
     }
 
     @Getter
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     public static class VbankDto {
+        @NotBlank
         private String vbankInfo;
+        @NotBlank
         private String depositorName;
         private Boolean isApplyCashReceipt;
 

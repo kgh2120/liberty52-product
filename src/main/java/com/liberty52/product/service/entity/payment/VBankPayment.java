@@ -1,7 +1,7 @@
 package com.liberty52.product.service.entity.payment;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.liberty52.product.service.controller.dto.PreregisterOrderRequestDto;
+import com.liberty52.product.service.controller.dto.OrderCreateRequestDto;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.*;
@@ -65,7 +65,7 @@ public class VBankPayment extends Payment<VBankPayment.VBankPaymentInfo> {
             return new VBankPaymentInfo(vBankInfo, depositorBank, depositorName, depositorAccount, isApplyCashReceipt, LocalDateTime.now());
         }
 
-        public static VBankPaymentInfo ofWaitingDeposit(PreregisterOrderRequestDto.VbankDto dto) {
+        public static VBankPaymentInfo ofWaitingDeposit(OrderCreateRequestDto.VbankDto dto) {
             VBankPaymentInfo info = new VBankPaymentInfo();
             info.vbankInfo = dto.getVbankInfo();
             info.depositorName = dto.getDepositorName();

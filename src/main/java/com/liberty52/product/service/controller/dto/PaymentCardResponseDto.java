@@ -8,13 +8,13 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class PreregisterOrderResponseDto {
+public class PaymentCardResponseDto {
 
     private String merchantId;
     private Long amount;
 
-    public static PreregisterOrderResponseDto of(String merchantId, Long amount) {
-        return new PreregisterOrderResponseDto(merchantId, amount);
+    public static PaymentCardResponseDto of(String merchantId, Long amount) {
+        return new PaymentCardResponseDto(merchantId, amount);
     }
 
 }

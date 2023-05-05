@@ -1,10 +1,9 @@
 package com.liberty52.product.service.applicationservice;
 
 import com.liberty52.product.MockS3Test;
-import com.liberty52.product.global.config.DBInitConfig;
+import com.liberty52.product.service.controller.dto.OrderCreateRequestDto;
+import com.liberty52.product.service.controller.dto.PaymentCardResponseDto;
 import com.liberty52.product.service.controller.dto.PaymentVBankResponseDto;
-import com.liberty52.product.service.controller.dto.PreregisterOrderRequestDto;
-import com.liberty52.product.service.controller.dto.PreregisterOrderResponseDto;
 import com.liberty52.product.service.entity.OrderStatus;
 import com.liberty52.product.service.entity.Orders;
 import com.liberty52.product.service.entity.payment.PaymentStatus;
@@ -56,8 +55,8 @@ class OrderCreateServiceImplTest extends MockS3Test {
 
     @Test
     void test_preregisterCardPaymentOrders() {
-        PreregisterOrderResponseDto dto = orderCreateService.preregisterCardPaymentOrders(authId,
-                PreregisterOrderRequestDto.forTestCard(
+        PaymentCardResponseDto dto = orderCreateService.createCardPaymentOrders(authId,
+                OrderCreateRequestDto.forTestCard(
                         LIBERTY, List.of(OPTION_1, OPTION_2, OPTION_3), 2, List.of(),
                         "receiverName", "receiverEmail", "receiverPhoneNumber", "address1", "address2", "zipCode"),
                         imageFile);
@@ -88,20 +87,13 @@ class OrderCreateServiceImplTest extends MockS3Test {
     }
 
     @Test
-    public void calcTotalPrice() {
-        Orders order = DBInitConfig.DBInitService.getOrder();
-        order.calcTotalAmountAndSet();
-        System.out.println(order.getAmount());
-    }
-
-    @Test
     void test_registerVBankPaymentOrders() {
-        PreregisterOrderRequestDto requestDto = PreregisterOrderRequestDto.forTestVBank(
+        OrderCreateRequestDto requestDto = OrderCreateRequestDto.forTestVBank(
                 LIBERTY, List.of(OPTION_1, OPTION_2, OPTION_3), QUANTITY, List.of(),
                 "receiverName", "receiverEmail", "receiverPhoneNumber", "address1", "address2", "zipCode",
                 "하나은행 1234123412341234 리버티", "tester"
         );
-        PaymentVBankResponseDto responseDto = orderCreateService.registerVBankPaymentOrders("AUTH_ID", requestDto, imageFile);
+        PaymentVBankResponseDto responseDto = orderCreateService.createVBankPaymentOrders("AUTH_ID", requestDto, imageFile);
 
         String orderId = responseDto.getOrderId();
 

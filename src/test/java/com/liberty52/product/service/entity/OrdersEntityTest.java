@@ -3,8 +3,8 @@ package com.liberty52.product.service.entity;
 import com.liberty52.product.global.adapter.s3.S3UploaderApi;
 import com.liberty52.product.global.contants.PriceConstants;
 import com.liberty52.product.service.applicationservice.OrderCreateService;
-import com.liberty52.product.service.controller.dto.PreregisterOrderRequestDto;
-import com.liberty52.product.service.controller.dto.PreregisterOrderResponseDto;
+import com.liberty52.product.service.controller.dto.OrderCreateRequestDto;
+import com.liberty52.product.service.controller.dto.PaymentCardResponseDto;
 import com.liberty52.product.service.repository.OptionDetailRepository;
 import com.liberty52.product.service.repository.OrdersRepository;
 import com.liberty52.product.service.repository.ProductRepository;
@@ -53,18 +53,18 @@ class OrdersEntityTest {
 
     @Test
     void test_getTotalAmount() {
-        PreregisterOrderRequestDto requestDto = PreregisterOrderRequestDto.forTestCard(
+        OrderCreateRequestDto requestDto = OrderCreateRequestDto.forTestCard(
                 LIBERTY, List.of(OPTION_1, OPTION_2, OPTION_3), QUANTITY, List.of(),
                 "receiverName", "receiverEmail", "receiverPhoneNumber", "address1", "address2", "zipCode"
         );
 
-        PreregisterOrderResponseDto save = orderCreateService.preregisterCardPaymentOrders(authId, requestDto, imageFile);
+        PaymentCardResponseDto save = orderCreateService.createCardPaymentOrders(authId, requestDto, imageFile);
         orderId = save.getMerchantId();
 
         Orders orders = ordersRepository.findById(orderId).get();
 
         long expected = getExpectedPrice();
-        orders.calcTotalAmountAndSet();
+        orders.calculateTotalValueAndSet();
         long actual = orders.getAmount();
         Assertions.assertNotNull(orders);
         Assertions.assertEquals(expected, actual);
