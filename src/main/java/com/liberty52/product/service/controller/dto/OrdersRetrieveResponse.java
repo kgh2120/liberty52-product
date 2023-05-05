@@ -3,9 +3,9 @@ package com.liberty52.product.service.controller.dto;
 import static com.liberty52.product.global.contants.RepresentImageUrl.LIBERTY52_FRAME_REPRESENTATIVE_URL;
 
 import com.liberty52.product.service.entity.Orders;
-import com.querydsl.core.annotations.QueryProjection;
+import com.liberty52.product.service.entity.payment.Payment;
+import com.liberty52.product.service.entity.payment.Payment.PaymentInfo;
 import java.util.List;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -21,6 +21,11 @@ public class OrdersRetrieveResponse {
     private String receiverEmail;
     private String receiverPhoneNumber;
     private String productRepresentUrl;
+    private String orderNum;
+    private String paymentType;
+    private PaymentInfo paymentInfo;
+
+
     private List<OrderRetrieveProductResponse> products;
 
 
@@ -33,6 +38,10 @@ public class OrdersRetrieveResponse {
         this.receiverEmail = orders.getOrderDestination().getReceiverEmail();
         this.receiverPhoneNumber = orders.getOrderDestination().getReceiverPhoneNumber();
         this.productRepresentUrl = LIBERTY52_FRAME_REPRESENTATIVE_URL;
+        this.orderNum = orders.getOrderNum();
+        Payment payment = orders.getPayment();
+        this.paymentType = payment.getType().getKorName();
+        this.paymentInfo = payment.getInfoAsDto();
         this.products = orders.getCustomProducts().stream().map(c ->
                 new OrderRetrieveProductResponse(c.getProduct().getName(), c.getQuantity(),
                         c.getProduct().getPrice() + c.getOptions()

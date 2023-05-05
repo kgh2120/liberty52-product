@@ -6,8 +6,10 @@ import static com.liberty52.product.service.entity.QOptionDetail.optionDetail;
 import static com.liberty52.product.service.entity.QOrderDestination.orderDestination;
 import static com.liberty52.product.service.entity.QOrders.orders;
 import static com.liberty52.product.service.entity.QProduct.product;
+import static com.liberty52.product.service.entity.payment.QPayment.*;
 
 import com.liberty52.product.service.entity.Orders;
+import com.liberty52.product.service.entity.payment.QPayment;
 import com.querydsl.jpa.JPQLTemplates;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -38,12 +40,13 @@ public class OrderQueryDslRepositoryImpl implements OrderQueryDslRepository {
 
         return queryFactory
                 .selectFrom(orders)
-                .join(orderDestination).on(orderDestination.orders.id.eq(orders.id))
-                .join(customProduct).on(customProduct.orders.id.eq(orders.id))
-                .join(product).on(customProduct.product.id.eq(product.id))
-                .join(customProductOption).on(customProductOption.customProduct.id.eq(
-                        customProduct.id))
-                .join(optionDetail).on(customProductOption.optionDetail.id.eq(optionDetail.id))
+                .leftJoin(orderDestination).on(orders.orderDestination.eq(orderDestination)).fetchJoin()
+                .leftJoin(customProduct).on(customProduct.orders.eq(orders)).fetchJoin()
+                .leftJoin(product).on(customProduct.product.eq(product)).fetchJoin()
+                .leftJoin(customProductOption).on(customProductOption.customProduct.eq(
+                        customProduct)).fetchJoin()
+                .leftJoin(optionDetail).on(customProductOption.optionDetail.eq(optionDetail))
+                .leftJoin(payment).on(payment.orders.eq(orders)).fetchJoin()
                 .where(orders.authId.eq(authId))
                 .orderBy(orders.orderDate.desc())
                 .fetch();
@@ -56,12 +59,13 @@ public class OrderQueryDslRepositoryImpl implements OrderQueryDslRepository {
 
        return Optional.ofNullable(queryFactory
                .selectFrom(orders)
-               .join(orderDestination).on(orderDestination.orders.id.eq(orders.id)).fetchJoin()
-               .join(customProduct).on(customProduct.orders.id.eq(orders.id)).fetchJoin()
-               .join(product).on(customProduct.product.id.eq(product.id)).fetchJoin()
-               .join(customProductOption).on(customProductOption.customProduct.id.eq(
-                       customProduct.id)).fetchJoin()
-               .join(optionDetail).on(customProductOption.optionDetail.id.eq(optionDetail.id)).fetchJoin()
+               .leftJoin(orderDestination).on(orders.orderDestination.eq(orderDestination)).fetchJoin()
+               .leftJoin(customProduct).on(customProduct.orders.eq(orders)).fetchJoin()
+               .leftJoin(product).on(customProduct.product.eq(product)).fetchJoin()
+               .leftJoin(customProductOption).on(customProductOption.customProduct.eq(
+                       customProduct)).fetchJoin()
+               .leftJoin(optionDetail).on(customProductOption.optionDetail.eq(optionDetail))
+               .leftJoin(payment).on(payment.orders.eq(orders)).fetchJoin()
                .where(orders.authId.eq(authId).and(orders.id.eq(orderId)))
                .fetchOne());
     }

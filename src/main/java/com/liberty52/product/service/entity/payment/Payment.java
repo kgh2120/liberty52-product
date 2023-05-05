@@ -72,6 +72,6 @@ public abstract class Payment<T extends Payment.PaymentInfo> {
     public abstract <T extends PaymentInfo> T getInfoAsDto();
     public abstract String getInfoAsString();
 
-    protected static class PaymentInfo {}
+    public static class PaymentInfo {}
 
 }

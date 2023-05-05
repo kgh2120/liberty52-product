@@ -24,7 +24,7 @@ public class PortOnePaymentInfo {
         return new PortOnePaymentInfo(
                 "IMP_TEST", merchant_uid, "html5_inicis", "PG_TID_TEST", pName, amount,
                 "현대카드", "1234123412341234", 0,
-                0L, customer_uid
+                1683273600L, customer_uid
         );
     }
 }
