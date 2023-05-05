@@ -29,11 +29,4 @@ public class ReviewCreateController {
       @RequestPart(value = "images",required = false) List<MultipartFile> images) {
     reviewCreateService.createReview(reviewerId,dto,images);
   }
-
-  @PostMapping("/reviews/{reviewId}/replies")
-  @ResponseStatus(HttpStatus.CREATED)
-  public void replyCreate(@RequestHeader(HttpHeaders.AUTHORIZATION) String reviewerId,
-      @Validated @RequestBody ReplyCreateRequestDto dto, @PathVariable String reviewId) {
-    reviewCreateService.createReply(reviewerId,dto,reviewId);
-  }
 }

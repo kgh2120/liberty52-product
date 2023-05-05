@@ -1,8 +1,11 @@
 package com.liberty52.product.service.applicationservice;
 
+import static com.liberty52.product.global.contants.RoleConstants.ADMIN;
+
 import com.liberty52.product.global.adapter.s3.S3UploaderApi;
 import com.liberty52.product.global.exception.external.badrequest.BadRequestException;
 import com.liberty52.product.global.exception.external.badrequest.ReviewAlreadyExistByOrderException;
+import com.liberty52.product.global.exception.external.forbidden.InvalidRoleException;
 import com.liberty52.product.global.exception.external.forbidden.NotYourOrderException;
 import com.liberty52.product.global.exception.external.notfound.CustomProductNotFoundByIdException;
 import com.liberty52.product.global.exception.external.notfound.OrderNotFoundByIdException;
@@ -63,17 +66,6 @@ public class ReviewCreateServiceImpl implements ReviewCreateService {
     }
     reviewRepository.save(review);
   }
-
-
-  @Override
-  public void createReply(String reviewerId, ReplyCreateRequestDto dto, String reviewId) {
-    Review review = reviewRepository.findById(reviewId)
-        .orElseThrow(() -> new ResourceNotFoundException("Review", "ID", reviewId));
-    Reply reply = Reply.create(dto.getContent(), reviewerId);
-    reply.associate(review);
-  }
-
-
   private void addImage(List<MultipartFile> imageFiles, Review review) {
     if (imageFiles.size() > Review.IMAGES_MAX_COUNT)
       throw new BadRequestException(1 + " <= Size of images <= " + Review.IMAGES_MAX_COUNT);

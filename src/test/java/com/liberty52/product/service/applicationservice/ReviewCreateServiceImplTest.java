@@ -82,19 +82,4 @@ class ReviewCreateServiceImplTest extends MockS3Test {
     reviewRepository.save(review);
   }
 
-  @Test
-  @Order(2)
-  void createReply() {
-    createReview();
-    String content = "is very nice reply";
-    ReplyCreateRequestDto dto = ReplyCreateRequestDto.createForTest(content);
-
-    Review review = reviewRepository.findByOrder(order).get();
-    reviewCreateService.createReply(reviewerId, dto, review.getId());
-
-    Reply reply = Reply.create(content, reviewerId);
-    Assertions.assertEquals(content, reply.getContent());
-    Assertions.assertEquals(reviewerId, reply.getAuthId());
-  }
-
 }

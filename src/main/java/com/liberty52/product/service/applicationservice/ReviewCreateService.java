@@ -7,6 +7,4 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface ReviewCreateService {
   void createReview(String reviewerId,ReviewCreateRequestDto dto, List<MultipartFile> imageFile);
-
-  void createReply(String reviewerId, ReplyCreateRequestDto dto, String reviewId);
 }
