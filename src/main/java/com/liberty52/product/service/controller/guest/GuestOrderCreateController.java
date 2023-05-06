@@ -47,4 +47,22 @@ public class GuestOrderCreateController {
         return orderCreateService.createVBankPaymentOrders(guestId, dto, imageFile);
     }
 
+    @PostMapping("/guest/orders/payment/card/prepare/carts")
+    @ResponseStatus(HttpStatus.CREATED)
+    public PaymentCardResponseDto createCardPaymentOrdersByCarts(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String guestId,
+            @RequestBody @Validated OrderCreateRequestDto dto
+    ) {
+        return orderCreateService.createCardPaymentOrdersByCarts(guestId, dto);
+    }
+
+    @PostMapping("/guest/orders/payment/vbank/carts")
+    @ResponseStatus(HttpStatus.CREATED)
+    public PaymentVBankResponseDto createVBankPaymentOrdersByCarts(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String guestId,
+            @RequestBody @Validated OrderCreateRequestDto dto
+    ) {
+        return orderCreateService.createVBankPaymentOrdersByCarts(guestId, dto);
+    }
+
 }
