@@ -3,16 +3,15 @@ package com.liberty52.product.service.applicationservice;
 import com.liberty52.product.MockS3Test;
 import com.liberty52.product.global.config.DBInitConfig;
 import com.liberty52.product.global.exception.external.forbidden.NotYourReviewException;
+import com.liberty52.product.global.exception.external.forbidden.InvalidRoleException;
 import com.liberty52.product.global.exception.external.notfound.ReviewNotFoundByIdException;
 import com.liberty52.product.service.entity.Reply;
 import com.liberty52.product.service.entity.Review;
 import com.liberty52.product.service.repository.ReplyRepository;
 import com.liberty52.product.service.repository.ReviewRepository;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationEventPublisher;
@@ -63,6 +62,22 @@ public class ReviewRemoveServiceTest extends MockS3Test {
         for(Reply reply : reviewBefore.getReplies()){
             System.out.println(reply.getContent());
         }
+    }
+
+    @Test
+    void 고객리뷰삭제() {
+        Review reviewBefore = reviewRepository.findById(review.getId()).orElse(null);
+        Assertions.assertNotNull(reviewBefore);
+
+        String role = "ADMIN";
+
+        Assertions.assertThrows(InvalidRoleException.class, () -> reviewRemoveService.removeCustomerReview(randomString(), review.getId()));
+        Assertions.assertThrows(ReviewNotFoundByIdException.class, () -> reviewRemoveService.removeCustomerReview(role, randomString()));
+
+
+        reviewRemoveService.removeCustomerReview(role, review.getId());
+        Review reviewAfter = reviewRepository.findById(review.getId()).orElse(null);
+        Assertions.assertNull(reviewAfter);
     }
 
     @Test

@@ -15,8 +15,15 @@ public class ReviewRemoveController {
 
     @DeleteMapping("/reviews/{reviewId}")
     @ResponseStatus(HttpStatus.OK)
-    public void cartItemRemove(@RequestHeader(HttpHeaders.AUTHORIZATION) String reviewerId, @PathVariable String reviewId) {
+    public void removeReview(@RequestHeader(HttpHeaders.AUTHORIZATION) String reviewerId, @PathVariable String reviewId) {
         reviewItemRemoveService.removeReview(reviewerId, reviewId);
+    }
+
+    @DeleteMapping("/customerReviews/{reviewId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void removeCustomerReview(@RequestHeader(HttpHeaders.AUTHORIZATION) String adminId, @RequestHeader("X-Role") String role, @PathVariable String reviewId) {
+
+        reviewItemRemoveService.removeCustomerReview(role, reviewId);
     }
 
     @DeleteMapping("/reviews/replies/{replyId}")
