@@ -55,6 +55,7 @@ class ReplyCreateControllerTest {
     final String mockAdminRole = ADMIN;
     final String mockUserRole = "USER";
     final String mockReplyContent = "Hello world";
+    final String headerRole = "LB-Role";
     @Test
     void Craete_Reply_Success_Status_CRAETED () throws Exception{
         //given
@@ -62,7 +63,7 @@ class ReplyCreateControllerTest {
         //when
         mockMvc.perform(post(String.format(createReplyUrl,mockReviewId))
                 .header(HttpHeaders.AUTHORIZATION,mockAdminId)
-                .header("X-ROLE",mockAdminRole)
+                .header(headerRole,mockAdminRole)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(dto)))
         //then
@@ -88,7 +89,7 @@ class ReplyCreateControllerTest {
         //when
         mockMvc.perform(post(String.format(createReplyUrl,mockReviewId))
                         .header(HttpHeaders.AUTHORIZATION,mockAdminId)
-                        .header("X-ROLE",mockUserRole)
+                        .header(headerRole,mockUserRole)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(dto)))
                 //then
@@ -120,7 +121,7 @@ class ReplyCreateControllerTest {
         //when
         mockMvc.perform(post(String.format(createReplyUrl,mockReviewId))
                         .header(HttpHeaders.AUTHORIZATION,mockAdminId)
-                        .header("X-ROLE",mockAdminRole)
+                        .header(headerRole,mockAdminRole)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(dto)))
                 //then
