@@ -33,8 +33,8 @@ public class ReviewRetrieveController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/all-reviews")
-    public ResponseEntity<AdminReviewRetrieveResponse> retrieveReview(@RequestHeader("LB-ROLE") String role, Pageable pageable){
+    @GetMapping("/reviews")
+    public ResponseEntity<AdminReviewRetrieveResponse> retrieveReview(@RequestHeader("LB-Role") String role, Pageable pageable){
         AdminReviewRetrieveResponse response = reviewRetrieveService.retrieveReviews(role,pageable);
         return ResponseEntity.ok(response);
     }
