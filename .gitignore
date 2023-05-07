@@ -8,6 +8,7 @@ build/
 
 ### config profiles ###
 *-config.yml
+deploy.sh
 
 ### STS ###
 .apt_generated
