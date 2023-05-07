@@ -1,6 +1,7 @@
 package com.liberty52.product.service.entity.payment;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.liberty52.product.global.adapter.portone.dto.PortOnePaymentInfo;
 import com.liberty52.product.global.util.Utils;
@@ -56,11 +57,11 @@ public class CardPayment extends Payment<CardPayment.CardPaymentInfo> {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     public static class CardPaymentInfo extends PaymentInfo {
-        @JsonIgnore
+        @JsonIgnoreProperties(allowSetters = true)
         private String impUid;
-        @JsonIgnore
+        @JsonIgnoreProperties(allowSetters = true)
         private String pgProvider;
-        @JsonIgnore
+        @JsonIgnoreProperties(allowSetters = true)
         private String pgTid;
         private LocalDateTime paidAt;
         private String cardName;
