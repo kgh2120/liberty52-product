@@ -5,6 +5,7 @@ import static com.liberty52.product.service.entity.QReply.reply;
 import static com.liberty52.product.service.entity.QReview.review;
 import static com.liberty52.product.service.entity.QReviewImage.reviewImage;
 
+import com.liberty52.product.service.controller.dto.AdminReviewRetrieveResponse;
 import com.liberty52.product.service.controller.dto.ReviewRetrieveResponse;
 import com.liberty52.product.service.entity.Review;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -65,23 +66,49 @@ public class ReviewQueryDslRepositoryImpl implements ReviewQueryDslRepository {
 
     }
 
-    private List<Review> fetchReviews(String productId, Pageable pageable,boolean isPhotoFilter) {
-        return queryFactory.selectFrom(review).distinct()
-                .leftJoin(reply).on(reply.review.eq(review))
-                .leftJoin(reviewImage).on(reviewImage.review.eq(review))
-                .leftJoin(orders).on(review.order.eq(orders))
-                .where(review.product.id.eq(productId), photoFilter(isPhotoFilter))
-                .orderBy(review.createdAt.desc())
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
+    @Override
+    public AdminReviewRetrieveResponse retrieveAllReviews(Pageable pageable) {
+        List<Review> reviews = fetchReviews(pageable);
+        if(reviews.isEmpty())
+            return noReviewExistCase(reviews);
+        Map<String, Long> pageInfo = getPageInfo(pageable);
+        return new AdminReviewRetrieveResponse(reviews,
+            pageInfo.get(startPage),
+            pageInfo.get(currentPage),
+            pageInfo.get(lastPage),
+            pageInfo.get(totalLastPage));
     }
+
+    private List<Review> fetchReviews(String productId, Pageable pageable, Boolean isPhotoFilter) {
+        return queryFactory.selectFrom(review).distinct()
+            .leftJoin(reply).on(reply.review.eq(review))
+            .leftJoin(reviewImage).on(reviewImage.review.eq(review))
+            .leftJoin(orders).on(review.order.eq(orders))
+            .where(productIdFilter(productId), photoFilter(isPhotoFilter))
+            .orderBy(review.createdAt.desc())
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize())
+            .fetch();
+    }
+
+    private List<Review> fetchReviews(Pageable pageable) {
+        return fetchReviews(null, pageable, false);
+    }
+
+    private BooleanExpression productIdFilter(String productId) {
+        if (productId != null) {
+            return review.product.id.eq(productId);
+        }
+        return null;
+    }
+
     private Long getTotalCount(String productId) {
         return queryFactory.select(review.count())
                 .from(review)
-                .where(review.product.id.eq(productId))
+                .where(productIdFilter(productId))
                 .fetchOne();
     }
+
 
     private BooleanExpression photoFilter(boolean isPhotoFilter){
         if (!isPhotoFilter) {
@@ -108,9 +135,17 @@ public class ReviewQueryDslRepositoryImpl implements ReviewQueryDslRepository {
         return returnMap;
     }
 
+    private Map<String,Long> getPageInfo(Pageable pageable){
+        return getPageInfo(pageable,null);
+    }
+
     private ReviewRetrieveResponse noReviewExistCase(String authorId,
             List<Review> reviews) {
         return new ReviewRetrieveResponse(reviews, 0, 0, 0, 0,authorId);
+    }
+
+    private AdminReviewRetrieveResponse noReviewExistCase(List<Review> reviews) {
+        return new AdminReviewRetrieveResponse(reviews, 0, 0, 0, 0);
     }
 
 }

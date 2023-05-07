@@ -2,6 +2,7 @@ package com.liberty52.product.service.controller;
 
 
 import com.liberty52.product.service.applicationservice.ReviewRetrieveService;
+import com.liberty52.product.service.controller.dto.AdminReviewRetrieveResponse;
 import com.liberty52.product.service.controller.dto.ReviewRetrieveResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,4 +33,9 @@ public class ReviewRetrieveController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/all-reviews")
+    public ResponseEntity<AdminReviewRetrieveResponse> retrieveReview(@RequestHeader("LB-ROLE") String role, Pageable pageable){
+        AdminReviewRetrieveResponse response = reviewRetrieveService.retrieveReviews(role,pageable);
+        return ResponseEntity.ok(response);
+    }
 }
