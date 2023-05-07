@@ -43,6 +43,7 @@ out/
 ### secret
 
 /src/main/resources/bootstrap.yml
+/src/main/java/com/liberty52/product/global/config/CorsConfig.java
 
 # trash
 spy.log

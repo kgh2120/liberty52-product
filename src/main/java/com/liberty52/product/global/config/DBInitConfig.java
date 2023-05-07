@@ -130,10 +130,7 @@ public class DBInitConfig {
                 customProduct.associateWithCart(cart);
                 customProductRepository.save(customProduct);
 
-                CustomProductOption customProductOption = CustomProductOption.create();
-                customProductOption.associate(detailEasel);
-                customProductOption.associate(customProduct);
-                customProductOptionRepository.save(customProductOption);
+                associateCustomProductOption(detailEasel, material, materialOption2, customProduct);
 
                 // Add Order
                 Orders order = ordersRepository.save(
@@ -148,10 +145,7 @@ public class DBInitConfig {
                 customProduct.associateWithOrder(order);
                 customProductRepository.save(customProduct);
 
-                customProductOption = CustomProductOption.create();
-                customProductOption.associate(detailEasel);
-                customProductOption.associate(customProduct);
-                customProductOptionRepository.save(customProductOption);
+                associateCustomProductOption(detailEasel, material, materialOption2, customProduct);
                 Payment<?> payment = Payment.cardOf();
                 PortOnePaymentInfo info = PortOnePaymentInfo.testOf(
                         UUID.randomUUID().toString(), UUID.randomUUID().toString(), 100L,
@@ -186,10 +180,7 @@ public class DBInitConfig {
                 customProduct.associateWithOrder(orderSub);
                 customProductRepository.save(customProduct);
 
-                customProductOption = CustomProductOption.create();
-                customProductOption.associate(detailEasel);
-                customProductOption.associate(customProduct);
-                customProductOptionRepository.save(customProductOption);
+                associateCustomProductOption(detailEasel, material, materialOption2, customProduct);
                 Payment<? extends PaymentInfo> vbank = Payment.vbankOf();
                 vbank.setInfo(VBankPayment.VBankPaymentInfo.of("하나은행 1234123412341234 리버티","하나은행", "김테스터", "138-978554-10547",false));
                 vbank.associate(orderSub);
@@ -212,10 +203,7 @@ public class DBInitConfig {
                     customProduct.associateWithOrder(guestOrder);
                     customProductRepository.save(customProduct);
 
-                    customProductOption = CustomProductOption.create();
-                    customProductOption.associate(customProduct);
-                    customProductOption.associate(detailEasel);
-                    customProductOptionRepository.save(customProductOption);
+                    associateCustomProductOption(detailEasel, material, materialOption2, customProduct);
 
                     Review noPhotoReview = Review.create(3, "good");
                     noPhotoReview.associate(guestOrder);
@@ -239,6 +227,24 @@ public class DBInitConfig {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+
+        private void associateCustomProductOption(OptionDetail detailEasel, OptionDetail material,
+                OptionDetail materialOption2, CustomProduct customProduct) {
+            CustomProductOption customProductOption = CustomProductOption.create();
+            customProductOption.associate(detailEasel);
+            customProductOption.associate(customProduct);
+            customProductOptionRepository.save(customProductOption);
+
+            customProductOption = CustomProductOption.create();
+            customProductOption.associate(material);
+            customProductOption.associate(customProduct);
+            customProductOptionRepository.save(customProductOption);
+
+            customProductOption = CustomProductOption.create();
+            customProductOption.associate(materialOption2);
+            customProductOption.associate(customProduct);
+            customProductOptionRepository.save(customProductOption);
         }
 
         public static Orders getOrder() {
