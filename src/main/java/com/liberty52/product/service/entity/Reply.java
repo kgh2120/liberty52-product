@@ -52,4 +52,9 @@ public class Reply {
         review.removeReply(this);
         review = null;
     }
+
+    public void modify(String content) {
+        this.content = content;
+        validContent();
+    }
 }
