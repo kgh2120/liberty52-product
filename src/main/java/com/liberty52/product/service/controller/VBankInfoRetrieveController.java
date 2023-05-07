@@ -14,8 +14,7 @@ public class VBankInfoRetrieveController {
 
     private final VBankInfoRetrieveService vBankInfoRetrieveService;
 
-    // /vbanks
-    @GetMapping("/orders/payment/vbank")
+    @GetMapping("/vbanks")
     @ResponseStatus(HttpStatus.OK)
     public VBankInfoListResponseDto getVBankInfoList() {
         return vBankInfoRetrieveService.getVBankInfoList();

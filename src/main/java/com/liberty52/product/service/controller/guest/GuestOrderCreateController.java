@@ -18,7 +18,7 @@ public class GuestOrderCreateController {
 
     private final OrderCreateService orderCreateService;
 
-    @PostMapping("/guest/orders/payment/card/prepare")
+    @PostMapping("/guest/orders/card")
     @ResponseStatus(HttpStatus.CREATED)
     public PaymentCardResponseDto preregisterCardPaymentOrdersByGuest(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String guestId,
@@ -28,7 +28,7 @@ public class GuestOrderCreateController {
         return orderCreateService.createCardPaymentOrders(guestId, dto, imageFile);
     }
 
-    @GetMapping("/guest/orders/payment/card/confirm/{orderId}")
+    @GetMapping("/guest/orders/card/{orderId}/confirm")
     @ResponseStatus(HttpStatus.OK)
     public PaymentConfirmResponseDto confirmFinalApprovalOfCardPaymentByGuest(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String guestId,
@@ -37,7 +37,7 @@ public class GuestOrderCreateController {
         return orderCreateService.confirmFinalApprovalOfCardPayment(guestId, orderId);
     }
 
-    @PostMapping("/guest/orders/payment/vbank")
+    @PostMapping("/guest/orders/vbank")
     @ResponseStatus(HttpStatus.CREATED)
     public PaymentVBankResponseDto registerVBankPaymentOrdersByGuest(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String guestId,
@@ -47,7 +47,7 @@ public class GuestOrderCreateController {
         return orderCreateService.createVBankPaymentOrders(guestId, dto, imageFile);
     }
 
-    @PostMapping("/guest/orders/payment/card/prepare/carts")
+    @PostMapping("/guest/orders/card/carts")
     @ResponseStatus(HttpStatus.CREATED)
     public PaymentCardResponseDto createCardPaymentOrdersByCarts(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String guestId,
@@ -56,7 +56,7 @@ public class GuestOrderCreateController {
         return orderCreateService.createCardPaymentOrdersByCarts(guestId, dto);
     }
 
-    @PostMapping("/guest/orders/payment/vbank/carts")
+    @PostMapping("/guest/orders/vbank/carts")
     @ResponseStatus(HttpStatus.CREATED)
     public PaymentVBankResponseDto createVBankPaymentOrdersByCarts(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String guestId,

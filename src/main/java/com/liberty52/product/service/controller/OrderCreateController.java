@@ -24,8 +24,7 @@ public class OrderCreateController {
         return orderCreateService.save(authId, imageFile, dto);
     }
 
-    // /orders/card
-    @PostMapping("/orders/payment/card/prepare")
+    @PostMapping("/orders/card")
     @ResponseStatus(HttpStatus.CREATED)
     public PaymentCardResponseDto createCardPaymentOrders(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authId,
@@ -35,8 +34,7 @@ public class OrderCreateController {
         return orderCreateService.createCardPaymentOrders(authId, dto, imageFile);
     }
 
-    // orders/card/{orderId}/confirm
-    @GetMapping("/orders/payment/card/confirm/{orderId}")
+    @GetMapping("/orders/card/{orderId}/confirm")
     @ResponseStatus(HttpStatus.OK)
     public PaymentConfirmResponseDto confirmFinalApprovalOfCardPayment(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authId,
@@ -45,8 +43,7 @@ public class OrderCreateController {
         return orderCreateService.confirmFinalApprovalOfCardPayment(authId, orderId);
     }
 
-    // /orders/vbank
-    @PostMapping("/orders/payment/vbank")
+    @PostMapping("/orders/vbank")
     @ResponseStatus(HttpStatus.CREATED)
     public PaymentVBankResponseDto createVBankPaymentOrders(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authId,
@@ -56,8 +53,7 @@ public class OrderCreateController {
         return orderCreateService.createVBankPaymentOrders(authId, dto, imageFile);
     }
 
-    // /orders/card/carts
-    @PostMapping("/orders/payment/card/prepare/carts")
+    @PostMapping("/orders/card/carts")
     @ResponseStatus(HttpStatus.CREATED)
     public PaymentCardResponseDto createCardPaymentOrdersByCarts(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authId,
@@ -66,8 +62,7 @@ public class OrderCreateController {
         return orderCreateService.createCardPaymentOrdersByCarts(authId, dto);
     }
 
-    // /orders/vbank/carts
-    @PostMapping("/orders/payment/vbank/carts")
+    @PostMapping("/orders/vbank/carts")
     @ResponseStatus(HttpStatus.CREATED)
     public PaymentVBankResponseDto createVBankPaymentOrdersByCarts(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authId,
