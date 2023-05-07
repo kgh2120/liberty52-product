@@ -28,7 +28,7 @@ public class ReviewRemoveController {
 
     @DeleteMapping("/reviews/replies/{replyId}")
     @ResponseStatus(HttpStatus.OK)
-    public void replyRemove(@RequestHeader(HttpHeaders.AUTHORIZATION) String reviewerId, @RequestHeader("LB-Role") String role, @PathVariable String replyId) {
-        reviewItemRemoveService.removeReply(reviewerId, role ,replyId);
+    public void replyRemove(@RequestHeader(HttpHeaders.AUTHORIZATION) String adminId, @RequestHeader("LB-Role") String role, @PathVariable String replyId) {
+        reviewItemRemoveService.removeReply(adminId, role ,replyId);
     }
 }

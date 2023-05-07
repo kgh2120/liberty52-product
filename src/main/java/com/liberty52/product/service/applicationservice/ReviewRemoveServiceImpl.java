@@ -59,7 +59,7 @@ public class ReviewRemoveServiceImpl implements ReviewRemoveService {
     }
 
     @Override
-    public void removeReply(String reviewerId, String role, String replyId) {
+    public void removeReply(String adminId, String role, String replyId) {
         if(!role.equals("ADMIN")){
             throw new InvalidRoleException(role);
         }
