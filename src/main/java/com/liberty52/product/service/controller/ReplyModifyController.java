@@ -18,7 +18,7 @@ public class ReplyModifyController {
     private final ReplyModifyService replyModifyService;
 
     @PutMapping("/reviews/{reviewId}/replies/{replyId}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void replyModify(@RequestHeader(HttpHeaders.AUTHORIZATION) String adminId,
                             @RequestHeader("LB-Role") String role,
                             @Validated @RequestBody ReplyModifyRequestDto dto,
