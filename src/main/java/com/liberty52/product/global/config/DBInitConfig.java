@@ -196,7 +196,12 @@ public class DBInitConfig {
                     guestOrderId.setAccessible(true);
                     guestOrderId.set(guestOrder, "GORDER-00"+i);
                     ordersRepository.save(guestOrder);
-                    Payment.cardOf().associate(guestOrder);
+                    Payment<? extends PaymentInfo> guestPayment = Payment.cardOf();
+                    PortOnePaymentInfo cardInfo = PortOnePaymentInfo.testOf(
+                            UUID.randomUUID().toString(), UUID.randomUUID().toString(), 100L,
+                            UUID.randomUUID().toString());
+                    guestPayment.associate(guestOrder);
+                    guestPayment.setInfo(CardPayment.CardPaymentInfo.of(cardInfo));
 
                     customProduct = CustomProduct.create(imageUrl, 1, "GUEST-00"+i);
                     customProduct.associateWithProduct(product);

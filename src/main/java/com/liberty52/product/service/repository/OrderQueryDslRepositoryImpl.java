@@ -8,6 +8,7 @@ import static com.liberty52.product.service.entity.QOrders.orders;
 import static com.liberty52.product.service.entity.QProduct.product;
 import static com.liberty52.product.service.entity.payment.QPayment.*;
 
+import com.liberty52.product.service.entity.OrderStatus;
 import com.liberty52.product.service.entity.Orders;
 import com.liberty52.product.service.entity.payment.QPayment;
 import com.querydsl.jpa.JPQLTemplates;
@@ -47,7 +48,7 @@ public class OrderQueryDslRepositoryImpl implements OrderQueryDslRepository {
                         customProduct)).fetchJoin()
                 .leftJoin(optionDetail).on(customProductOption.optionDetail.eq(optionDetail))
                 .leftJoin(payment).on(payment.orders.eq(orders)).fetchJoin()
-                .where(orders.authId.eq(authId))
+                .where(orders.authId.eq(authId).and(orders.orderStatus.ne(OrderStatus.READY)))
                 .orderBy(orders.orderDate.desc())
                 .fetch();
 
@@ -66,7 +67,7 @@ public class OrderQueryDslRepositoryImpl implements OrderQueryDslRepository {
                        customProduct)).fetchJoin()
                .leftJoin(optionDetail).on(customProductOption.optionDetail.eq(optionDetail))
                .leftJoin(payment).on(payment.orders.eq(orders)).fetchJoin()
-               .where(orders.authId.eq(authId).and(orders.id.eq(orderId)))
+               .where(orders.authId.eq(authId).and(orders.id.eq(orderId)).and(orders.orderStatus.ne(OrderStatus.READY)))
                .fetchOne());
     }
 
