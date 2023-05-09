@@ -92,6 +92,20 @@ public class OrderCreateServiceImpl implements OrderCreateService {
         return PaymentVBankResponseDto.of(order.getId());
     }
 
+    @Override
+    public PaymentCardResponseDto createCardPaymentOrdersByCartsForGuest(String authId, OrderCreateRequestDto dto) {
+        Orders order = this.saveOrderByCartsForGuest(authId, dto);
+        this.saveCardPayment(order);
+        return PaymentCardResponseDto.of(order.getId(), order.getAmount());
+    }
+
+    @Override
+    public PaymentVBankResponseDto createVBankPaymentOrdersByCartsForGuest(String authId, OrderCreateRequestDto dto) {
+        Orders order = this.saveOrderByCartsForGuest(authId, dto);
+        this.saveVBankPayment(dto, order);
+        return PaymentVBankResponseDto.of(order.getId());
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /* private method area */
     private Orders saveOrder(String authId, OrderCreateRequestDto dto, MultipartFile imageFile) {
@@ -117,6 +131,19 @@ public class OrderCreateServiceImpl implements OrderCreateService {
 
         OrderDestination orderDestination = this.createOrderDestination(dto);
         Orders order = ordersRepository.save(Orders.create(authId, orderDestination)); // OrderDestination will be saved by cascading
+
+        customProducts.forEach(customProduct -> customProduct.associateWithOrder(order));
+
+        order.calculateTotalValueAndSet();
+
+        return order;
+    }
+
+    private Orders saveOrderByCartsForGuest(String authId, OrderCreateRequestDto dto) {
+        List<CustomProduct> customProducts = this.getCustomProducts(authId, dto);
+
+        OrderDestination orderDestination = this.createOrderDestination(dto);
+        Orders order = ordersRepository.save(Orders.create(orderDestination.getReceiverPhoneNumber(), orderDestination));
 
         customProducts.forEach(customProduct -> customProduct.associateWithOrder(order));
 

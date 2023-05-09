@@ -130,6 +130,77 @@ public class OrderCreateServiceByCartsTest extends MockS3Test {
         Assertions.assertEquals("tester", ((VBankPayment.VBankPaymentInfo)(order.getPayment().getInfoAsDto())).getDepositorName());
     }
 
+    @Test
+    void test_createOrdersByCartForGuest() {
+        final String receiverPhoneNum = "01012341234";
+        List<String> customProductIdList = cartItemRetriveService.retriveAuthCartItem(aid).stream()
+                .map(CartItemResponse::getId).toList();
+
+        PaymentCardResponseDto orderResponseDto = orderCreateService.createCardPaymentOrdersByCartsForGuest(
+                aid,
+                OrderCreateRequestDto.forTestCardByCarts(customProductIdList, "receiverName", "receiverEmail", receiverPhoneNum, "address1", "address2", "zipCode")
+        );
+        String orderId = orderResponseDto.getMerchantId();
+        Orders order = ordersRepository.findById(orderId).get();
+
+        Assertions.assertEquals(receiverPhoneNum, order.getAuthId());
+        Assertions.assertEquals(3, order.getCustomProducts().size());
+        Assertions.assertEquals(6, order.getTotalQuantity());
+        Assertions.assertEquals("receiverName", order.getOrderDestination().getReceiverName());
+        Assertions.assertEquals("receiverEmail", order.getOrderDestination().getReceiverEmail());
+        Assertions.assertEquals(receiverPhoneNum, order.getOrderDestination().getReceiverPhoneNumber());
+        Assertions.assertEquals("address1", order.getOrderDestination().getAddress1());
+        Assertions.assertEquals("address2", order.getOrderDestination().getAddress2());
+        Assertions.assertEquals("zipCode", order.getOrderDestination().getZipCode());
+
+        Assertions.assertEquals(OrderStatus.READY, order.getOrderStatus());
+        Assertions.assertNotEquals(0, order.getAmount());
+
+        Assertions.assertEquals(PaymentType.CARD, order.getPayment().getType());
+        Assertions.assertEquals(PaymentStatus.READY, order.getPayment().getStatus());
+        Assertions.assertSame(order, order.getPayment().getOrders());
+        Assertions.assertTrue(order.getPayment().getInfoAsString().isBlank());
+    }
+
+    @Test
+    void test_test_createOrdersByVBankForGuest() {
+        final String receiverPhoneNum = "01012341234";
+        List<String> customProductIdList = cartItemRetriveService.retriveAuthCartItem(aid).stream()
+                .map(CartItemResponse::getId).toList();
+
+        PaymentVBankResponseDto orderResponseDto = orderCreateService.createVBankPaymentOrdersByCartsForGuest(
+                aid,
+                OrderCreateRequestDto.forTestVBankByCarts(
+                        customProductIdList,
+                        "receiverName", "receiverEmail", receiverPhoneNum, "address1", "address2", "zipCode",
+                        "하나은행 1234123412341234 리버티", "tester"
+                )
+        );
+
+        String orderId = orderResponseDto.getOrderId();
+        Orders order = ordersRepository.findById(orderId).get();
+
+        Assertions.assertNotNull(order);
+        Assertions.assertEquals(receiverPhoneNum, order.getAuthId());
+        Assertions.assertEquals(3, order.getCustomProducts().size());
+        Assertions.assertEquals(6, order.getTotalQuantity());
+        Assertions.assertEquals("receiverName", order.getOrderDestination().getReceiverName());
+        Assertions.assertEquals("receiverEmail", order.getOrderDestination().getReceiverEmail());
+        Assertions.assertEquals(receiverPhoneNum, order.getOrderDestination().getReceiverPhoneNumber());
+        Assertions.assertEquals("address1", order.getOrderDestination().getAddress1());
+        Assertions.assertEquals("address2", order.getOrderDestination().getAddress2());
+        Assertions.assertEquals("zipCode", order.getOrderDestination().getZipCode());
+
+        Assertions.assertEquals(OrderStatus.WAITING_DEPOSIT, order.getOrderStatus());
+        Assertions.assertNotEquals(0, order.getAmount());
+
+        Assertions.assertEquals(PaymentType.VBANK, order.getPayment().getType());
+        Assertions.assertEquals(PaymentStatus.READY, order.getPayment().getStatus());
+        Assertions.assertNotEquals("", order.getPayment().getInfoAsString());
+        Assertions.assertEquals("하나은행 1234123412341234 리버티", ((VBankPayment.VBankPaymentInfo)(order.getPayment().getInfoAsDto())).getVbankInfo());
+        Assertions.assertEquals("tester", ((VBankPayment.VBankPaymentInfo)(order.getPayment().getInfoAsDto())).getDepositorName());
+
+    }
 
     @BeforeEach
     void initCarts() {

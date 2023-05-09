@@ -53,7 +53,7 @@ public class GuestOrderCreateController {
             @RequestHeader(HttpHeaders.AUTHORIZATION) String guestId,
             @RequestBody @Validated OrderCreateRequestDto dto
     ) {
-        return orderCreateService.createCardPaymentOrdersByCarts(guestId, dto);
+        return orderCreateService.createCardPaymentOrdersByCartsForGuest(guestId, dto);
     }
 
     @PostMapping("/guest/orders/vbank/carts")
@@ -62,7 +62,7 @@ public class GuestOrderCreateController {
             @RequestHeader(HttpHeaders.AUTHORIZATION) String guestId,
             @RequestBody @Validated OrderCreateRequestDto dto
     ) {
-        return orderCreateService.createVBankPaymentOrdersByCarts(guestId, dto);
+        return orderCreateService.createVBankPaymentOrdersByCartsForGuest(guestId, dto);
     }
 
 }
