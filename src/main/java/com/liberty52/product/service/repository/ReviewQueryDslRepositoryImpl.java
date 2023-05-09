@@ -45,7 +45,7 @@ public class ReviewQueryDslRepositoryImpl implements ReviewQueryDslRepository {
         if(reviews.isEmpty())
             return noReviewExistCase(authorId, reviews);
 
-        Map<String, Long> pageInfo = getPageInfo(pageable, productId);
+        Map<String, Long> pageInfo = getPageInfo(pageable, productId,isPhotoFilter);
 
         return new ReviewRetrieveResponse(reviews,
                 pageInfo.get(startPage),
@@ -102,10 +102,10 @@ public class ReviewQueryDslRepositoryImpl implements ReviewQueryDslRepository {
         return null;
     }
 
-    private Long getTotalCount(String productId) {
+    private Long getTotalCount(String productId,boolean isPhotoFilter) {
         return queryFactory.select(review.count())
                 .from(review)
-                .where(productIdFilter(productId))
+                .where(productIdFilter(productId), photoFilter(isPhotoFilter))
                 .fetchOne();
     }
 
@@ -119,10 +119,10 @@ public class ReviewQueryDslRepositoryImpl implements ReviewQueryDslRepository {
 
     }
 
-    private Map<String,Long> getPageInfo(Pageable pageable, String productId){
+    private Map<String,Long> getPageInfo(Pageable pageable, String productId, boolean isPhotoFilter){
         long currentPage = pageable.getPageNumber() +1;
         long startPage =  currentPage %10 ==0 ? (currentPage/10-1)*10+1 : (currentPage/10)*10 +1;
-        Long total = getTotalCount(productId);
+        Long total = getTotalCount(productId,isPhotoFilter);
         long totalLastPage = total%pageable.getPageSize() == 0 ? total / pageable.getPageSize() :
                 total / pageable.getPageSize()+1;
         long lastPage = Math.min(totalLastPage,
@@ -136,7 +136,7 @@ public class ReviewQueryDslRepositoryImpl implements ReviewQueryDslRepository {
     }
 
     private Map<String,Long> getPageInfo(Pageable pageable){
-        return getPageInfo(pageable,null);
+        return getPageInfo(pageable,null, false);
     }
 
     private ReviewRetrieveResponse noReviewExistCase(String authorId,

@@ -53,6 +53,7 @@ class ReviewQueryDslRepositoryImplTest {
                 product.getId(), order.getAuthId(), PageRequest.of(0, 3), true);
         //when
         assertThat(response.getContents().size()).isSameAs(1);
+        assertThat(response.getTotalLastPage()).isSameAs(1L);
     }
     @Test
     void photoFilterTest_NotFiltering () throws Exception{
