@@ -5,6 +5,7 @@ import com.liberty52.product.global.event.Events;
 import com.liberty52.product.global.event.events.OrderRequestDepositEvent;
 import com.liberty52.product.global.exception.external.badrequest.RequestForgeryPayException;
 import com.liberty52.product.global.exception.external.forbidden.NotYourCustomProductException;
+import com.liberty52.product.global.exception.external.forbidden.NotYourOrderException;
 import com.liberty52.product.global.exception.external.internalservererror.ConfirmPaymentException;
 import com.liberty52.product.global.exception.external.notfound.ResourceNotFoundException;
 import com.liberty52.product.service.controller.dto.*;
@@ -53,6 +54,10 @@ public class OrderCreateServiceImpl implements OrderCreateService {
         }
 
         Orders orders = confirmPaymentMapRepository.getAndRemove(orderId);
+        if (!Objects.equals(authId, orders.getAuthId())) {
+            confirmPaymentMapRepository.put(orders.getId(), orders);
+            throw new NotYourOrderException(authId);
+        }
 
         return switch (orders.getPayment().getStatus()) {
             case PAID -> PaymentConfirmResponseDto.of(orderId);
