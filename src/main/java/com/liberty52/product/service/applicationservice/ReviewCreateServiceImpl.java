@@ -1,32 +1,25 @@
 package com.liberty52.product.service.applicationservice;
 
-import static com.liberty52.product.global.contants.RoleConstants.ADMIN;
-
 import com.liberty52.product.global.adapter.s3.S3UploaderApi;
 import com.liberty52.product.global.exception.external.badrequest.BadRequestException;
 import com.liberty52.product.global.exception.external.badrequest.ReviewAlreadyExistByOrderException;
-import com.liberty52.product.global.exception.external.forbidden.InvalidRoleException;
 import com.liberty52.product.global.exception.external.forbidden.NotYourOrderException;
-import com.liberty52.product.global.exception.external.notfound.CustomProductNotFoundByIdException;
 import com.liberty52.product.global.exception.external.notfound.OrderNotFoundByIdException;
 import com.liberty52.product.global.exception.external.notfound.ProductNotFoundByNameException;
-import com.liberty52.product.global.exception.external.notfound.ResourceNotFoundException;
-import com.liberty52.product.service.controller.dto.ReplyCreateRequestDto;
 import com.liberty52.product.service.controller.dto.ReviewCreateRequestDto;
 import com.liberty52.product.service.entity.Orders;
 import com.liberty52.product.service.entity.Product;
-import com.liberty52.product.service.entity.Reply;
 import com.liberty52.product.service.entity.Review;
 import com.liberty52.product.service.entity.ReviewImage;
-import com.liberty52.product.service.repository.CustomProductRepository;
 import com.liberty52.product.service.repository.OrdersRepository;
 import com.liberty52.product.service.repository.ProductRepository;
 import com.liberty52.product.service.repository.ReviewRepository;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -35,7 +28,6 @@ public class ReviewCreateServiceImpl implements ReviewCreateService {
   private final ReviewRepository reviewRepository;
   private final ProductRepository productRepository;
   private final OrdersRepository ordersRepository;
-  private final CustomProductRepository customProductRepository;
   private final S3UploaderApi s3Uploader;
 
   @Override
@@ -45,9 +37,6 @@ public class ReviewCreateServiceImpl implements ReviewCreateService {
 
     Orders order = ordersRepository.findById(dto.getOrderId())
         .orElseThrow(() -> new OrderNotFoundByIdException(dto.getOrderId()));
-
-    customProductRepository.findByOrderIdAndProductId(dto.getOrderId(), product.getId())
-        .orElseThrow(() -> new CustomProductNotFoundByIdException(product.getId()));
 
     if (!(order.getAuthId().equals(reviewerId))) {
       throw new NotYourOrderException(reviewerId);
