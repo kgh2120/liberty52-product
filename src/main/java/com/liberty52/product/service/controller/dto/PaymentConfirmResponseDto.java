@@ -11,9 +11,10 @@ import lombok.NoArgsConstructor;
 public class PaymentConfirmResponseDto {
 
     private String orderId;
+    private String orderNum;
 
-    public static PaymentConfirmResponseDto of(String orderId) {
-        return new PaymentConfirmResponseDto(orderId);
+    public static PaymentConfirmResponseDto of(String orderId, String orderNum) {
+        return new PaymentConfirmResponseDto(orderId, orderNum);
     }
 
 }

@@ -11,9 +11,10 @@ import lombok.NoArgsConstructor;
 public class PaymentVBankResponseDto {
 
     private String orderId;
+    private String orderNum;
 
-    public static PaymentVBankResponseDto of(String orderId) {
-        return new PaymentVBankResponseDto(orderId);
+    public static PaymentVBankResponseDto of(String orderId, String orderNum) {
+        return new PaymentVBankResponseDto(orderId, orderNum);
     }
 
 }

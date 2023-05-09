@@ -11,10 +11,11 @@ import lombok.NoArgsConstructor;
 public class PaymentCardResponseDto {
 
     private String merchantId;
+    private String orderNum;
     private Long amount;
 
-    public static PaymentCardResponseDto of(String merchantId, Long amount) {
-        return new PaymentCardResponseDto(merchantId, amount);
+    public static PaymentCardResponseDto of(String merchantId, String orderNum, Long amount) {
+        return new PaymentCardResponseDto(merchantId, orderNum, amount);
     }
 
 }

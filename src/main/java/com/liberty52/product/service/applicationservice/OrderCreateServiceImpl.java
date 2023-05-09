@@ -60,7 +60,7 @@ public class OrderCreateServiceImpl implements OrderCreateService {
         }
 
         return switch (orders.getPayment().getStatus()) {
-            case PAID -> PaymentConfirmResponseDto.of(orderId);
+            case PAID -> PaymentConfirmResponseDto.of(orderId, orders.getOrderNum());
             case FORGERY -> throw new RequestForgeryPayException();
             default -> {
                 log.error("주문 결제 상태의 PAID or FORGERY 이외의 상태로 요청되었습니다. 요청주문의 상태: {}", orders.getPayment().getStatus());
@@ -73,42 +73,42 @@ public class OrderCreateServiceImpl implements OrderCreateService {
     public PaymentCardResponseDto createCardPaymentOrders(String authId, OrderCreateRequestDto dto, MultipartFile imageFile) {
         Orders order = this.saveOrder(authId, dto, imageFile);
         this.saveCardPayment(order);
-        return PaymentCardResponseDto.of(order.getId(), order.getAmount());
+        return PaymentCardResponseDto.of(order.getId(), order.getOrderNum(), order.getAmount());
     }
 
     @Override
     public PaymentCardResponseDto createCardPaymentOrdersByCarts(String authId, OrderCreateRequestDto dto) {
         Orders order = this.saveOrderByCarts(authId, dto);
         this.saveCardPayment(order);
-        return PaymentCardResponseDto.of(order.getId(), order.getAmount());
+        return PaymentCardResponseDto.of(order.getId(), order.getOrderNum(), order.getAmount());
     }
 
     @Override
     public PaymentVBankResponseDto createVBankPaymentOrders(String authId, OrderCreateRequestDto dto, MultipartFile imageFile) {
         Orders order = this.saveOrder(authId, dto, imageFile);
         this.saveVBankPayment(dto, order);
-        return PaymentVBankResponseDto.of(order.getId());
+        return PaymentVBankResponseDto.of(order.getId(), order.getOrderNum());
     }
 
     @Override
     public PaymentVBankResponseDto createVBankPaymentOrdersByCarts(String authId, OrderCreateRequestDto dto) {
         Orders order = this.saveOrderByCarts(authId, dto);
         this.saveVBankPayment(dto, order);
-        return PaymentVBankResponseDto.of(order.getId());
+        return PaymentVBankResponseDto.of(order.getId(), order.getOrderNum());
     }
 
     @Override
     public PaymentCardResponseDto createCardPaymentOrdersByCartsForGuest(String authId, OrderCreateRequestDto dto) {
         Orders order = this.saveOrderByCartsForGuest(authId, dto);
         this.saveCardPayment(order);
-        return PaymentCardResponseDto.of(order.getId(), order.getAmount());
+        return PaymentCardResponseDto.of(order.getId(), order.getOrderNum(), order.getAmount());
     }
 
     @Override
     public PaymentVBankResponseDto createVBankPaymentOrdersByCartsForGuest(String authId, OrderCreateRequestDto dto) {
         Orders order = this.saveOrderByCartsForGuest(authId, dto);
         this.saveVBankPayment(dto, order);
-        return PaymentVBankResponseDto.of(order.getId());
+        return PaymentVBankResponseDto.of(order.getId(), order.getOrderNum());
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
