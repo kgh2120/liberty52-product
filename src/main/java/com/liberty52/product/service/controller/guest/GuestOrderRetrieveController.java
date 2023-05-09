@@ -16,12 +16,11 @@ public class GuestOrderRetrieveController {
 
     private final OrderRetrieveService orderRetrieveService;
 
-    @GetMapping("/guest/orders/{orderId}")
+    @GetMapping("/guest/orders/{orderNumber}")
     public ResponseEntity<OrderDetailRetrieveResponse> retrieveGuestOrderDetail(
         @RequestHeader(HttpHeaders.AUTHORIZATION) String guestId,
-        @PathVariable("orderId") String orderId
-    ){
-        return ResponseEntity.ok(orderRetrieveService.retrieveOrderDetail(guestId,orderId));
+        @PathVariable("orderNumber") String orderNumber){
+        return ResponseEntity.ok(orderRetrieveService.retrieveGuestOrderDetail(guestId,orderNumber));
     }
 
 }

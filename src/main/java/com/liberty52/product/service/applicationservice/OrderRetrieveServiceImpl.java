@@ -26,9 +26,18 @@ public class OrderRetrieveServiceImpl implements
                 .stream().map(OrdersRetrieveResponse::new).toList();
     }
 
+
+
     @Override
     public OrderDetailRetrieveResponse retrieveOrderDetail(String authId, String orderId) {
         Orders orders = orderQueryDslRepository.retrieveOrderDetail(authId, orderId)
+                .orElseThrow(CannotAccessOrderException::new);
+        return new OrderDetailRetrieveResponse(orders);
+    }
+
+    @Override
+    public OrderDetailRetrieveResponse retrieveGuestOrderDetail(String authId, String orderNumber) {
+        Orders orders = orderQueryDslRepository.retrieveGuestOrderDetail(authId, orderNumber)
                 .orElseThrow(CannotAccessOrderException::new);
         return new OrderDetailRetrieveResponse(orders);
     }

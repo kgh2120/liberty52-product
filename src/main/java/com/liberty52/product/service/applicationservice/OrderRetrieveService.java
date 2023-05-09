@@ -9,4 +9,6 @@ public interface OrderRetrieveService {
     List<OrdersRetrieveResponse> retrieveOrders(String authId);
 
      OrderDetailRetrieveResponse retrieveOrderDetail(String authId, String orderId);
+
+    OrderDetailRetrieveResponse retrieveGuestOrderDetail(String authId, String orderNumber);
 }

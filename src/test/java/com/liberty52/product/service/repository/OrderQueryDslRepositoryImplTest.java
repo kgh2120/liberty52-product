@@ -28,6 +28,25 @@ class OrderQueryDslRepositoryImplTest {
     }
 
     @Test
+    void retrieveGuestOrderDetail () throws Exception{
+        final String PHONE_NUM = "bar";
+        final OrderDestination orderDestination = OrderDestination.create("","",PHONE_NUM,"","","");
+        //given
+        Orders orders = Orders.create(PHONE_NUM, orderDestination);
+        orders.changeOrderStatusToOrdered();
+        String orderNum = orders.getOrderNum();
+        em.persist(orders);
+        em.flush();
+        em.clear();
+        //when
+
+        Orders guestOrder = repository.retrieveGuestOrderDetail(PHONE_NUM, orderNum)
+                .orElseThrow();
+        //then
+        assertThat(guestOrder.getAuthId()).isEqualTo(PHONE_NUM);
+    }
+
+    @Test
     void ready_filtering_test () throws Exception{
         //given
         final String AUTH_ID = "user";

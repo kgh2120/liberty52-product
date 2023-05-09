@@ -12,6 +12,7 @@ import com.liberty52.product.service.entity.OrderStatus;
 import com.liberty52.product.service.entity.Orders;
 import com.liberty52.product.service.entity.payment.QPayment;
 import com.querydsl.jpa.JPQLTemplates;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import java.util.List;
@@ -39,15 +40,7 @@ public class OrderQueryDslRepositoryImpl implements OrderQueryDslRepository {
 
     public List<Orders> retrieveOrders(String authId) {
 
-        return queryFactory
-                .selectFrom(orders)
-                .leftJoin(orderDestination).on(orders.orderDestination.eq(orderDestination)).fetchJoin()
-                .leftJoin(customProduct).on(customProduct.orders.eq(orders)).fetchJoin()
-                .leftJoin(product).on(customProduct.product.eq(product)).fetchJoin()
-                .leftJoin(customProductOption).on(customProductOption.customProduct.eq(
-                        customProduct)).fetchJoin()
-                .leftJoin(optionDetail).on(customProductOption.optionDetail.eq(optionDetail))
-                .leftJoin(payment).on(payment.orders.eq(orders)).fetchJoin()
+        return selectOrdersAndAssociatedEntity()
                 .where(orders.authId.eq(authId).and(orders.orderStatus.ne(OrderStatus.READY)))
                 .orderBy(orders.orderDate.desc())
                 .fetch();
@@ -58,17 +51,34 @@ public class OrderQueryDslRepositoryImpl implements OrderQueryDslRepository {
     public Optional<Orders> retrieveOrderDetail(String authId,
             String orderId) {
 
-       return Optional.ofNullable(queryFactory
-               .selectFrom(orders)
-               .leftJoin(orderDestination).on(orders.orderDestination.eq(orderDestination)).fetchJoin()
-               .leftJoin(customProduct).on(customProduct.orders.eq(orders)).fetchJoin()
-               .leftJoin(product).on(customProduct.product.eq(product)).fetchJoin()
-               .leftJoin(customProductOption).on(customProductOption.customProduct.eq(
-                       customProduct)).fetchJoin()
-               .leftJoin(optionDetail).on(customProductOption.optionDetail.eq(optionDetail))
-               .leftJoin(payment).on(payment.orders.eq(orders)).fetchJoin()
+       return Optional.ofNullable(
+               selectOrdersAndAssociatedEntity()
                .where(orders.authId.eq(authId).and(orders.id.eq(orderId)).and(orders.orderStatus.ne(OrderStatus.READY)))
                .fetchOne());
+    }
+
+    @Override
+    public Optional<Orders> retrieveGuestOrderDetail(String guestId, String orderNumber) {
+
+
+
+        return Optional.ofNullable(
+                selectOrdersAndAssociatedEntity()
+                .where(orders.authId.eq(guestId).and(orders.orderNum.eq(orderNumber)).and(orders.orderStatus.ne(OrderStatus.READY)))
+                .fetchOne());
+    }
+
+    private JPAQuery<Orders> selectOrdersAndAssociatedEntity() {
+        return queryFactory
+                .selectFrom(orders)
+                .leftJoin(orderDestination).on(orders.orderDestination.eq(orderDestination))
+                .fetchJoin()
+                .leftJoin(customProduct).on(customProduct.orders.eq(orders)).fetchJoin()
+                .leftJoin(product).on(customProduct.product.eq(product)).fetchJoin()
+                .leftJoin(customProductOption).on(customProductOption.customProduct.eq(
+                        customProduct)).fetchJoin()
+                .leftJoin(optionDetail).on(customProductOption.optionDetail.eq(optionDetail))
+                .leftJoin(payment).on(payment.orders.eq(orders)).fetchJoin();
     }
 
 

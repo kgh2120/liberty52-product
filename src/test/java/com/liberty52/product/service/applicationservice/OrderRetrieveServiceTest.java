@@ -16,6 +16,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.liberty52.product.global.exception.external.badrequest.CannotAccessOrderException;
+import com.liberty52.product.service.entity.OrderDestination;
+import com.liberty52.product.service.entity.Orders;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -86,7 +88,7 @@ class OrderRetrieveServiceTest {
     void retrieveOrderDetail_Throw_cannot_access_order () throws Exception{
         //given
         //when
-        assertThatThrownBy(() ->  orderRetrieveService.retrieveOrderDetail(
+        assertThatThrownBy(() ->  orderRetrieveService.retrieveGuestOrderDetail(
                 "WrongID", "WrongID"))
                 .isInstanceOf(CannotAccessOrderException.class);
 

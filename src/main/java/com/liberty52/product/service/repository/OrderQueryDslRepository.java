@@ -11,4 +11,6 @@ public interface OrderQueryDslRepository {
     List<Orders> retrieveOrders(String authId);
 
     Optional<Orders> retrieveOrderDetail(String authId, String orderId);
+
+    Optional<Orders> retrieveGuestOrderDetail(String authId, String orderNumber);
 }

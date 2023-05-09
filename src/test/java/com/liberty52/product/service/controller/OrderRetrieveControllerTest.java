@@ -121,7 +121,7 @@ class OrderRetrieveControllerTest {
     @Test
     void retrieveGuestOrderDetail () throws Exception{
         //given
-        given(orderRetrieveService.retrieveOrderDetail(MOCK_AUTH_ID, MOCK_ORDER_ID))
+        given(orderRetrieveService.retrieveGuestOrderDetail(MOCK_AUTH_ID, MOCK_ORDER_ID))
                 .willReturn(createMockOrderDetailRetrieveResponse());
 
         //when
@@ -149,7 +149,7 @@ class OrderRetrieveControllerTest {
     @Test
     void retrieveGuestOrderDetail_throw_cannot_access () throws Exception{
         //given
-        given(orderRetrieveService.retrieveOrderDetail(MOCK_AUTH_ID, MOCK_ORDER_ID))
+        given(orderRetrieveService.retrieveGuestOrderDetail(MOCK_AUTH_ID, MOCK_ORDER_ID))
                 .willThrow(CannotAccessOrderException.class);
         given(exceptionHandler.handleGlobalException(any(),any()))
                 .willReturn(
