@@ -15,23 +15,34 @@ import static com.liberty52.product.service.utils.TestInitiator.initDataForTesti
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.liberty52.product.TestBeanConfig;
+import com.liberty52.product.global.adapter.cloud.AuthServiceClient;
 import com.liberty52.product.global.exception.external.badrequest.CannotAccessOrderException;
+import com.liberty52.product.global.exception.external.forbidden.InvalidRoleException;
+import com.liberty52.product.service.controller.dto.AdminOrderListResponse;
 import com.liberty52.product.service.entity.OrderDestination;
 import com.liberty52.product.service.entity.Orders;
+import com.liberty52.product.service.utils.MockConstants;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @SpringBootTest
+@Import({TestBeanConfig.class})
 class OrderRetrieveServiceTest {
 
     @Autowired
     OrderRetrieveService orderRetrieveService;
+    @Autowired
+    AuthServiceClient authServiceClient;
 
     @Autowired
     EntityManager em;
@@ -97,6 +108,33 @@ class OrderRetrieveServiceTest {
 
     }
 
+    @Test
+    void test_retrieveOrdersByAdmin() {
+        final String ROLE_ADMIN = "ADMIN";
+        final int page = 0;
+        final int size = 10;
 
+        AdminOrderListResponse response = orderRetrieveService.retrieveOrdersByAdmin(ROLE_ADMIN, PageRequest.of(page, size));
+
+        Assertions.assertNotNull(response);
+        Assertions.assertNotNull(response.getOrders());
+        Assertions.assertFalse(response.getOrders().isEmpty());
+        Assertions.assertEquals(size, response.getOrders().size());
+        response.getOrders().forEach(res -> {
+            Assertions.assertEquals(MockConstants.MOCK_AUTHOR_NAME, res.getCustomerName());
+        });
+        Assertions.assertEquals(1, response.getStartPage());
+        Assertions.assertEquals(page+1, response.getCurrentPage());
+    }
+
+    @Test
+    void test_retrieveOrdersByAdmin_throw_InvalidRoleException() {
+        final String ROLE_INVALID = "USER";
+
+        Assertions.assertThrows(
+                InvalidRoleException.class,
+                () -> orderRetrieveService.retrieveOrdersByAdmin(ROLE_INVALID, PageRequest.of(0, 10))
+        );
+    }
 
 }
