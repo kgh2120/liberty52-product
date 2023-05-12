@@ -8,7 +8,6 @@ import lombok.*;
 
 import java.util.*;
 
-@ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -48,7 +47,6 @@ public class AdminOrderListResponse {
     }
 
     @Getter
-    @ToString
     public static class AdminOrderContent {
         private String orderId;
         private String orderNumber;

@@ -39,4 +39,13 @@ public class OrderRetrieveController {
         return orderRetrieveService.retrieveOrdersByAdmin(role, pageable);
     }
 
+    @GetMapping("/admin/orders/{orderId}")
+    @ResponseStatus(HttpStatus.OK)
+    public OrderDetailRetrieveResponse retrieveOrderDetailByAdmin(
+            @RequestHeader("LB-Role") String role,
+            @PathVariable String orderId
+    ) {
+        return orderRetrieveService.retrieveOrderDetailByAdmin(role, orderId);
+    }
+
 }

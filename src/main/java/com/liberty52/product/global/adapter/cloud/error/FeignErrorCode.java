@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum FeignErrorCode implements ErrorCode {
 
-    UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "다시 로그인 후 시도해주세요."),
+    UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "FEIGN_ERROR - 다시 로그인 후 시도해주세요."),
     ERROR_4XX(HttpStatus.INTERNAL_SERVER_ERROR),
     ERROR_5XX(HttpStatus.INTERNAL_SERVER_ERROR),
     ERROR_UNKNOWN(HttpStatus.INTERNAL_SERVER_ERROR)

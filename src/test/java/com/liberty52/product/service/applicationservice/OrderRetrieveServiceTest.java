@@ -20,6 +20,7 @@ import com.liberty52.product.global.adapter.cloud.AuthServiceClient;
 import com.liberty52.product.global.exception.external.badrequest.CannotAccessOrderException;
 import com.liberty52.product.global.exception.external.forbidden.InvalidRoleException;
 import com.liberty52.product.service.controller.dto.AdminOrderListResponse;
+import com.liberty52.product.service.controller.dto.OrderDetailRetrieveResponse;
 import com.liberty52.product.service.entity.OrderDestination;
 import com.liberty52.product.service.entity.Orders;
 import com.liberty52.product.service.utils.MockConstants;
@@ -136,5 +137,62 @@ class OrderRetrieveServiceTest {
                 () -> orderRetrieveService.retrieveOrdersByAdmin(ROLE_INVALID, PageRequest.of(0, 10))
         );
     }
+
+    @Test
+    void test_retrieveOrderDetailByAdmin() {
+        final String ROLE_ADMIN = "ADMIN";
+        final String ORDER_ID = "GORDER-000";
+
+        OrderDetailRetrieveResponse response = orderRetrieveService.retrieveOrderDetailByAdmin(ROLE_ADMIN, ORDER_ID);
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(ORDER_ID, response.getOrderId());
+        Assertions.assertFalse(response.getOrderDate().isBlank());
+        Assertions.assertFalse(response.getOrderStatus().isBlank());
+        Assertions.assertFalse(response.getAddress().isBlank());
+        Assertions.assertFalse(response.getReceiverEmail().isBlank());
+        Assertions.assertFalse(response.getReceiverName().isBlank());
+        Assertions.assertFalse(response.getReceiverEmail().isBlank());
+        Assertions.assertFalse(response.getReceiverPhoneNumber().isBlank());
+        Assertions.assertNotEquals(0, response.getTotalProductPrice());
+        Assertions.assertNotEquals(0, response.getDeliveryFee());
+        Assertions.assertNotEquals(0, response.getTotalPrice());
+        Assertions.assertFalse(response.getOrderNum().isBlank());
+        Assertions.assertFalse(response.getPaymentType().isBlank());
+        Assertions.assertNotNull(response.getPaymentInfo());
+        Assertions.assertFalse(response.getCustomerName().isBlank());
+
+        Assertions.assertFalse(response.getProducts().isEmpty());
+        response.getProducts().forEach(product -> {
+            Assertions.assertFalse(product.getName().isBlank());
+            Assertions.assertNotEquals(0, product.getQuantity());
+            Assertions.assertNotEquals(0, product.getPrice());
+            Assertions.assertFalse(product.getProductUrl().isBlank());
+            Assertions.assertFalse(product.getOptions().isEmpty());
+        });
+    }
+
+    @Test
+    void test_retrieveOrderDetailByAdmin_throw_InvalidRoleException() {
+        final String ROLE_USER = "USER";
+        final String ORDER_ID = "GORDER-000";
+
+        Assertions.assertThrows(
+                InvalidRoleException.class,
+                () -> orderRetrieveService.retrieveOrderDetailByAdmin(ROLE_USER, ORDER_ID)
+        );
+    }
+
+    @Test
+    void test_retrieveOrderDetailByAdmin_throw_CannotAccessOrderException() {
+        final String ROLE_ADMIN = "ADMIN";
+        final String ORDER_ID = "GORDER-00x";
+
+        Assertions.assertThrows(
+                CannotAccessOrderException.class,
+                () -> orderRetrieveService.retrieveOrderDetailByAdmin(ROLE_ADMIN, ORDER_ID)
+        );
+    }
+
 
 }

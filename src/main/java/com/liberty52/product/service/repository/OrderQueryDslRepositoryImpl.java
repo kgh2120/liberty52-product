@@ -49,18 +49,15 @@ public class OrderQueryDslRepositoryImpl implements OrderQueryDslRepository {
     }
 
     public List<Orders> retrieveOrders(String authId) {
-
         return selectOrdersAndAssociatedEntity()
                 .where(orders.authId.eq(authId).and(orders.orderStatus.ne(OrderStatus.READY)))
                 .orderBy(orders.orderDate.desc())
                 .fetch();
-
     }
 
     @Override
     public Optional<Orders> retrieveOrderDetail(String authId,
             String orderId) {
-
        return Optional.ofNullable(
                selectOrdersAndAssociatedEntity()
                .where(orders.authId.eq(authId).and(orders.id.eq(orderId)).and(orders.orderStatus.ne(OrderStatus.READY)))
@@ -69,7 +66,6 @@ public class OrderQueryDslRepositoryImpl implements OrderQueryDslRepository {
 
     @Override
     public Optional<Orders> retrieveGuestOrderDetail(String guestId, String orderNumber) {
-
         return Optional.ofNullable(
                 selectOrdersAndAssociatedEntity()
                 .where(orders.authId.eq(guestId).and(orders.orderNum.eq(orderNumber)).and(orders.orderStatus.ne(OrderStatus.READY)))
@@ -79,6 +75,15 @@ public class OrderQueryDslRepositoryImpl implements OrderQueryDslRepository {
     @Override
     public List<Orders> retrieveOrdersByAdmin(Pageable pageable) {
         return fetchOrdersByAdmin(pageable).fetch();
+    }
+
+    @Override
+    public Optional<Orders> retrieveOrderDetailByOrderId(String orderId) {
+        return Optional.ofNullable(
+                selectOrdersAndAssociatedEntity()
+                        .where(orders.id.eq(orderId))
+                        .fetchOne()
+        );
     }
 
 

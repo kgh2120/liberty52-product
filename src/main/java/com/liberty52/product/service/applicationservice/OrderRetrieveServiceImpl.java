@@ -1,6 +1,7 @@
 package com.liberty52.product.service.applicationservice;
 
 import com.liberty52.product.global.adapter.cloud.AuthServiceClient;
+import com.liberty52.product.global.adapter.cloud.dto.AuthProfileDto;
 import com.liberty52.product.global.exception.external.badrequest.CannotAccessOrderException;
 import com.liberty52.product.global.util.Validator;
 import com.liberty52.product.service.controller.dto.AdminOrderListResponse;
@@ -72,5 +73,19 @@ public class OrderRetrieveServiceImpl implements OrderRetrieveService {
                 pageInfo.getLastPage(),
                 pageInfo.getTotalLastPage()
         );
+    }
+
+    @Override
+    public OrderDetailRetrieveResponse retrieveOrderDetailByAdmin(String role, String orderId) {
+        Validator.isAdmin(role);
+
+        Orders order = orderQueryDslRepository.retrieveOrderDetailByOrderId(orderId)
+                .orElseThrow(CannotAccessOrderException::new);
+
+        String customerId = order.getAuthId();
+        String customerName = authServiceClient.retrieveAuthData(Set.of(customerId))
+                .get(customerId).getAuthorName();
+
+        return OrderDetailRetrieveResponse.of(order, customerName);
     }
 }

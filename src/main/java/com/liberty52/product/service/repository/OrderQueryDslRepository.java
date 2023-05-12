@@ -1,6 +1,7 @@
 package com.liberty52.product.service.repository;
 
 import com.liberty52.product.service.entity.Orders;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -15,6 +16,8 @@ public interface OrderQueryDslRepository {
     Optional<Orders> retrieveGuestOrderDetail(String authId, String orderNumber);
 
     List<Orders> retrieveOrdersByAdmin(Pageable pageable);
+
+    Optional<Orders> retrieveOrderDetailByOrderId(String orderId);
 
     OrderQueryDslRepositoryImpl.PageInfo getPageInfo(Pageable pageable);
 
