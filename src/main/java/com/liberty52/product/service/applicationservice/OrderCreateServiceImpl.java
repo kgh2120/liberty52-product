@@ -2,11 +2,13 @@ package com.liberty52.product.service.applicationservice;
 
 import com.liberty52.product.global.adapter.s3.S3UploaderApi;
 import com.liberty52.product.global.event.Events;
+import com.liberty52.product.global.event.events.CardOrderedCompletedEvent;
 import com.liberty52.product.global.event.events.OrderRequestDepositEvent;
 import com.liberty52.product.global.exception.external.badrequest.RequestForgeryPayException;
 import com.liberty52.product.global.exception.external.forbidden.NotYourCustomProductException;
 import com.liberty52.product.global.exception.external.forbidden.NotYourOrderException;
 import com.liberty52.product.global.exception.external.internalservererror.ConfirmPaymentException;
+import com.liberty52.product.global.exception.external.notfound.OrderNotFoundByIdException;
 import com.liberty52.product.global.exception.external.notfound.ResourceNotFoundException;
 import com.liberty52.product.service.controller.dto.*;
 import com.liberty52.product.service.entity.*;
@@ -53,14 +55,20 @@ public class OrderCreateServiceImpl implements OrderCreateService {
             this.sleepingConfirmPaymentThread(orderId, secTimeout);
         }
 
-        Orders orders = confirmPaymentMapRepository.getAndRemove(orderId);
-        if (!Objects.equals(authId, orders.getAuthId())) {
-            confirmPaymentMapRepository.put(orders.getId(), orders);
+        Orders checkOrder = confirmPaymentMapRepository.getAndRemove(orderId);
+        if (!Objects.equals(authId, checkOrder.getAuthId())) {
+            confirmPaymentMapRepository.put(checkOrder.getId(), checkOrder);
             throw new NotYourOrderException(authId);
         }
 
+        Orders orders = ordersRepository.findById(checkOrder.getId())
+                .orElseThrow(() -> new OrderNotFoundByIdException(checkOrder.getId()));
+
         return switch (orders.getPayment().getStatus()) {
-            case PAID -> PaymentConfirmResponseDto.of(orderId, orders.getOrderNum());
+            case PAID -> {
+                Events.raise(new CardOrderedCompletedEvent(orders));
+                yield PaymentConfirmResponseDto.of(orderId, orders.getOrderNum());
+            }
             case FORGERY -> throw new RequestForgeryPayException();
             default -> {
                 log.error("주문 결제 상태의 PAID or FORGERY 이외의 상태로 요청되었습니다. 요청주문의 상태: {}", orders.getPayment().getStatus());

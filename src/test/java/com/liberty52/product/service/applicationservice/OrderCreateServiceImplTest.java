@@ -1,8 +1,11 @@
 package com.liberty52.product.service.applicationservice;
 
 import com.liberty52.product.MockS3Test;
+import com.liberty52.product.global.adapter.portone.PortOneWebhookService;
+import com.liberty52.product.global.adapter.portone.dto.PortOneWebhookDto;
 import com.liberty52.product.service.controller.dto.OrderCreateRequestDto;
 import com.liberty52.product.service.controller.dto.PaymentCardResponseDto;
+import com.liberty52.product.service.controller.dto.PaymentConfirmResponseDto;
 import com.liberty52.product.service.controller.dto.PaymentVBankResponseDto;
 import com.liberty52.product.service.entity.OrderStatus;
 import com.liberty52.product.service.entity.Orders;
@@ -39,6 +42,8 @@ class OrderCreateServiceImplTest extends MockS3Test {
     ProductOptionRepository productOptionRepository;
     @Autowired
     private OrdersRepository ordersRepository;
+    @Autowired
+    private PortOneWebhookService portOneWebhookService;
 
     OrderCreateServiceImplTest() throws IOException {
     }
@@ -105,6 +110,26 @@ class OrderCreateServiceImplTest extends MockS3Test {
         Assertions.assertNotEquals("", order.getPayment().getInfoAsString());
         Assertions.assertNotNull(((VBankPayment.VBankPaymentInfo)(order.getPayment().getInfoAsDto())).getVbankInfo());
         Assertions.assertNotNull(((VBankPayment.VBankPaymentInfo)(order.getPayment().getInfoAsDto())).getDepositorName());
+    }
+
+    @Test
+    void test_confirmFinalApprovalOfCardPayment() {
+        final String aid = authId;
+
+        PaymentCardResponseDto dto = orderCreateService.createCardPaymentOrders(aid,
+                OrderCreateRequestDto.forTestCard(
+                        LIBERTY, List.of(OPTION_1, OPTION_2, OPTION_3), 2, List.of(),
+                        "receiverName", "hsh47607@naver.com", "receiverPhoneNumber", "address1", "address2", "zipCode"),
+                imageFile);
+        String orderId = dto.getMerchantId();
+        Long amount = dto.getAmount();
+
+        portOneWebhookService.hookPortOnePaymentInfoForTest(PortOneWebhookDto.testOf(orderId, "paid"), amount);
+
+        PaymentConfirmResponseDto response = orderCreateService.confirmFinalApprovalOfCardPayment(aid, orderId);
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(orderId, response.getOrderId());
     }
 
 }
