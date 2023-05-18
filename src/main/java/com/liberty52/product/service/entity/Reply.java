@@ -2,6 +2,7 @@ package com.liberty52.product.service.entity;
 
 import com.liberty52.product.global.exception.internal.InvalidTextSize;
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,8 @@ public class Reply {
 
     @Column(nullable = false)
     private String authId;
+
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "review_id")
