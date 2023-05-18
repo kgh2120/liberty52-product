@@ -1,5 +1,6 @@
 package com.liberty52.product.service.repository;
 
+import com.liberty52.product.service.controller.dto.AdminReviewDetailResponse;
 import com.liberty52.product.service.controller.dto.AdminReviewRetrieveResponse;
 import com.liberty52.product.service.controller.dto.ReviewRetrieveResponse;
 import com.liberty52.product.service.entity.Review;
@@ -14,4 +15,6 @@ public interface ReviewQueryDslRepository {
     List<Review> retrieveReviewByWriterId(String writerId);
 
     AdminReviewRetrieveResponse retrieveAllReviews(Pageable pageable);
+
+    AdminReviewDetailResponse retrieveReviewDetail(String reviewId);
 }

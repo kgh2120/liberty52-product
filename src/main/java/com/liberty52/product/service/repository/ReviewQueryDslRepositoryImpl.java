@@ -1,23 +1,20 @@
 package com.liberty52.product.service.repository;
 
 import static com.liberty52.product.service.entity.QCustomProduct.customProduct;
-import static com.liberty52.product.service.entity.QOrders.orders;
 import static com.liberty52.product.service.entity.QReply.reply;
 import static com.liberty52.product.service.entity.QReview.review;
 import static com.liberty52.product.service.entity.QReviewImage.reviewImage;
 
+import com.liberty52.product.service.controller.dto.AdminReviewDetailResponse;
 import com.liberty52.product.service.controller.dto.AdminReviewRetrieveResponse;
 import com.liberty52.product.service.controller.dto.ReviewRetrieveResponse;
-import com.liberty52.product.service.entity.QCustomProduct;
 import com.liberty52.product.service.entity.Review;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
@@ -82,6 +79,12 @@ public class ReviewQueryDslRepositoryImpl implements ReviewQueryDslRepository {
                 pageInfo.get(totalLastPage));
     }
 
+    @Override
+    public AdminReviewDetailResponse retrieveReviewDetail(String reviewId) {
+        Review review = fetchReviewDetail(reviewId);
+        return new AdminReviewDetailResponse(review);
+    }
+
     private List<Review> fetchReviews(String productId, Pageable pageable, Boolean isPhotoFilter) {
         return queryFactory.selectFrom(review).distinct()
                 .leftJoin(reply).on(reply.review.eq(review))
@@ -94,8 +97,18 @@ public class ReviewQueryDslRepositoryImpl implements ReviewQueryDslRepository {
                 .fetch();
     }
 
+    //admin retrieve reviews
     private List<Review> fetchReviews(Pageable pageable) {
         return fetchReviews(null, pageable, false);
+    }
+
+    private Review fetchReviewDetail(String reviewId) {
+        return queryFactory.selectFrom(review).distinct()
+            .leftJoin(reply).on(reply.review.eq(review))
+            .leftJoin(reviewImage).on(reviewImage.review.eq(review))
+            .leftJoin(customProduct).on(review.customProduct.eq(customProduct))
+            .where(review.id.eq(reviewId))
+            .fetchOne();
     }
 
     private BooleanExpression productIdFilter(String productId) {
