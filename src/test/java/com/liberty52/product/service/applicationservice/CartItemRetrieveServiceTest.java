@@ -1,5 +1,6 @@
 package com.liberty52.product.service.applicationservice;
 
+import com.liberty52.product.MockS3Test;
 import com.liberty52.product.service.controller.dto.CartItemRequest;
 import com.liberty52.product.service.controller.dto.CartItemResponse;
 import com.liberty52.product.service.controller.dto.CartOptionResponse;
@@ -19,7 +20,7 @@ import java.util.List;
 
 @SpringBootTest
 @Transactional
-public class CartItemRetrieveServiceTest {
+public class CartItemRetrieveServiceTest extends MockS3Test {
 
     @Autowired
     CartItemCreateService cartItemCreateService;

@@ -1,5 +1,6 @@
 package com.liberty52.product.service.applicationservice;
 
+import com.liberty52.product.MockS3Test;
 import com.liberty52.product.service.controller.dto.CartItemRequest;
 import com.liberty52.product.service.entity.Cart;
 import com.liberty52.product.service.entity.CustomProduct;
@@ -28,7 +29,7 @@ import java.util.Optional;
 
 @SpringBootTest
 @Transactional
-public class CartItemSchedulerServiceTest {
+public class CartItemSchedulerServiceTest extends MockS3Test {
 
     @Autowired
     CartRepository cartRepository;
