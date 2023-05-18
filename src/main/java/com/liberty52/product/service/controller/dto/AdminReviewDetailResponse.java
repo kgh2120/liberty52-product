@@ -1,12 +1,9 @@
 package com.liberty52.product.service.controller.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.liberty52.product.service.entity.Review;
 import com.liberty52.product.service.entity.ReviewImage;
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -14,8 +11,6 @@ import lombok.Data;
 public class AdminReviewDetailResponse {
   private ReviewContent content;
 
-  @JsonIgnore
-  private Set<String> authorIds = new HashSet<>();
   public AdminReviewDetailResponse(Review review) {
     String orderAuthId = review.getCustomProduct().getOrders().getAuthId();
     content = new ReviewContent(review.getRating(),review.getContent(),review.getReviewImages().stream().map(
@@ -28,7 +23,6 @@ public class AdminReviewDetailResponse {
     private Integer rating;
     private String content;
     private List<String> imageUrls;
-    @JsonIgnore
     private String authorId;
     private LocalDate reviewCreatedAt;
     private List<ReplyContent> replies;
@@ -46,7 +40,6 @@ public class AdminReviewDetailResponse {
 
   @Data
   public class ReplyContent{
-    @JsonIgnore
     private String authorId;
     private String content;
     private String replyId;
