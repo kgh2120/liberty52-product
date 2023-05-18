@@ -119,7 +119,7 @@ class OrderCreateServiceImplTest extends MockS3Test {
         PaymentCardResponseDto dto = orderCreateService.createCardPaymentOrders(aid,
                 OrderCreateRequestDto.forTestCard(
                         LIBERTY, List.of(OPTION_1, OPTION_2, OPTION_3), 2, List.of(),
-                        "receiverName", "hsh47607@naver.com", "receiverPhoneNumber", "address1", "address2", "zipCode"),
+                        "receiverName", "mju.omnm@gmail.com", "receiverPhoneNumber", "address1", "address2", "zipCode"),
                 imageFile);
         String orderId = dto.getMerchantId();
         Long amount = dto.getAmount();

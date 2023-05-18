@@ -44,7 +44,7 @@ public class OrderDetailRetrieveResponse {
         this.orderNum = orders.getOrderNum();
 
         this.products = orders.getCustomProducts().stream().map(c ->
-            new OrderRetrieveProductResponse(c.getProduct().getName(), c.getQuantity(),
+            new OrderRetrieveProductResponse(c.getId(),c.getProduct().getName(), c.getQuantity(),
                     c.getProduct().getPrice() + c.getOptions()
                             .stream()
                             .mapToLong(e

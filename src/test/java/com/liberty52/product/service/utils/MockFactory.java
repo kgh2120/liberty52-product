@@ -22,11 +22,11 @@ public class MockFactory {
     }
 
     public static ProductOption createProductOption(String name, boolean require) {
-        return ProductOption.create(name, require);
+        return ProductOption.create(name, require, true);
     }
 
     public static OptionDetail createOptionDetail(String name, Integer price) {
-        return OptionDetail.create(name, price);
+        return OptionDetail.create(name, price, true);
     }
 
     public static CustomProductOption createProductCartOption() {
@@ -62,7 +62,13 @@ public class MockFactory {
         return list;
     }
     public static OrderRetrieveProductResponse createMockOrderRetrieveProductResponse(){
-        return new OrderRetrieveProductResponse(MOCK_PRODUCT_NAME,MOCK_QUANTITY,MOCK_PRICE,MOCK_PRODUCT_REPRESENT_URL,null);
+        return new OrderRetrieveProductResponse(
+                MOCK_CUSTOM_PRODUCT_ID,
+                MOCK_PRODUCT_NAME
+                ,MOCK_QUANTITY
+                ,MOCK_PRICE,
+                MOCK_PRODUCT_REPRESENT_URL,
+                null);
     }
 
     public static OrderDetailRetrieveResponse createMockOrderDetailRetrieveResponse(){
@@ -78,8 +84,7 @@ public class MockFactory {
 
     public static Review createMockReview(){
         Review review = Review.create(3, "good");
-        review.associate(createOrder(MOCK_AUTH_ID,null));
-        review.associate(createProduct(MOCK_PRODUCT_NAME,MOCK_PRODUCT_STATE_ON_SAIL,MOCK_PRICE));
+        review.associate(createCustomProduct(MOCK_PRODUCT_REPRESENT_URL, 1, MOCK_AUTH_ID));
 
         ReviewImage.create(review,MOCK_PRODUCT_REPRESENT_URL);
 

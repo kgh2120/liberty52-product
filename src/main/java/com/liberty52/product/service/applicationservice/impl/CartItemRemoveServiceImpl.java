@@ -1,8 +1,9 @@
-package com.liberty52.product.service.applicationservice;
+package com.liberty52.product.service.applicationservice.impl;
 
 import com.liberty52.product.global.exception.external.forbidden.NotYourCartItemException;
 import com.liberty52.product.global.exception.external.notfound.ResourceNotFoundException;
 import com.liberty52.product.global.exception.external.forbidden.UnRemovableResourceException;
+import com.liberty52.product.service.applicationservice.CartItemRemoveService;
 import com.liberty52.product.service.controller.dto.CartItemListRemoveRequestDto;
 import com.liberty52.product.service.entity.CustomProduct;
 import com.liberty52.product.service.event.internal.ImageRemovedEvent;

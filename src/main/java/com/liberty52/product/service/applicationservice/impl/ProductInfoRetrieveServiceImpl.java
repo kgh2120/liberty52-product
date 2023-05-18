@@ -1,6 +1,7 @@
-package com.liberty52.product.service.applicationservice;
+package com.liberty52.product.service.applicationservice.impl;
 
 import com.liberty52.product.global.exception.external.notfound.ResourceNotFoundException;
+import com.liberty52.product.service.applicationservice.ProductInfoRetrieveService;
 import com.liberty52.product.service.controller.dto.ProductDetailResponseDto;
 import com.liberty52.product.service.controller.dto.ProductListResponseDto;
 import com.liberty52.product.service.entity.Product;

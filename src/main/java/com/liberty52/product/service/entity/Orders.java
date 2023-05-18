@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -14,7 +15,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
-import lombok.extern.slf4j.Slf4j;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -106,7 +106,7 @@ public class Orders {
             totalAmount.getAndAdd(customProduct.getProduct().getPrice());
             // 옵션 추가금액
             customProduct.getOptions().forEach(customProductOption ->
-                        totalAmount.getAndAdd(customProductOption.getOptionDetail().getPrice()));
+                        totalAmount.getAndAdd(customProductOption.getPrice()));
             // 수량
             totalAmount.getAndUpdate(x -> customProduct.getQuantity() * x);
         });

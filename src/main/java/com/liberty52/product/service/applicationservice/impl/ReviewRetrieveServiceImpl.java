@@ -1,9 +1,10 @@
-package com.liberty52.product.service.applicationservice;
+package com.liberty52.product.service.applicationservice.impl;
 
 import static com.liberty52.product.global.contants.RoleConstants.ADMIN;
 
 import com.liberty52.product.global.adapter.cloud.AuthServiceClient;
 import com.liberty52.product.global.exception.external.forbidden.InvalidRoleException;
+import com.liberty52.product.service.applicationservice.ReviewRetrieveService;
 import com.liberty52.product.service.controller.dto.AdminReviewRetrieveResponse;
 import com.liberty52.product.service.controller.dto.ReviewRetrieveResponse;
 import com.liberty52.product.service.repository.ReviewQueryDslRepository;

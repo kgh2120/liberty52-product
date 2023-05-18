@@ -1,5 +1,6 @@
-package com.liberty52.product.service.applicationservice;
+package com.liberty52.product.service.applicationservice.impl;
 
+import com.liberty52.product.service.applicationservice.VBankInfoRetrieveService;
 import com.liberty52.product.service.controller.dto.VBankInfoListResponseDto;
 import com.liberty52.product.service.entity.payment.VBank;
 import com.liberty52.product.service.repository.VBankRepository;

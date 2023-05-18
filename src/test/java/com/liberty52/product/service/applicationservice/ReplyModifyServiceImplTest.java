@@ -5,10 +5,7 @@ import com.liberty52.product.global.exception.external.badrequest.BadRequestExce
 import com.liberty52.product.global.exception.external.forbidden.InvalidRoleException;
 import com.liberty52.product.global.exception.external.notfound.ResourceNotFoundException;
 import com.liberty52.product.service.controller.dto.ReplyModifyRequestDto;
-import com.liberty52.product.service.entity.Orders;
-import com.liberty52.product.service.entity.Product;
-import com.liberty52.product.service.entity.Reply;
-import com.liberty52.product.service.entity.Review;
+import com.liberty52.product.service.entity.*;
 import com.liberty52.product.service.repository.ReplyRepository;
 import com.liberty52.product.service.repository.ReviewRepository;
 import org.junit.jupiter.api.Assertions;
@@ -70,9 +67,10 @@ class ReplyModifyServiceImplTest {
     void BadRequest() {
         Product product = DBInitService.getProduct();
         Orders order = DBInitService.getOrder();
+        CustomProduct customProduct = DBInitService.getCustomProduct();
         Review otherReview = Review.create(3, "content");
-        otherReview.associate(order);
-        otherReview.associate(product);
+
+        otherReview.associate(customProduct);
         reviewRepository.save(otherReview);
 
         Assertions.assertThrows(BadRequestException.class, () -> service.modify(mockAdminId, ADMIN, ReplyModifyRequestDto.createForTest(UUID.randomUUID().toString()), otherReview.getId(), replyId));

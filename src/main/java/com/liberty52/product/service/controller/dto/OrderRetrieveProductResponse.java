@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class OrderRetrieveProductResponse {
 
+    private String customProductId;
     private String name;
     private int quantity;
     private Long price;
@@ -28,7 +29,8 @@ public class OrderRetrieveProductResponse {
     }
 
     @QueryProjection
-    public OrderRetrieveProductResponse(String name, int quantity, Long price, String productUrl, List<String> options) {
+    public OrderRetrieveProductResponse(String customProductId, String name, int quantity, Long price, String productUrl, List<String> options) {
+        this.customProductId = customProductId;
         this.name = name;
         this.quantity = quantity;
         this.price = price;

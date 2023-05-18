@@ -30,13 +30,10 @@ public class Review {
     @BatchSize(size = 10)
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReviewImage> reviewImages = new ArrayList<>();
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "product_id")
-    private Product product;
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "order_id")
-    private Orders order;
+    @JoinColumn(name = "custom_product_id")
+    private CustomProduct customProduct;
 
     private LocalDateTime createdAt = LocalDateTime.now();
 
@@ -55,13 +52,8 @@ public class Review {
         return review;
     }
 
-    public void associate(Product product) {
-        this.product = product;
-        product.addReview(this);
-    }
-
-    public void associate(Orders order) {
-        this.order = order;
+    public void associate(CustomProduct customProduct) {
+        this.customProduct = customProduct;
     }
 
     public void addImage(ReviewImage reviewImage) {
@@ -114,8 +106,7 @@ public class Review {
                 ", content='" + content + '\'' +
                 ", replies=" + replies +
                 ", reviewImages=" + reviewImages +
-                ", product=" + product +
-                ", order=" + order +
+                ", customProduct=" + customProduct +
                 '}';
     }
 

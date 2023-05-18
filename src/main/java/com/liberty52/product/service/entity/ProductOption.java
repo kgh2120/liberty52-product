@@ -28,13 +28,17 @@ public class ProductOption {
     @Column(nullable = false)
     private boolean require;
 
+    @Column(nullable = false)
+    private boolean onSale;
+
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "productOption")
     private List<OptionDetail> optionDetails = new ArrayList<>();
 
     @Builder
-    private ProductOption(String name, boolean require) {
+    private ProductOption(String name, boolean require, boolean onSale) {
         this.name = name;
         this.require = require;
+        this.onSale = onSale;
     }
 
     public void associate(Product product) {
@@ -46,7 +50,7 @@ public class ProductOption {
         this.optionDetails.add(optionDetail);
     }
 
-    public static ProductOption create(String name, boolean require) {
-        return builder().name(name).require(require).build();
+    public static ProductOption create(String name, boolean require, boolean onSale) {
+        return builder().name(name).require(require).onSale(onSale).build();
     }
 }

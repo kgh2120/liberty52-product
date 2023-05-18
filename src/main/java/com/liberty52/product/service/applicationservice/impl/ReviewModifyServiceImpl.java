@@ -1,9 +1,10 @@
-package com.liberty52.product.service.applicationservice;
+package com.liberty52.product.service.applicationservice.impl;
 
 import com.liberty52.product.global.adapter.s3.S3UploaderApi;
 import com.liberty52.product.global.exception.external.badrequest.BadRequestException;
 import com.liberty52.product.global.exception.external.forbidden.NotYourReviewException;
 import com.liberty52.product.global.exception.external.notfound.ResourceNotFoundException;
+import com.liberty52.product.service.applicationservice.ReviewModifyService;
 import com.liberty52.product.service.controller.dto.ReviewImagesRemoveRequestDto;
 import com.liberty52.product.service.controller.dto.ReviewModifyRequestDto;
 import com.liberty52.product.service.entity.Review;
@@ -73,7 +74,7 @@ public class ReviewModifyServiceImpl implements ReviewModifyService {
     private Review validAndGetReview(String reviewerId, String reviewId) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new ResourceNotFoundException(RESOURCE_NAME_REVIEW, PARAM_NAME_ID, reviewId));
-        if(!reviewerId.equals(review.getOrder().getAuthId()))
+        if(!reviewerId.equals(review.getCustomProduct().getOrders().getAuthId()))
             throw new NotYourReviewException(reviewerId);
         return review;
     }

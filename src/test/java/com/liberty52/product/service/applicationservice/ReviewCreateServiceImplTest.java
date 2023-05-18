@@ -1,13 +1,16 @@
 package com.liberty52.product.service.applicationservice;
 
 import com.liberty52.product.MockS3Test;
-import com.liberty52.product.service.controller.dto.ReplyCreateRequestDto;
 import com.liberty52.product.service.controller.dto.ReviewCreateRequestDto;
-import com.liberty52.product.service.entity.*;
+import com.liberty52.product.service.entity.CustomProduct;
+import com.liberty52.product.service.entity.Review;
 import com.liberty52.product.service.repository.CustomProductRepository;
-import com.liberty52.product.service.repository.OrdersRepository;
-import com.liberty52.product.service.repository.ProductRepository;
 import com.liberty52.product.service.repository.ReviewRepository;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -18,32 +21,18 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
 class ReviewCreateServiceImplTest extends MockS3Test {
-  @Autowired
-  private OrdersRepository ordersRepository;
-  @Autowired
-  private ProductRepository productRepository;
   @Autowired
   private CustomProductRepository customProductRepository;
   @Autowired
   private ReviewRepository reviewRepository;
   @Autowired
   private ReviewCreateService reviewCreateService;
-  Orders order;
-  CustomProduct customProduct;
   private final List<MultipartFile> testImageList = new ArrayList<>();
   private final String reviewerId = "authId2";
-
-  private final String productName = "Liberty 52_Frame";
   private final MockMultipartFile imageFile = newImageFile();
 
   private MockMultipartFile newImageFile() {
@@ -58,28 +47,19 @@ class ReviewCreateServiceImplTest extends MockS3Test {
   @Test
   @Order(1)
   void createReview() {
-    order= ordersRepository.save(Orders.create("authId2", 10000, OrderDestination.create("receiver",
-        "email", "01012341234", "경기도 어딘가", "101동 101호", "12345")));
-    Product product = productRepository.findByName(productName).get();
-
-    customProduct = CustomProduct.create("aa", 3, "authId2");
-    customProduct.associateWithProduct(product);
-    customProduct.associateWithOrder(order);
-    customProduct = customProductRepository.save(customProduct);
-
+    final String MOCK_CUSTOM_PRODUCT_ID = "Custom_Product_Id";
+    CustomProduct customProduct = customProductRepository.findById(MOCK_CUSTOM_PRODUCT_ID).get();
     Integer rating = 3;
     String content = "is very nice review";
     testImageList.add(imageFile);
 
-    ReviewCreateRequestDto dto = ReviewCreateRequestDto.createForTest(productName, rating, content,order.getId());
+    ReviewCreateRequestDto dto = ReviewCreateRequestDto.createForTest(rating, content,customProduct.getId());
 
     reviewCreateService.createReview(reviewerId,dto,testImageList);
-    Review review = reviewRepository.findByOrder(order).get();
+    Review review = reviewRepository.findByCustomProduct_Orders(customProduct.getOrders()).get();
 
     Assertions.assertEquals(rating, review.getRating());
     Assertions.assertEquals(content, review.getContent());
-
-    reviewRepository.save(review);
   }
 
 }

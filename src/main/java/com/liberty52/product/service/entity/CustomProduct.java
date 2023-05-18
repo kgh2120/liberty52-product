@@ -51,9 +51,9 @@ public class CustomProduct {
     public Map<String, String> getOptionsMap() {
         Map<String, String> optionsMap = new HashMap<>();
         for (CustomProductOption option : this.options) {
-            String optTypeName = option.getOptionDetail().getProductOption().getName();
-            String optName = option.getOptionDetail().getName();
-            optionsMap.put(optTypeName, optName);
+            String optionName = option.getOptionName();
+            String detailName = option.getDetailName();
+            optionsMap.put(optionName, detailName);
         }
         return optionsMap;
     }

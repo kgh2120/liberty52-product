@@ -6,10 +6,7 @@ import com.liberty52.product.global.exception.internal.InvalidRatingException;
 import com.liberty52.product.global.exception.internal.InvalidTextSize;
 import com.liberty52.product.service.controller.dto.ReviewImagesRemoveRequestDto;
 import com.liberty52.product.service.controller.dto.ReviewModifyRequestDto;
-import com.liberty52.product.service.entity.Orders;
-import com.liberty52.product.service.entity.Product;
-import com.liberty52.product.service.entity.Review;
-import com.liberty52.product.service.entity.ReviewImage;
+import com.liberty52.product.service.entity.*;
 import com.liberty52.product.service.repository.ReviewRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -60,10 +57,9 @@ class ReviewModifyServiceImplTest extends MockS3Test {
     void beforeEach() {
         product = DBInitConfig.DBInitService.getProduct();
         order = DBInitConfig.DBInitService.getOrder();
-
+        CustomProduct customProduct = DBInitConfig.DBInitService.getCustomProduct();
         review = Review.create(4, "content");
-        review.associate(order);
-        review.associate(product);
+        review.associate(customProduct);
         images = IntStream.range(0, 4).mapToObj(i -> ReviewImage.create(review, "url" + i)).toList();
         reviewRepository.save(review);
     }

@@ -1,8 +1,9 @@
-package com.liberty52.product.service.applicationservice;
+package com.liberty52.product.service.applicationservice.impl;
 
 import com.liberty52.product.global.exception.external.badrequest.BadRequestException;
 import com.liberty52.product.global.exception.external.forbidden.InvalidRoleException;
 import com.liberty52.product.global.exception.external.notfound.ResourceNotFoundException;
+import com.liberty52.product.service.applicationservice.ReplyModifyService;
 import com.liberty52.product.service.controller.dto.ReplyModifyRequestDto;
 import com.liberty52.product.service.entity.Reply;
 import com.liberty52.product.service.repository.ReplyRepository;

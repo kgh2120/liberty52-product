@@ -1,4 +1,4 @@
-package com.liberty52.product.service.applicationservice;
+package com.liberty52.product.service.applicationservice.impl;
 
 import com.liberty52.product.global.adapter.s3.S3UploaderApi;
 import com.liberty52.product.global.event.Events;
@@ -10,6 +10,7 @@ import com.liberty52.product.global.exception.external.forbidden.NotYourOrderExc
 import com.liberty52.product.global.exception.external.internalservererror.ConfirmPaymentException;
 import com.liberty52.product.global.exception.external.notfound.OrderNotFoundByIdException;
 import com.liberty52.product.global.exception.external.notfound.ResourceNotFoundException;
+import com.liberty52.product.service.applicationservice.OrderCreateService;
 import com.liberty52.product.service.controller.dto.*;
 import com.liberty52.product.service.entity.*;
 import com.liberty52.product.service.entity.payment.Payment;
@@ -202,6 +203,7 @@ public class OrderCreateServiceImpl implements OrderCreateService {
         customProductOption.associate(customProduct);
         customProductOption.associate(detail);
         customProductOptionRepository.save(customProductOption);
+        customProductOption.fixOption();
     }
 
 

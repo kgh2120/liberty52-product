@@ -54,7 +54,7 @@ public class ReviewRemoveServiceTest extends MockS3Test {
         Assertions.assertThrows(ReviewNotFoundByIdException.class, () -> reviewRemoveService.removeReview(reviewerId, randomString()));
         Assertions.assertThrows(NotYourReviewException.class, () -> reviewRemoveService.removeReview(randomString(), review.getId()));
 
-        reviewRemoveService.removeReview(review.getOrder().getAuthId(), review.getId());
+        reviewRemoveService.removeReview(review.getCustomProduct().getOrders().getAuthId(), review.getId());
         Review reviewAfter = reviewRepository.findById(review.getId()).orElse(null);
         Assertions.assertNull(reviewAfter);
 

@@ -1,9 +1,10 @@
-package com.liberty52.product.service.applicationservice;
+package com.liberty52.product.service.applicationservice.impl;
 
 import static com.liberty52.product.global.contants.RoleConstants.ADMIN;
 
 import com.liberty52.product.global.exception.external.forbidden.InvalidRoleException;
 import com.liberty52.product.global.exception.external.notfound.ResourceNotFoundException;
+import com.liberty52.product.service.applicationservice.ReplyCreateService;
 import com.liberty52.product.service.controller.dto.ReplyCreateRequestDto;
 import com.liberty52.product.service.entity.Reply;
 import com.liberty52.product.service.entity.Review;

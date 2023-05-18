@@ -20,8 +20,15 @@ public class CustomProductOption {
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private CustomProduct customProduct;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    /**
+     * Order 이후, optionDetail 값은 null.
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
     private OptionDetail optionDetail;
+
+    private int price;
+    private String optionName;
+    private String detailName;
 
     public static CustomProductOption create() {
         return new CustomProductOption();
@@ -34,5 +41,21 @@ public class CustomProductOption {
 
     public void associate(OptionDetail optionDetail) {
         this.optionDetail = optionDetail;
+    }
+
+    /**
+     * 주문이 완료된 후 기존의 옵션-옵션 디테일 정보를
+     * 필드로 저장하고, 옵션 디테일과의 연관 관계를 끊는다.
+     *
+     */
+    public void fixOption(){
+        price = optionDetail.getPrice();
+        detailName = optionDetail.getName();
+        optionName = optionDetail.getProductOption().getName();
+        removeAssociateWithOptionDetail();
+    }
+
+    private void removeAssociateWithOptionDetail() {
+        optionDetail = null;
     }
 }

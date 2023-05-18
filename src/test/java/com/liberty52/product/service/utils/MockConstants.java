@@ -28,6 +28,8 @@ public class MockConstants {
     public static final String MOCK_AUTHOR_NAME = "MOCK_AUTHOR_NAME";
     public static final String MOCK_AUTHOR_PROFILE_URL = "MOCK_AUTHOR_PROFILE_URL";
 
+    public static final String MOCK_CUSTOM_PRODUCT_ID = "MOCK_CUSTOM_PRODUCT_ID";
+
 
 
 

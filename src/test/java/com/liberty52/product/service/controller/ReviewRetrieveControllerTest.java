@@ -3,8 +3,7 @@ package com.liberty52.product.service.controller;
 import static com.liberty52.product.service.utils.MockConstants.MOCK_AUTH_ID;
 import static com.liberty52.product.service.utils.MockConstants.MOCK_PRODUCT_REPRESENT_URL;
 import static com.liberty52.product.service.utils.MockFactory.createMockReviewRetrieveResponse;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -38,7 +37,7 @@ class ReviewRetrieveControllerTest {
     @Test
     void reviewRetrieveTest() throws Exception {
         //given
-        BDDMockito.given(reviewRetrieveService.retrieveReviews(any(), any(), any(), anyBoolean()))
+        BDDMockito.given(reviewRetrieveService.retrieveReviews(anyString(), anyString(), any(), anyBoolean()))
                 .willReturn(createMockReviewRetrieveResponse());
 
         ResultActions actions = mvc.perform(

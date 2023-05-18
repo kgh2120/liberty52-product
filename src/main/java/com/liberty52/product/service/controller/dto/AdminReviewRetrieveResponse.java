@@ -23,7 +23,7 @@ public class AdminReviewRetrieveResponse {
   private Set<String> authorIds = new HashSet<>();
   public AdminReviewRetrieveResponse(List<Review> reviews, long currentPage, long startPage, long lastPage, long totalLastPage) {
     contents = reviews.stream().map(r -> {
-      String orderAuthId = r.getOrder().getAuthId();
+      String orderAuthId = r.getCustomProduct().getOrders().getAuthId();
       ReviewContent content = new ReviewContent(r.getId(),r.getRating(), r.getContent(),
           r.getReviewImages().stream().map(
               ReviewImage::getUrl).toList(), r.getReplies().size(),

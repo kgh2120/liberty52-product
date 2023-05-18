@@ -126,15 +126,15 @@ public class MailContentMaker {
 
     private static String makeOrderedProductInfoSection(Orders order) {
         StringBuilder sb = new StringBuilder();
-        for (CustomProduct product : order.getCustomProducts()) {
+        for (CustomProduct customProduct : order.getCustomProducts()) {
             String productInfo = String.format(
                     OrderedProductInfoSection.ORDERED_PRODUCT_INFO,
                     RepresentImageUrl.LIBERTY52_FRAME_REPRESENTATIVE_URL,
-                    product.getProduct().getName(),
-                    product.getOptionsMap().get(ProductConstants.PROD_OPT_1),
-                    product.getOptionsMap().get(ProductConstants.PROD_OPT_2),
-                    product.getOptionsMap().get(ProductConstants.PROD_OPT_3),
-                    product.getQuantity()
+                    customProduct.getProduct().getName(),
+                    customProduct.getOptionsMap().get(ProductConstants.PROD_OPT_1),
+                    customProduct.getOptionsMap().get(ProductConstants.PROD_OPT_2),
+                    customProduct.getOptionsMap().get(ProductConstants.PROD_OPT_3),
+                    customProduct.getQuantity()
             );
             sb.append(productInfo);
         }

@@ -26,14 +26,18 @@ public class OptionDetail {
     @Column(nullable = false)
     private Integer price;
 
+    @Column(nullable = false)
+    private boolean onSale;
+
     @Builder
-    private OptionDetail(String name, Integer price) {
+    private OptionDetail(String name, Integer price, boolean onSale) {
         this.name = name;
         this.price = price;
+        this.onSale = onSale;
     }
 
-    public static OptionDetail create(String name, Integer price) {
-        return builder().name(name).price(price).build();
+    public static OptionDetail create(String name, Integer price, boolean onSale) {
+        return builder().name(name).price(price).onSale(onSale).build();
     }
 
     public void associate(ProductOption productOption) {
