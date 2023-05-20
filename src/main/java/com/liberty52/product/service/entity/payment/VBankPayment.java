@@ -60,7 +60,7 @@ public class VBankPayment extends Payment<VBankPayment.VBankPaymentInfo> {
         private Boolean isApplyCashReceipt;
         private LocalDateTime paidAt;
 
-        // Refund
+        // For Refund
         private String refundBank;
         private String refundHolder;
         private String refundAccount;
@@ -73,6 +73,10 @@ public class VBankPayment extends Payment<VBankPayment.VBankPaymentInfo> {
             this.depositorAccount = depositorAccount;
             this.isApplyCashReceipt = isApplyCashReceipt;
             this.paidAt = LocalDateTime.now();
+            this.refundBank = "";
+            this.refundHolder = "";
+            this.refundAccount = "";
+            this.refundPhoneNum = "";
         }
 
         private VBankPaymentInfo(VBankPaymentInfo prev) {
@@ -104,7 +108,7 @@ public class VBankPayment extends Payment<VBankPayment.VBankPaymentInfo> {
             return null;
         }
 
-        public static VBankPaymentInfo refund(VBankPaymentInfo prev, OrderCancelDto.Request.RefundVO refundVO) {
+        public static VBankPaymentInfo ofRefund(VBankPaymentInfo prev, OrderCancelDto.Request.RefundVO refundVO) {
             VBankPaymentInfo newInstance = new VBankPaymentInfo(prev);
             newInstance.refundBank = refundVO.getRefundBank();
             newInstance.refundHolder = refundVO.getRefundHolder();

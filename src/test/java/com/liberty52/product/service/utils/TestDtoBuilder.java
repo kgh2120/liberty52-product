@@ -5,6 +5,12 @@ import com.liberty52.product.service.controller.dto.OrderRefundDto;
 
 public class TestDtoBuilder {
 
+    public static OrderCancelDto.Request orderCancelRequestDto(String orderId) {
+        return OrderCancelDto.Request.builder()
+                .orderId(orderId)
+                .build();
+    }
+
     public static OrderCancelDto.Request orderCancelRequestDto(
             String orderId, String reason, String refundBank, String refundHolder, String refundAccount, String refundPhoneNum) {
         return OrderCancelDto.Request.builder()

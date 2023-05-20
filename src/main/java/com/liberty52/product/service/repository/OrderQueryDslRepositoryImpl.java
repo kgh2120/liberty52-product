@@ -1,13 +1,5 @@
 package com.liberty52.product.service.repository;
 
-import static com.liberty52.product.service.entity.QCustomProduct.customProduct;
-import static com.liberty52.product.service.entity.QCustomProductOption.customProductOption;
-import static com.liberty52.product.service.entity.QOptionDetail.optionDetail;
-import static com.liberty52.product.service.entity.QOrderDestination.orderDestination;
-import static com.liberty52.product.service.entity.QOrders.orders;
-import static com.liberty52.product.service.entity.QProduct.product;
-import static com.liberty52.product.service.entity.payment.QPayment.*;
-
 import com.liberty52.product.global.exception.external.internalservererror.InternalServerErrorException;
 import com.liberty52.product.service.entity.OrderStatus;
 import com.liberty52.product.service.entity.Orders;
@@ -15,10 +7,6 @@ import com.querydsl.jpa.JPQLTemplates;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-
-import java.util.List;
-import java.util.Optional;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,6 +15,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+
+import static com.liberty52.product.service.entity.QCanceledOrders.canceledOrders;
+import static com.liberty52.product.service.entity.QCustomProduct.customProduct;
+import static com.liberty52.product.service.entity.QCustomProductOption.customProductOption;
+import static com.liberty52.product.service.entity.QOptionDetail.optionDetail;
+import static com.liberty52.product.service.entity.QOrderDestination.orderDestination;
+import static com.liberty52.product.service.entity.QOrders.orders;
+import static com.liberty52.product.service.entity.QProduct.product;
+import static com.liberty52.product.service.entity.payment.QPayment.payment;
 
 
 @Slf4j
@@ -86,17 +86,42 @@ public class OrderQueryDslRepositoryImpl implements OrderQueryDslRepository {
         );
     }
 
+    @Override
+    public List<Orders> retrieveCanceledOrdersByAdmin(Pageable pageable) {
+        return fetchOrdersWithCanceledOrdersByAdmin(pageable, OrderStatus.CANCELED, OrderStatus.CANCEL_REQUESTED)
+                .fetch();
+    }
+
+    @Override
+    public List<Orders> retrieveOnlyRequestedCanceledOrdersByAdmin(Pageable pageable) {
+        return fetchOrdersWithCanceledOrdersByAdmin(pageable, OrderStatus.CANCEL_REQUESTED)
+                .fetch();
+    }
+
+    @Override
+    public List<Orders> retrieveOnlyCanceledOrdersByAdmin(Pageable pageable) {
+        return fetchOrdersWithCanceledOrdersByAdmin(pageable, OrderStatus.CANCELED)
+                .fetch();
+    }
+
+    @Override
+    public Optional<Orders> retrieveOrderDetailWithCanceledOrdersByAdmin(String orderId) {
+        return Optional.ofNullable(
+                selectOrdersAndAssociatedEntityWithCanceledOrders()
+                    .where(orders.id.eq(orderId))
+                    .fetchOne()
+        );
+    }
+
 
     private JPAQuery<Orders> selectOrdersAndAssociatedEntity() {
         return queryFactory
                 .selectFrom(orders)
-                .leftJoin(orderDestination).on(orders.orderDestination.eq(orderDestination))
-                .fetchJoin()
+                .leftJoin(orderDestination).on(orders.orderDestination.eq(orderDestination)).fetchJoin()
                 .leftJoin(customProduct).on(customProduct.orders.eq(orders)).fetchJoin()
                 .leftJoin(product).on(customProduct.product.eq(product)).fetchJoin()
-                .leftJoin(customProductOption).on(customProductOption.customProduct.eq(
-                        customProduct)).fetchJoin()
-                .leftJoin(optionDetail).on(customProductOption.optionDetail.eq(optionDetail))
+                .leftJoin(customProductOption).on(customProductOption.customProduct.eq(customProduct)).fetchJoin()
+                .leftJoin(optionDetail).on(customProductOption.optionDetail.eq(optionDetail)).fetchJoin()
                 .leftJoin(payment).on(payment.orders.eq(orders)).fetchJoin();
     }
 
@@ -110,6 +135,32 @@ public class OrderQueryDslRepositoryImpl implements OrderQueryDslRepository {
                 .orderBy(orders.orderDate.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize());
+    }
+
+    private JPAQuery<Orders> fetchOrdersWithCanceledOrdersByAdmin(Pageable pageable, OrderStatus... statuses) {
+        if (statuses.length == 0 || statuses.length > 2) {
+            log.error("[LIB-ERROR] 주문 취소 SQL 로직을 잘못 요청하셨습니다.");
+            throw new InternalServerErrorException("SQL Error");
+        }
+        return queryFactory
+                .selectFrom(orders)
+                .leftJoin(customProduct).on(customProduct.orders.eq(orders)).fetchJoin()
+                .leftJoin(product).on(customProduct.product.eq(product)).fetchJoin()
+                .where(
+                        statuses.length == 2 ?
+                                orders.orderStatus.eq(statuses[0]).or(orders.orderStatus.eq(statuses[1])) :
+                                orders.orderStatus.eq(statuses[0])
+                )
+                .leftJoin(canceledOrders).on(canceledOrders.orders.eq(orders))
+                .orderBy(orders.orderDate.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize());
+    }
+
+    private JPAQuery<Orders> selectOrdersAndAssociatedEntityWithCanceledOrders() {
+        return selectOrdersAndAssociatedEntity()
+                .where(orders.orderStatus.eq(OrderStatus.CANCELED).or(orders.orderStatus.eq(OrderStatus.CANCEL_REQUESTED)))
+                .leftJoin(canceledOrders).on(canceledOrders.orders.eq(orders)).fetchJoin();
     }
 
     private Long getTotalCount() {

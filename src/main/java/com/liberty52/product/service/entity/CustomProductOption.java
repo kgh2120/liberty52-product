@@ -25,7 +25,6 @@ public class CustomProductOption {
      */
     @ManyToOne(fetch = FetchType.LAZY)
     private OptionDetail optionDetail;
-
     private int price;
     private String optionName;
     private String detailName;

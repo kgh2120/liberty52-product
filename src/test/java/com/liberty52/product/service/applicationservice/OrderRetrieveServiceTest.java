@@ -11,9 +11,6 @@ package com.liberty52.product.service.applicationservice;
 //import static com.liberty52.product.service.utils.MockConstants.MOCK_RECEIVER_EMAIL;
 //import static com.liberty52.product.service.utils.MockConstants.MOCK_RECEIVER_NAME;
 //import static com.liberty52.product.service.utils.MockConstants.MOCK_RECEIVER_PHONE_NUMBER;
-import static com.liberty52.product.service.utils.TestInitiator.initDataForTestingOrder;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.liberty52.product.TestBeanConfig;
 import com.liberty52.product.global.adapter.cloud.AuthServiceClient;
@@ -21,8 +18,6 @@ import com.liberty52.product.global.exception.external.badrequest.CannotAccessOr
 import com.liberty52.product.global.exception.external.forbidden.InvalidRoleException;
 import com.liberty52.product.service.controller.dto.AdminOrderListResponse;
 import com.liberty52.product.service.controller.dto.OrderDetailRetrieveResponse;
-import com.liberty52.product.service.entity.OrderDestination;
-import com.liberty52.product.service.entity.Orders;
 import com.liberty52.product.service.utils.MockConstants;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.AfterEach;
@@ -34,6 +29,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.liberty52.product.service.utils.TestInitiator.initDataForTestingOrder;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Transactional
 @SpringBootTest
@@ -193,6 +191,5 @@ class OrderRetrieveServiceTest {
                 () -> orderRetrieveService.retrieveOrderDetailByAdmin(ROLE_ADMIN, ORDER_ID)
         );
     }
-
 
 }

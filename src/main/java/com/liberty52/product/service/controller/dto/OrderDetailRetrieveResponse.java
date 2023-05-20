@@ -1,15 +1,14 @@
 package com.liberty52.product.service.controller.dto;
 
-import static com.liberty52.product.global.contants.RepresentImageUrl.LIBERTY52_FRAME_REPRESENTATIVE_URL;
-
+import com.liberty52.product.service.entity.CustomProductOption;
 import com.liberty52.product.service.entity.OrderDestination;
 import com.liberty52.product.service.entity.Orders;
 import com.liberty52.product.service.entity.payment.Payment;
+import lombok.Data;
 
 import java.util.List;
-import java.util.Map;
 
-import lombok.Data;
+import static com.liberty52.product.global.contants.RepresentImageUrl.LIBERTY52_FRAME_REPRESENTATIVE_URL;
 
 @Data
 public class OrderDetailRetrieveResponse {
@@ -47,13 +46,11 @@ public class OrderDetailRetrieveResponse {
             new OrderRetrieveProductResponse(c.getId(),c.getProduct().getName(), c.getQuantity(),
                     c.getProduct().getPrice() + c.getOptions()
                             .stream()
-                            .mapToLong(e
-                                    -> e.getOptionDetail()
-                                    .getPrice())
+                            .mapToLong(CustomProductOption::getPrice)
                             .sum(),
                     c.getUserCustomPictureUrl(),
-                    c.getOptions().stream().map(o ->
-                            o.getOptionDetail().getName()).toList())
+                    c.getOptions().stream().map(CustomProductOption::getDetailName).toList()
+            )
         ).toList();
         this.deliveryFee = orders.getDeliveryPrice();
         this.totalPrice = orders.getAmount();

@@ -86,13 +86,6 @@ public class OrderCreateServiceImpl implements OrderCreateService {
     }
 
     @Override
-    public PaymentCardResponseDto createCardPaymentOrdersByCarts(String authId, OrderCreateRequestDto dto) {
-        Orders order = this.saveOrderByCarts(authId, dto);
-        this.saveCardPayment(order);
-        return PaymentCardResponseDto.of(order.getId(), order.getOrderNum(), order.getAmount());
-    }
-
-    @Override
     public PaymentVBankResponseDto createVBankPaymentOrders(String authId, OrderCreateRequestDto dto, MultipartFile imageFile) {
         Orders order = this.saveOrder(authId, dto, imageFile);
         this.saveVBankPayment(dto, order);
@@ -100,22 +93,33 @@ public class OrderCreateServiceImpl implements OrderCreateService {
     }
 
     @Override
+    public PaymentCardResponseDto createCardPaymentOrdersByCarts(String authId, OrderCreateRequestDto dto) {
+        List<CustomProduct> customProducts = this.getCustomProducts(authId, dto);
+        Orders order = this.saveOrderByCarts(authId, dto, customProducts);
+        this.saveCardPayment(order);
+        return PaymentCardResponseDto.of(order.getId(), order.getOrderNum(), order.getAmount());
+    }
+
+    @Override
     public PaymentVBankResponseDto createVBankPaymentOrdersByCarts(String authId, OrderCreateRequestDto dto) {
-        Orders order = this.saveOrderByCarts(authId, dto);
+        List<CustomProduct> customProducts = this.getCustomProducts(authId, dto);
+        Orders order = this.saveOrderByCarts(authId, dto, customProducts);
         this.saveVBankPayment(dto, order);
         return PaymentVBankResponseDto.of(order.getId(), order.getOrderNum());
     }
 
     @Override
     public PaymentCardResponseDto createCardPaymentOrdersByCartsForGuest(String authId, OrderCreateRequestDto dto) {
-        Orders order = this.saveOrderByCartsForGuest(authId, dto);
+        List<CustomProduct> customProducts = this.getCustomProducts(authId, dto);
+        Orders order = this.saveOrderByCarts(dto.getDestinationDto().getReceiverPhoneNumber(), dto, customProducts);
         this.saveCardPayment(order);
         return PaymentCardResponseDto.of(order.getId(), order.getOrderNum(), order.getAmount());
     }
 
     @Override
     public PaymentVBankResponseDto createVBankPaymentOrdersByCartsForGuest(String authId, OrderCreateRequestDto dto) {
-        Orders order = this.saveOrderByCartsForGuest(authId, dto);
+        List<CustomProduct> customProducts = this.getCustomProducts(authId, dto);
+        Orders order = this.saveOrderByCarts(dto.getDestinationDto().getReceiverPhoneNumber(), dto, customProducts);
         this.saveVBankPayment(dto, order);
         return PaymentVBankResponseDto.of(order.getId(), order.getOrderNum());
     }
@@ -140,26 +144,16 @@ public class OrderCreateServiceImpl implements OrderCreateService {
         return order;
     }
 
-    private Orders saveOrderByCarts(String authId, OrderCreateRequestDto dto) {
-        List<CustomProduct> customProducts = this.getCustomProducts(authId, dto);
-
+    private Orders saveOrderByCarts(String authId, OrderCreateRequestDto dto, List<CustomProduct> customProducts) {
         OrderDestination orderDestination = this.createOrderDestination(dto);
         Orders order = ordersRepository.save(Orders.create(authId, orderDestination)); // OrderDestination will be saved by cascading
 
-        customProducts.forEach(customProduct -> customProduct.associateWithOrder(order));
-
-        order.calculateTotalValueAndSet();
-
-        return order;
-    }
-
-    private Orders saveOrderByCartsForGuest(String authId, OrderCreateRequestDto dto) {
-        List<CustomProduct> customProducts = this.getCustomProducts(authId, dto);
-
-        OrderDestination orderDestination = this.createOrderDestination(dto);
-        Orders order = ordersRepository.save(Orders.create(orderDestination.getReceiverPhoneNumber(), orderDestination));
-
-        customProducts.forEach(customProduct -> customProduct.associateWithOrder(order));
+        customProducts.forEach(customProduct -> {
+            customProduct.associateWithOrder(order);
+            customProduct.getOptions().stream()
+                    .peek(CustomProductOption::fixOption)
+                    .close();
+        });
 
         order.calculateTotalValueAndSet();
 
@@ -205,7 +199,6 @@ public class OrderCreateServiceImpl implements OrderCreateService {
         customProductOption.fixOption();
         customProductOptionRepository.save(customProductOption);
     }
-
 
     private void saveCardPayment(Orders order) {
         Payment<?> payment = Payment.cardOf();

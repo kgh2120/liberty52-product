@@ -114,7 +114,7 @@ public class OrderCancelServiceImpl implements OrderCancelService {
             }
             case ORDERED -> {
                 VBankPayment.VBankPaymentInfo prev = order.getPayment().getInfoAsDto();
-                VBankPayment.VBankPaymentInfo refund = VBankPayment.VBankPaymentInfo.refund(prev, request.getRefundVO());
+                VBankPayment.VBankPaymentInfo refund = VBankPayment.VBankPaymentInfo.ofRefund(prev, request.getRefundVO());
                 Payment<?> payment = order.getPayment();
                 payment.setInfo(refund);
                 order.changeOrderStatusToCancelRequest();

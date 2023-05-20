@@ -1,8 +1,6 @@
 package com.liberty52.product.service.applicationservice;
 
-import com.liberty52.product.service.controller.dto.AdminOrderListResponse;
-import com.liberty52.product.service.controller.dto.OrderDetailRetrieveResponse;
-import com.liberty52.product.service.controller.dto.OrdersRetrieveResponse;
+import com.liberty52.product.service.controller.dto.*;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -18,5 +16,13 @@ public interface OrderRetrieveService {
     AdminOrderListResponse retrieveOrdersByAdmin(String role, Pageable pageable);
 
     OrderDetailRetrieveResponse retrieveOrderDetailByAdmin(String role, String orderId);
+
+    AdminCanceledOrderListResponse retrieveCanceledOrdersByAdmin(String role, Pageable pageable);
+
+    AdminCanceledOrderListResponse retrieveOnlyRequestedCanceledOrdersByAdmin(String role, Pageable pageable);
+
+    AdminCanceledOrderListResponse retrieveOnlyCanceledOrdersByAdmin(String role, Pageable pageable);
+
+    AdminCanceledOrderDetailResponse retrieveCanceledOrderDetailByAdmin(String role, String orderId);
 
 }
