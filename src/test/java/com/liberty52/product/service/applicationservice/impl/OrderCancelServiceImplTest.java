@@ -1,11 +1,14 @@
 package com.liberty52.product.service.applicationservice.impl;
 
 import com.liberty52.product.MockS3Test;
+import com.liberty52.product.TestBeanConfig;
+import com.liberty52.product.global.adapter.cloud.AuthServiceClient;
+import com.liberty52.product.global.exception.external.badrequest.AlreadyCancelOrderException;
+import com.liberty52.product.global.exception.external.badrequest.OrderRefundException;
+import com.liberty52.product.global.exception.external.forbidden.InvalidRoleException;
 import com.liberty52.product.service.applicationservice.OrderCancelService;
 import com.liberty52.product.service.applicationservice.OrderCreateService;
-import com.liberty52.product.service.controller.dto.OrderCancelDto;
-import com.liberty52.product.service.controller.dto.OrderCreateRequestDto;
-import com.liberty52.product.service.controller.dto.PaymentVBankResponseDto;
+import com.liberty52.product.service.controller.dto.*;
 import com.liberty52.product.service.entity.OrderStatus;
 import com.liberty52.product.service.entity.Orders;
 import com.liberty52.product.service.entity.payment.VBankPayment;
@@ -14,6 +17,7 @@ import com.liberty52.product.service.utils.TestDtoBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.mock.web.MockMultipartFile;
 
 import java.io.FileInputStream;
@@ -22,6 +26,7 @@ import java.util.List;
 import java.util.UUID;
 
 @SpringBootTest
+@Import({TestBeanConfig.class})
 class OrderCancelServiceImplTest extends MockS3Test {
 
     @Autowired
@@ -30,6 +35,8 @@ class OrderCancelServiceImplTest extends MockS3Test {
     private OrdersRepository ordersRepository;
     @Autowired
     private OrderCreateService orderCreateService;
+    @Autowired
+    private AuthServiceClient authServiceClient;
 
     private final String AUTH_ID = UUID.randomUUID().toString();
 
@@ -107,6 +114,116 @@ class OrderCancelServiceImplTest extends MockS3Test {
         Assertions.assertFalse(paymentInfo.getRefundHolder().isBlank());
         Assertions.assertFalse(paymentInfo.getRefundAccount().isBlank());
         Assertions.assertFalse(paymentInfo.getRefundPhoneNum().isBlank());
+    }
+
+//    @Test
+    void test_refundCustomerOrder() {
+        final String aid = AUTH_ID;
+        OrderCreateRequestDto requestDto = OrderCreateRequestDto.forTestVBank(
+                LIBERTY, List.of(OPTION_1, OPTION_2, OPTION_3), QUANTITY, List.of(),
+                "테스터", "hsh47607@naver.com", "receiverPhoneNumber", "address1", "address2", "zipCode",
+                "하나은행 1234123412341234 리버티", "tester"
+        );
+        PaymentVBankResponseDto creationDto = orderCreateService.createVBankPaymentOrders(aid, requestDto, imageFile);
+
+        String orderId = creationDto.getOrderId();
+        Orders bOrder = ordersRepository.findById(orderId).get();
+        bOrder.changeOrderStatusToOrdered();
+        ordersRepository.save(bOrder);
+
+        OrderCancelDto.Request cancelRequest = TestDtoBuilder.orderCancelRequestDto(
+                orderId, "취소사유", "국민은행", "김테스터", "1304124-31232-12", "01012341234"
+        );
+        orderCancelService.cancelOrder(aid, cancelRequest);
+        Orders cOrder = ordersRepository.findById(orderId).get();
+
+        Assertions.assertEquals(OrderStatus.CANCEL_REQUESTED, cOrder.getOrderStatus());
+
+        OrderRefundDto.Request refundRequest = TestDtoBuilder.orderRefundRequestDto(orderId, 300);
+        orderCancelService.refundCustomerOrder("ADMIN_ID", "ADMIN", refundRequest);
+
+        Orders order = ordersRepository.findById(orderId).get();
+        Assertions.assertNotNull(order);
+        Assertions.assertEquals(OrderStatus.CANCELED, order.getOrderStatus());
+        Assertions.assertEquals("빌드 테스터", order.getCanceledOrders().getApprovedAdminName());
+        Assertions.assertEquals(300, order.getCanceledOrders().getFee());
+    }
+
+//    @Test
+    void test_refundCustomerOrder_when_givenInvalidPayType_throw_OrderRefundException() {
+        final String aid = AUTH_ID;
+        PaymentCardResponseDto dto = orderCreateService.createCardPaymentOrders(aid,
+                OrderCreateRequestDto.forTestCard(
+                        LIBERTY, List.of(OPTION_1, OPTION_2, OPTION_3), 2, List.of(),
+                        "receiverName", "receiverEmail", "receiverPhoneNumber", "address1", "address2", "zipCode"),
+                imageFile);
+
+        String orderId = dto.getMerchantId();
+
+        OrderRefundDto.Request refundRequest = TestDtoBuilder.orderRefundRequestDto(orderId, 300);
+        Assertions.assertThrows(
+                OrderRefundException.class,
+                () -> orderCancelService.refundCustomerOrder("ADMIN_ID", "ADMIN", refundRequest)
+        );
+    }
+
+//    @Test
+    void test_refundCustomerOrder_when_orderIsAlreadyCancel_throw_AlreadyCancelOrderException() {
+        final String aid = AUTH_ID;
+
+        OrderCreateRequestDto requestDto = OrderCreateRequestDto.forTestVBank(
+                LIBERTY, List.of(OPTION_1, OPTION_2, OPTION_3), QUANTITY, List.of(),
+                "테스터", "hsh47607@naver.com", "receiverPhoneNumber", "address1", "address2", "zipCode",
+                "하나은행 1234123412341234 리버티", "tester"
+        );
+        PaymentVBankResponseDto creationDto = orderCreateService.createVBankPaymentOrders(aid, requestDto, imageFile);
+
+        String orderId = creationDto.getOrderId();
+        Orders bOrder = ordersRepository.findById(orderId).get();
+        bOrder.changeOrderStatusToCanceled();
+        ordersRepository.save(bOrder);
+
+        OrderRefundDto.Request refundRequest = TestDtoBuilder.orderRefundRequestDto(orderId, 300);
+        Assertions.assertThrows(
+                AlreadyCancelOrderException.class,
+                () -> orderCancelService.refundCustomerOrder("ADMIN_ID", "ADMIN", refundRequest)
+        );
+    }
+
+//    @Test
+    void test_refundCustomerOrder_when_orderIsWaitingDeposit_throw_OrderRefundException() {
+        final String aid = AUTH_ID;
+        OrderCreateRequestDto requestDto = OrderCreateRequestDto.forTestVBank(
+                LIBERTY, List.of(OPTION_1, OPTION_2, OPTION_3), QUANTITY, List.of(),
+                "테스터", "hsh47607@naver.com", "receiverPhoneNumber", "address1", "address2", "zipCode",
+                "하나은행 1234123412341234 리버티", "tester"
+        );
+        PaymentVBankResponseDto creationDto = orderCreateService.createVBankPaymentOrders(aid, requestDto, imageFile);
+        String orderId = creationDto.getOrderId();
+
+        OrderRefundDto.Request refundRequest = TestDtoBuilder.orderRefundRequestDto(orderId, 300);
+        Assertions.assertThrows(
+                OrderRefundException.class,
+                () -> orderCancelService.refundCustomerOrder("ADMIN_ID", "ADMIN", refundRequest)
+        );
+    }
+
+//    @Test
+    void test_refundCustomerOrder_when_requesterIsNotAdmin_throw_InvalidRoleException() {
+        final String aid = AUTH_ID;
+        OrderCreateRequestDto requestDto = OrderCreateRequestDto.forTestVBank(
+                LIBERTY, List.of(OPTION_1, OPTION_2, OPTION_3), QUANTITY, List.of(),
+                "테스터", "hsh47607@naver.com", "receiverPhoneNumber", "address1", "address2", "zipCode",
+                "하나은행 1234123412341234 리버티", "tester"
+        );
+        PaymentVBankResponseDto creationDto = orderCreateService.createVBankPaymentOrders(aid, requestDto, imageFile);
+        String orderId = creationDto.getOrderId();
+
+        OrderRefundDto.Request refundRequest = TestDtoBuilder.orderRefundRequestDto(orderId, 300);
+        Assertions.assertThrows(
+                InvalidRoleException.class,
+                () -> orderCancelService.refundCustomerOrder("ADMIN_ID", "USER", refundRequest)
+        );
     }
 
 }

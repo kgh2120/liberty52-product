@@ -22,6 +22,8 @@ public class CanceledOrders {
     private LocalDateTime reqAt = LocalDateTime.now();
     private LocalDateTime canceledAt;
     private int fee;
+    /** 승인자 이름. */
+    private String approvedAdminName;
     @OneToOne
     @JoinColumn(name = "order_id")
     private Orders orders;
@@ -41,9 +43,10 @@ public class CanceledOrders {
         this.orders.setCanceledOrders(this);
     }
 
-    public void approveCanceled(int fee) {
+    public void approveCanceled(int fee, String approvedAdminName) {
         this.canceledAt = LocalDateTime.now();
         this.fee = fee;
+        this.approvedAdminName = approvedAdminName;
     }
 
 }
