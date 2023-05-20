@@ -30,6 +30,7 @@ public class Product {
     @OneToMany(mappedBy = "product")
     private List<ProductOption> productOptions = new ArrayList<>();
 
+    private String pictureUrl;
 
     @Builder
     private Product(String name, ProductState state, Long price) {
@@ -49,4 +50,12 @@ public class Product {
                 .build();
     }
 
+    public float getRate(List<Review> productReviewList) {
+        if(productReviewList.size() > 0) {
+            int totalRate = productReviewList.stream().mapToInt(Review::getRating).sum();
+            return totalRate / productReviewList.size();
+        } else {
+            return 0;
+        }
+    }
 }
