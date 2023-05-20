@@ -56,6 +56,12 @@ public class ReviewRetrieveServiceImpl implements
     @Override
     public AdminReviewDetailResponse retrieveReviewDetail(String role, String reviewId) {
         Validator.isAdmin(role);
-        return reviewQueryDslRepository.retrieveReviewDetail(reviewId);
+        AdminReviewDetailResponse response = reviewQueryDslRepository.retrieveReviewDetail(reviewId);
+        setAuthorDataFromAuthService(response);
+        return response;
+    }
+
+    private void setAuthorDataFromAuthService(AdminReviewDetailResponse response) {
+        response.setReviewAuthor(authServiceClient.retrieveAuthData(response.getAuthorIds()));
     }
 }

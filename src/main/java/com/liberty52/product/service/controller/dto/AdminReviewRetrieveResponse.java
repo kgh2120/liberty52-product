@@ -22,7 +22,7 @@ public class AdminReviewRetrieveResponse {
   public AdminReviewRetrieveResponse(List<Review> reviews, long currentPage, long startPage, long lastPage, long totalLastPage) {
     contents = reviews.stream().map(r -> {
       String orderAuthId = r.getCustomProduct().getOrders().getAuthId();
-      ReviewContent content = new ReviewContent(r.getId(),r.getRating(), r.getContent(),
+      ReviewContent content = new ReviewContent(r.getId(),r.getRating(), r.getContent(),orderAuthId,
           r.getReviewImages().stream().map(ReviewImage::getUrl).toList());
       authorIds.add(orderAuthId);
       return content;
@@ -41,17 +41,17 @@ public class AdminReviewRetrieveResponse {
   @Data
   public class ReviewContent{
     private String reviewId;
-    @JsonIgnore
     private String authorId;
     private String authorName;
     private Integer rating;
     private String content;
     private List<String> imageUrls;
 
-    public ReviewContent(String reviewId, Integer rating, String content, List<String> imageUrls) {
+    public ReviewContent(String reviewId, Integer rating, String content, String authorId, List<String> imageUrls) {
       this.reviewId = reviewId;
       this.rating = rating;
       this.content = content;
+      this.authorId = authorId;
       this.imageUrls = imageUrls;
     }
   }
