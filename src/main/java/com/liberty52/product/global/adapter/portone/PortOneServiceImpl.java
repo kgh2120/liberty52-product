@@ -52,7 +52,7 @@ public class PortOneServiceImpl implements PortOneService {
         Long amount = order.getAmount();
 
         PortOneToken token = this.getAccessToken();
-        this.requestCancelPayment(token, PortOneCancelDto.Request.of(impUid, reason, amount, 0L));
+        this.requestCancelPayment(token, PortOneCancelDto.Request.of(impUid, reason, amount, amount));
 
     }
 
