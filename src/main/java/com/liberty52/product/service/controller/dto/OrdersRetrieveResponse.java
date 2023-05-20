@@ -1,13 +1,15 @@
 package com.liberty52.product.service.controller.dto;
 
-import static com.liberty52.product.global.contants.RepresentImageUrl.LIBERTY52_FRAME_REPRESENTATIVE_URL;
-
+import com.liberty52.product.service.entity.CustomProductOption;
 import com.liberty52.product.service.entity.Orders;
 import com.liberty52.product.service.entity.payment.Payment;
 import com.liberty52.product.service.entity.payment.Payment.PaymentInfo;
-import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
+
+import static com.liberty52.product.global.contants.RepresentImageUrl.LIBERTY52_FRAME_REPRESENTATIVE_URL;
 
 @NoArgsConstructor
 @Data
@@ -24,10 +26,7 @@ public class OrdersRetrieveResponse {
     private String orderNum;
     private String paymentType;
     private PaymentInfo paymentInfo;
-
-
     private List<OrderRetrieveProductResponse> products;
-
 
     public OrdersRetrieveResponse(Orders orders) {
         this.orderId = orders.getId();
@@ -46,13 +45,11 @@ public class OrdersRetrieveResponse {
                 new OrderRetrieveProductResponse(c.getId(),c.getProduct().getName(), c.getQuantity(),
                         c.getProduct().getPrice() + c.getOptions()
                                 .stream()
-                                .mapToLong(e
-                                        -> e.getOptionDetail()
-                                        .getPrice())
+                                .mapToLong(CustomProductOption::getPrice)
                                 .sum(),
                         c.getUserCustomPictureUrl(),
-                        c.getOptions().stream().map(o ->
-                                o.getOptionDetail().getName()).toList())
+                        c.getOptions().stream().map(CustomProductOption::getDetailName).toList()
+                )
         ).toList();
     }
     public OrdersRetrieveResponse(String orderId, String orderDate, String orderStatus,
