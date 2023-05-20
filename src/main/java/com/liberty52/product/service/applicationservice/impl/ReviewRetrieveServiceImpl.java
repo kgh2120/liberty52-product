@@ -1,3 +1,6 @@
+
+
+
 package com.liberty52.product.service.applicationservice.impl;
 
 import com.liberty52.product.global.adapter.cloud.AuthServiceClient;
@@ -17,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @Service
 public class ReviewRetrieveServiceImpl implements
-        ReviewRetrieveService {
+    ReviewRetrieveService {
 
     private final ReviewQueryDslRepository reviewQueryDslRepository;
     private final AuthServiceClient authServiceClient;
@@ -26,9 +29,9 @@ public class ReviewRetrieveServiceImpl implements
 
     @Override
     public ReviewRetrieveResponse retrieveReviews(String productId, String authorId,
-            Pageable pageable,  boolean isPhotoFilter ) {
+        Pageable pageable,  boolean isPhotoFilter ) {
         ReviewRetrieveResponse response = reviewQueryDslRepository.retrieveReview(
-                productId, authorId, pageable, isPhotoFilter);
+            productId, authorId, pageable, isPhotoFilter);
 
         setAuthorDataFromAuthService(response);
         return response;
@@ -41,7 +44,13 @@ public class ReviewRetrieveServiceImpl implements
     @Override
     public AdminReviewRetrieveResponse retrieveReviews(String role, Pageable pageable) {
         Validator.isAdmin(role);
-        return reviewQueryDslRepository.retrieveAllReviews(pageable);
+        AdminReviewRetrieveResponse response = reviewQueryDslRepository.retrieveAllReviews(pageable);
+        setAuthorDataFromAuthService(response);
+        return response;
+    }
+
+    private void setAuthorDataFromAuthService(AdminReviewRetrieveResponse response) {
+        response.setReviewAuthor(authServiceClient.retrieveAuthData(response.getAuthorIds()));
     }
 
     @Override
