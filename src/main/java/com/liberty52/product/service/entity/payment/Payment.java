@@ -34,6 +34,7 @@ public abstract class Payment<T extends Payment.PaymentInfo> {
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     protected Orders orders;
 
+    @Column(length = 1000)
     protected String info = "";
 
     protected static final ObjectMapper objectMapper;
@@ -66,6 +67,10 @@ public abstract class Payment<T extends Payment.PaymentInfo> {
 
     public void changeStatusToForgery() {
         this.status = PaymentStatus.FORGERY;
+    }
+
+    public void changeStatusToRefund() {
+        this.status = PaymentStatus.REFUND;
     }
 
     public abstract <T extends PaymentInfo> void setInfo(T dto);

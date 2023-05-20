@@ -18,6 +18,7 @@ public class SendMailEventHandler {
     @Async
     @EventListener(SendMailEvent.class)
     public void handlingSendMailEvent(SendMailEvent sendMailEvent) throws MessagingException {
+        log.info("[LIB-LOG] {} Send Mail to {}.", sendMailEvent.getTitle(), sendMailEvent.getTo());
         MailSender.Mail mail = MailSender.buildMail(
                 sendMailEvent.getTo(),
                 sendMailEvent.getTitle(),

@@ -1,5 +1,6 @@
 package com.liberty52.product.global.adapter.mail;
 
+import com.liberty52.product.global.adapter.mail.content.OrderCanceledMail;
 import com.liberty52.product.global.adapter.mail.content.OrderedCompletedMail;
 import com.liberty52.product.global.adapter.mail.content.OrderedProductInfoSection;
 import com.liberty52.product.global.adapter.mail.content.RequestDepositMail;
@@ -12,6 +13,7 @@ import com.liberty52.product.service.entity.payment.VBankPayment;
 
 import java.text.DecimalFormat;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 
 public class MailContentMaker {
 
@@ -24,9 +26,9 @@ public class MailContentMaker {
         PRICE_FORMAT = new DecimalFormat("###,###");
     }
 
-    public static String makeOrderRequestDepositContent(String authName, Orders order) {
+    public static String makeOrderRequestDepositContent(Orders order) {
         String vBankInfo = ((VBankPayment.VBankPaymentInfo)(order.getPayment().getInfoAsDto())).getVbankInfo();
-        String customerName = authName;
+        String customerName = order.getOrderDestination().getReceiverName();
         String orderNum = order.getOrderNum();
         String orderedDate = order.getOrderDate().format(DATE_FORMAT);
         String receiverName = order.getOrderDestination().getReceiverName();
@@ -34,7 +36,7 @@ public class MailContentMaker {
         String address1 = "(" + order.getOrderDestination().getZipCode() + ")" + " " + order.getOrderDestination().getAddress1();
         String address2 = order.getOrderDestination().getAddress2();
 
-        String productList = makeOrderedProductInfoSection(order);
+        String productList = orderedProductInfoSection(order);
 
         String orderAmount = PRICE_FORMAT.format(order.getAmount() - order.getDeliveryPrice());
         Integer orderQuantity = order.getTotalQuantity();
@@ -51,9 +53,9 @@ public class MailContentMaker {
         );
     }
 
-    public static String makeCardOrderedCompletedContent(String authName, Orders order) {
+    public static String makeCardOrderedCompletedContent(Orders order) {
         // 기본정보
-        String customerName = authName;
+        String customerName = order.getOrderDestination().getReceiverName();
         String orderNum = order.getOrderNum();
         String orderedDate = order.getOrderDate().format(DATE_FORMAT);
 
@@ -71,7 +73,7 @@ public class MailContentMaker {
         String paidAt = paymentInfo.getPaidAt().format(DATE_FORMAT);
 
         // 주문상품 정보
-        String productInfo = makeOrderedProductInfoSection(order);
+        String productInfo = orderedProductInfoSection(order);
         String orderAmount = PRICE_FORMAT.format(order.getAmount() - order.getDeliveryPrice());
         Integer orderQuantity = order.getTotalQuantity();
         String deliveryPrice = PRICE_FORMAT.format(order.getDeliveryPrice());
@@ -86,9 +88,9 @@ public class MailContentMaker {
         );
     }
 
-    public static String makeVbankOrderedCompletedContent(String authName, Orders order) {
+    public static String makeVbankOrderedCompletedContent(Orders order) {
         // 기본정보
-        String customerName = authName;
+        String customerName = order.getOrderDestination().getReceiverName();
         String orderNum = order.getOrderNum();
         String orderedDate = order.getOrderDate().format(DATE_FORMAT);
 
@@ -108,7 +110,7 @@ public class MailContentMaker {
         String paidAt = paymentInfo.getPaidAt().format(DATE_FORMAT);
 
         // 주문 상품 정보
-        String productInfo = makeOrderedProductInfoSection(order);
+        String productInfo = orderedProductInfoSection(order);
         String orderAmount = PRICE_FORMAT.format(order.getAmount() - order.getDeliveryPrice());
         Integer orderQuantity = order.getTotalQuantity();
         String deliveryPrice = PRICE_FORMAT.format(order.getDeliveryPrice());
@@ -123,22 +125,56 @@ public class MailContentMaker {
         );
     }
 
-
-    private static String makeOrderedProductInfoSection(Orders order) {
+    private static String orderedProductInfoSection(Orders order) {
         StringBuilder sb = new StringBuilder();
         for (CustomProduct customProduct : order.getCustomProducts()) {
+            Map<String, String> optionsMap = customProduct.getOptionsMap();
             String productInfo = String.format(
                     OrderedProductInfoSection.ORDERED_PRODUCT_INFO,
                     RepresentImageUrl.LIBERTY52_FRAME_REPRESENTATIVE_URL,
                     customProduct.getProduct().getName(),
-                    customProduct.getOptionsMap().get(ProductConstants.PROD_OPT_1),
-                    customProduct.getOptionsMap().get(ProductConstants.PROD_OPT_2),
-                    customProduct.getOptionsMap().get(ProductConstants.PROD_OPT_3),
+                    optionsMap.get(ProductConstants.PROD_OPT_1),
+                    optionsMap.get(ProductConstants.PROD_OPT_2),
+                    optionsMap.get(ProductConstants.PROD_OPT_3),
                     customProduct.getQuantity()
             );
             sb.append(productInfo);
         }
         return sb.toString();
+    }
+
+    public static String makeOrderCanceledContent(String contentTitle, Orders order) {
+        String customerName = order.getOrderDestination().getReceiverName();
+        String orderNum = order.getOrderNum();
+        String orderDate = order.getOrderDate().format(DATE_FORMAT);
+        String cancelReason = order.getCanceledOrders().getReason();
+
+        String orderAmount = PRICE_FORMAT.format(order.getAmount() - order.getDeliveryPrice());
+        String deliveryPrice = PRICE_FORMAT.format(order.getDeliveryPrice());
+        String paymentType = order.getPayment().getType().getKorName();
+        String finalAmount = PRICE_FORMAT.format(order.getAmount());
+
+        String receiverName = order.getOrderDestination().getReceiverName();
+        String receiverPhone = order.getOrderDestination().getReceiverPhoneNumber();
+        String address1 = "(" + order.getOrderDestination().getZipCode() + ")" + " " + order.getOrderDestination().getAddress1();
+        String address2 = order.getOrderDestination().getAddress2();
+
+        String productInfo = orderedProductInfoSection(order);
+
+        Integer orderQuantity = order.getTotalQuantity();
+
+        String cancelFee = PRICE_FORMAT.format(order.getCanceledOrders().getFee());
+        String refundAmount = PRICE_FORMAT.format(order.getAmount() - order.getCanceledOrders().getFee());
+
+        return String.format(OrderCanceledMail.ORDER_CANCELED(contentTitle),
+                customerName, orderNum, orderDate, cancelReason,
+                orderAmount, deliveryPrice, paymentType, finalAmount,
+                receiverName, receiverPhone, address1, address2,
+                productInfo,
+                orderAmount, orderQuantity,
+                cancelFee, refundAmount,
+                deliveryPrice, orderAmount, deliveryPrice,
+                cancelFee, refundAmount);
     }
 
 }

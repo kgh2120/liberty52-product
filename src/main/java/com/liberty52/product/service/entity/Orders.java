@@ -50,7 +50,10 @@ public class Orders {
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "orders")
     @JoinColumn(updatable = false)
-    private Payment payment;
+    private Payment<?> payment;
+
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "orders")
+    private CanceledOrders canceledOrders;
 
     @Deprecated
     private Orders(String authId, int deliveryPrice, OrderDestination orderDestination) {
@@ -83,6 +86,18 @@ public class Orders {
 
     public void setPayment(Payment<?> payment) {
         this.payment = payment;
+    }
+
+    public void setCanceledOrders(CanceledOrders canceledOrders) {
+        this.canceledOrders = canceledOrders;
+    }
+
+    public void changeOrderStatusToCancelRequest() {
+        this.orderStatus = OrderStatus.CANCEL_REQUESTED;
+    }
+
+    public void changeOrderStatusToCanceled() {
+        this.orderStatus = OrderStatus.CANCELED;
     }
 
     public void changeOrderStatusToOrdered() {

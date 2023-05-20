@@ -1,11 +1,10 @@
 package com.liberty52.product.service.entity;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,10 +19,11 @@ public class CanceledOrders {
     @Id
     private String id = UUID.randomUUID().toString();
     private String reason;
-    private LocalDateTime reqAt;
+    private LocalDateTime reqAt = LocalDateTime.now();
     private LocalDateTime canceledAt;
     private int fee;
     @OneToOne
+    @JoinColumn(name = "order_id")
     private Orders orders;
 
     private CanceledOrders(String reason) {
@@ -38,6 +38,12 @@ public class CanceledOrders {
 
     public void associate(Orders order) {
         this.orders = order;
+        this.orders.setCanceledOrders(this);
+    }
+
+    public void approveCanceled(int fee) {
+        this.canceledAt = LocalDateTime.now();
+        this.fee = fee;
     }
 
 }

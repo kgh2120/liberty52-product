@@ -202,8 +202,8 @@ public class OrderCreateServiceImpl implements OrderCreateService {
         CustomProductOption customProductOption = CustomProductOption.create();
         customProductOption.associate(customProduct);
         customProductOption.associate(detail);
-        customProductOptionRepository.save(customProductOption);
         customProductOption.fixOption();
+        customProductOptionRepository.save(customProductOption);
     }
 
 
@@ -223,7 +223,7 @@ public class OrderCreateServiceImpl implements OrderCreateService {
         payment.associate(order);
         payment.setInfo(VBankPayment.VBankPaymentInfo.ofWaitingDeposit(dto.getVbankDto()));
 
-        Events.raise(new OrderRequestDepositEvent(dto.getDestinationDto().getReceiverEmail(), dto.getDestinationDto().getReceiverName(), order));
+        Events.raise(new OrderRequestDepositEvent(order));
     }
 
     private OrderDestination createOrderDestination(OrderCreateRequestDto dto) {

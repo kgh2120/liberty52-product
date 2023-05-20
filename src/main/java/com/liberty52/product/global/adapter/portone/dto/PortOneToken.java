@@ -12,7 +12,7 @@ public class PortOneToken {
     private LocalDateTime now;
     private LocalDateTime expiredAt;
 
-    public static PortOneToken of(PortOneTokenResponseDto.PortOneTokenResponse dto) {
+    public static PortOneToken of(PortOneTokenDto.Response.ApiResponse dto) {
         PortOneToken portOneToken = new PortOneToken();
         portOneToken.accessToken = dto.getAccess_token();
         portOneToken.now = Utils.convertUnixToLocalDateTime(dto.getNow());

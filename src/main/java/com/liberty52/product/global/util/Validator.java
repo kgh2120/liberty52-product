@@ -16,4 +16,13 @@ public class Validator {
     private static boolean isNotEquals(Object origin, Object target) {
         return !Objects.equals(origin, target);
     }
+
+    public static boolean areNullOrBlank(String... args) {
+        for (String arg : args) {
+            if (arg == null || arg.isBlank()) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -1,7 +1,7 @@
 package com.liberty52.product.service.applicationservice;
 
 import com.liberty52.product.MockS3Test;
-import com.liberty52.product.global.adapter.portone.PortOneWebhookService;
+import com.liberty52.product.global.adapter.portone.PortOneService;
 import com.liberty52.product.global.adapter.portone.dto.PortOneWebhookDto;
 import com.liberty52.product.service.controller.dto.OrderCreateRequestDto;
 import com.liberty52.product.service.controller.dto.PaymentCardResponseDto;
@@ -43,7 +43,7 @@ class OrderCreateServiceImplTest extends MockS3Test {
     @Autowired
     private OrdersRepository ordersRepository;
     @Autowired
-    private PortOneWebhookService portOneWebhookService;
+    private PortOneService portOneService;
 
     OrderCreateServiceImplTest() throws IOException {
     }
@@ -124,7 +124,7 @@ class OrderCreateServiceImplTest extends MockS3Test {
         String orderId = dto.getMerchantId();
         Long amount = dto.getAmount();
 
-        portOneWebhookService.hookPortOnePaymentInfoForTest(PortOneWebhookDto.testOf(orderId, "paid"), amount);
+        portOneService.hookPortOnePaymentInfoForTest(PortOneWebhookDto.testOf(orderId, "paid"), amount);
 
         PaymentConfirmResponseDto response = orderCreateService.confirmFinalApprovalOfCardPayment(aid, orderId);
 
