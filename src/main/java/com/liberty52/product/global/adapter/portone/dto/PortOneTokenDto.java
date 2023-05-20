@@ -1,13 +1,14 @@
 package com.liberty52.product.global.adapter.portone.dto;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 public class PortOneTokenDto {
 
     @Getter
-    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Request {
         private String imp_key;
         private String imp_secret;
@@ -18,19 +19,20 @@ public class PortOneTokenDto {
     }
 
     @Getter
-    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Response {
         private int code;
         private String message;
         private ApiResponse response;
 
         @Getter
-        public class ApiResponse {
-
+        @NoArgsConstructor
+        @AllArgsConstructor
+        public static class ApiResponse {
             private String access_token;
             private Long now;
             private Long expired_at;
-
         }
     }
 }

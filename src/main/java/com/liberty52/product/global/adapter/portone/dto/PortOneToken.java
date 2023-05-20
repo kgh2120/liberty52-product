@@ -1,11 +1,15 @@
 package com.liberty52.product.global.adapter.portone.dto;
 
 import com.liberty52.product.global.util.Utils;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class PortOneToken {
 
     private String accessToken;
