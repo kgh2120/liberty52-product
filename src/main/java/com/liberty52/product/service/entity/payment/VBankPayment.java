@@ -3,6 +3,7 @@ package com.liberty52.product.service.entity.payment;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.liberty52.product.service.controller.dto.OrderCancelDto;
 import com.liberty52.product.service.controller.dto.OrderCreateRequestDto;
+import com.liberty52.product.service.controller.dto.VBankStatusModifyDto;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.*;
@@ -104,8 +105,12 @@ public class VBankPayment extends Payment<VBankPayment.VBankPaymentInfo> {
             return info;
         }
 
-        public static VBankPaymentInfo ofPaid() {
-            return null;
+        public static VBankPaymentInfo ofPaid(VBankPaymentInfo prev, VBankStatusModifyDto dto) {
+            VBankPaymentInfo newInstance = new VBankPaymentInfo(prev);
+            newInstance.depositorBank = dto.getDepositorBank();
+            newInstance.depositorName = dto.getDepositorName();
+            newInstance.depositorAccount = dto.getDepositorAccount();
+            return newInstance;
         }
 
         public static VBankPaymentInfo ofRefund(VBankPaymentInfo prev, OrderCancelDto.Request.RefundVO refundVO) {

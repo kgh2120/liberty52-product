@@ -139,5 +139,8 @@ public class Orders {
         this.totalQuantity = quantity.get();
     }
 
+    public void modifyOrderStatus(OrderStatus orderStatus){
+        this.orderStatus = orderStatus;
+    }
 
 }
