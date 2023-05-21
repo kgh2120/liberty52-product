@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
@@ -32,16 +33,28 @@ public class DallEApiClient {
                 .baseUrl(BASE_URL)
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer " + apiKey)
+                .exchangeStrategies( // b64 로 받을 때 메모리 제한에 걸리는 것에 대한 해결. limit 없애버림.
+                        ExchangeStrategies.builder()
+                                .codecs(config -> config.defaultCodecs().maxInMemorySize(-1))
+                                .build())
                 .build();
     }
 
-    public Dto.Response generateImage(String prompt, int n, Dto.Request.Size size, Dto.Request.Format responseFormat, String user) {
-        Dto.Request request = new Dto.Request(prompt, n, size, responseFormat, user);
+    public Dto.Response.URL generateImageAsUrl(String prompt, int n, Dto.Request.Size size, String user) {
+        return generateImage(prompt, n, size, user, Dto.Request.Format.URL, Dto.Response.URL.class);
+    }
+
+    public Dto.Response.B64Json generateImageAsB64Json(String prompt, int n, Dto.Request.Size size, String user) {
+        return generateImage(prompt, n, size, user, Dto.Request.Format.B64_JSON, Dto.Response.B64Json.class);
+    }
+
+    private <T extends Dto.Response<?>> T generateImage(String prompt, int n, Dto.Request.Size size, String user, Dto.Request.Format format, Class<T> responseType) {
+        Dto.Request request = new Dto.Request(prompt, n, size, format, user);
         return webClient.post()
                 .uri(PATH_GENERATION)
                 .body(BodyInserters.fromValue(request))
                 .retrieve()
-                .bodyToMono(Dto.Response.class)
+                .bodyToMono(responseType)
                 .onErrorResume(WebClientResponseException.class,
                         ex -> {
                             System.out.println(ex.getResponseBodyAsString());
@@ -84,7 +97,7 @@ public class DallEApiClient {
             @Getter
             public enum Format {
                 URL("url"),
-                B62_JSON("b64_json"),
+                B64_JSON("b64_json"),
                 ;
 
                 final String value;
@@ -118,8 +131,27 @@ public class DallEApiClient {
             }
         }
 
-        public record Response(Long created, List<GenerationData> data) {
-            public record GenerationData(String url) {
+        @Getter
+        public abstract static class Response<T extends Response.Data> {
+            private Long created;
+            private List<T> data;
+
+            public static class URL extends Response<Data.URL> {
+            }
+
+            public static class B64Json extends Response<Data.B64Json> {
+            }
+
+            public abstract static class Data {
+                @Getter
+                public static class URL extends Data {
+                    private String url;
+                }
+                @Getter
+                public static class B64Json extends Data {
+                    @JsonProperty("b64_json")
+                    private String b64Json;
+                }
             }
         }
     }

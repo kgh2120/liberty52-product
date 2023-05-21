@@ -5,4 +5,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface S3Uploader extends S3Uploader_ {
     String upload(MultipartFile multipartFile) throws S3UploaderException;
+
+    String uploadOfByte(byte[] b);
 }

@@ -3,6 +3,7 @@ package com.liberty52.product.global.adapter.s3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.liberty52.product.global.exception.internal.FileConvertException;
 import com.liberty52.product.global.exception.internal.FileNullException;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.ion.NullValueException;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -44,6 +46,17 @@ public class S3UploaderImpl implements S3Uploader {
         } catch (IOException e) {
             throw new S3UploaderException();
         }
+    }
+
+    @Override
+    public String uploadOfByte(byte[] b) {
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentLength(b.length);
+        metadata.setContentType("image/png");
+        String fileName = customProductPath + "/" + UUID.randomUUID() + ".png";
+        amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, new ByteArrayInputStream(b), metadata)
+                .withCannedAcl(CannedAccessControlList.PublicRead));
+        return amazonS3Client.getUrl(bucket, fileName).toString();
     }
 
     @Override
