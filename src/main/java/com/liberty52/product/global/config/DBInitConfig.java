@@ -225,6 +225,37 @@ public class DBInitConfig {
                     ordersRepository.save(guestOrder);
                 }
 
+                for (int i = 11; i < 15; i++) {
+                    Orders guestOrder = Orders.create("GUEST-00"+i,
+                        PriceConstants.DEFAULT_DELIVERY_PRICE,
+                        OrderDestination.create("receiver", "email", "01012341234", "경기도 어딘가",
+                            "101동 101호", "12345"));
+                    guestOrder.changeOrderStatusToWaitingDeposit();
+                    Field guestOrderId = guestOrder.getClass().getDeclaredField("id");
+                    guestOrderId.setAccessible(true);
+                    guestOrderId.set(guestOrder, "GORDER-00"+i);
+                    ordersRepository.save(guestOrder);
+                    Payment<? extends PaymentInfo> guestPayment = Payment.vbankOf();
+                    guestPayment.associate(guestOrder);
+                    guestPayment.setInfo(VBankPayment.VBankPaymentInfo.of("하나은행","하나하나은행","박찬길",
+                        "123-3123123",false));
+
+                    customProduct = CustomProduct.create(imageUrl, 1, "GUEST-00"+i);
+                    customProduct.associateWithProduct(product);
+                    customProduct.associateWithOrder(guestOrder);
+                    customProductRepository.save(customProduct);
+
+                    associateCustomProductOption(detailEasel, material, materialOption2, customProduct);
+
+                    Review noPhotoReview = Review.create(3, "good");
+                    noPhotoReview.associate(customProduct);
+
+                    reviewRepository.save(noPhotoReview);
+
+                    guestOrder.calculateTotalValueAndSet();
+                    ordersRepository.save(guestOrder);
+                }
+
 
                 VBank vBank_hana = VBank.of(VBankConstants.VBANK_HANA);
                 VBank vBank_kb = VBank.of(VBankConstants.VBANK_KB);
