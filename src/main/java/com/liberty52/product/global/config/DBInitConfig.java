@@ -5,6 +5,7 @@ import com.liberty52.product.global.contants.PriceConstants;
 import com.liberty52.product.global.contants.ProductConstants;
 import com.liberty52.product.global.contants.VBankConstants;
 import com.liberty52.product.service.applicationservice.OrderCreateService;
+import com.liberty52.product.service.controller.dto.OrderCancelDto;
 import com.liberty52.product.service.entity.*;
 import com.liberty52.product.service.entity.payment.CardPayment;
 import com.liberty52.product.service.entity.payment.Payment;
@@ -132,7 +133,7 @@ public class DBInitConfig {
                 customProduct0.associateWithCart(cart);
                 customProductRepository.save(customProduct0);
 
-                associateCustomProductOption(detailEasel, material, materialOption2, customProduct0);
+                associateCustomProductOption(false, detailEasel, material, materialOption2, customProduct0);
 
                 // Add Order
                 Orders order = ordersRepository.save(
@@ -151,13 +152,14 @@ public class DBInitConfig {
                 customProduct0.associateWithOrder(order);
                 customProductRepository.save(customProduct0);
 
-                associateCustomProductOption(detailEasel, material, materialOption2, customProduct0);
+                associateCustomProductOption(true, detailEasel, material, materialOption2, customProduct0);
                 Payment<?> payment = Payment.cardOf();
                 PortOnePaymentInfo info = PortOnePaymentInfo.testOf(
                         UUID.randomUUID().toString(), UUID.randomUUID().toString(), 100L,
                         UUID.randomUUID().toString());
                 payment.associate(order);
                 payment.setInfo(CardPayment.CardPaymentInfo.of(info));
+                payment.changeStatusToPaid();
                 order.calculateTotalValueAndSet();
 
 
@@ -186,7 +188,7 @@ public class DBInitConfig {
                 }
                 reviewRepository.save(review);
 
-                associateCustomProductOption(detailEasel, material, materialOption2, customProduct);
+                associateCustomProductOption(true, detailEasel, material, materialOption2, customProduct);
                 Payment<? extends PaymentInfo> vbank = Payment.vbankOf();
                 vbank.setInfo(VBankPayment.VBankPaymentInfo.of("하나은행 1234123412341234 리버티","하나은행", "김테스터", "138-978554-10547",false));
                 vbank.associate(orderSub);
@@ -208,13 +210,14 @@ public class DBInitConfig {
                             UUID.randomUUID().toString());
                     guestPayment.associate(guestOrder);
                     guestPayment.setInfo(CardPayment.CardPaymentInfo.of(cardInfo));
+                    guestPayment.changeStatusToPaid();
 
                     customProduct = CustomProduct.create(imageUrl, 1, "GUEST-00"+i);
                     customProduct.associateWithProduct(product);
                     customProduct.associateWithOrder(guestOrder);
                     customProductRepository.save(customProduct);
 
-                    associateCustomProductOption(detailEasel, material, materialOption2, customProduct);
+                    associateCustomProductOption(true, detailEasel, material, materialOption2, customProduct);
 
                     Review noPhotoReview = Review.create(3, "good");
                     noPhotoReview.associate(customProduct);
@@ -239,13 +242,14 @@ public class DBInitConfig {
                     guestPayment.associate(guestOrder);
                     guestPayment.setInfo(VBankPayment.VBankPaymentInfo.of("하나은행","하나하나은행","박찬길",
                         "123-3123123",false));
+                    guestPayment.changeStatusToPaid();
 
                     customProduct = CustomProduct.create(imageUrl, 1, "GUEST-00"+i);
                     customProduct.associateWithProduct(product);
                     customProduct.associateWithOrder(guestOrder);
                     customProductRepository.save(customProduct);
 
-                    associateCustomProductOption(detailEasel, material, materialOption2, customProduct);
+                    associateCustomProductOption(true, detailEasel, material, materialOption2, customProduct);
 
                     Review noPhotoReview = Review.create(3, "good");
                     noPhotoReview.associate(customProduct);
@@ -255,6 +259,110 @@ public class DBInitConfig {
                     guestOrder.calculateTotalValueAndSet();
                     ordersRepository.save(guestOrder);
                 }
+
+                // 주문 취소 데이터 생성
+                int c = 0;
+                    // 카드 취소
+                for (; c < 5; c++) {
+                    Orders c_order = Orders.create("CANCELER-00" + c,
+                            PriceConstants.DEFAULT_DELIVERY_PRICE,
+                            OrderDestination.create("receiver", "email", "01012341234", "경기도 어딘가",
+                                    "101동 101호", "12345")
+                    );
+                    Field orderId = c_order.getClass().getDeclaredField("id");
+                    orderId.setAccessible(true);
+                    orderId.set(c_order, "CORDER-00"+c);
+                    ordersRepository.save(c_order);
+
+                    Payment<? extends PaymentInfo> c_payment = Payment.cardOf();
+                    PortOnePaymentInfo cardInfo = PortOnePaymentInfo.testOf(
+                            UUID.randomUUID().toString(), UUID.randomUUID().toString(), 100L,
+                            UUID.randomUUID().toString());
+                    c_payment.associate(c_order);
+                    c_payment.setInfo(CardPayment.CardPaymentInfo.of(cardInfo));
+                    c_payment.changeStatusToPaid();
+
+                    customProduct = CustomProduct.create(imageUrl, 1, "CANCELER-00"+c);
+                    customProduct.associateWithProduct(product);
+                    customProduct.associateWithOrder(c_order);
+                    customProductRepository.save(customProduct);
+
+                    associateCustomProductOption(true, detailEasel, material, materialOption2, customProduct);
+
+                    c_order.calculateTotalValueAndSet();
+
+                    CanceledOrders canceledOrders = CanceledOrders.of("취소사유-00"+c, c_order);
+                    canceledOrders.approveCanceled(0, "SYSTEM");
+                    c_order.changeOrderStatusToCanceled();
+
+                    ordersRepository.save(c_order);
+                }
+
+                for (; c < 10; c++) {
+                    Orders c_order = Orders.create("CANCELER-00" + c,
+                            PriceConstants.DEFAULT_DELIVERY_PRICE,
+                            OrderDestination.create("receiver", "email", "01012341234", "경기도 어딘가",
+                                    "101동 101호", "12345")
+                    );
+                    Field orderId = c_order.getClass().getDeclaredField("id");
+                    orderId.setAccessible(true);
+                    orderId.set(c_order, "CORDER-00"+c);
+                    ordersRepository.save(c_order);
+
+                    Payment<? extends PaymentInfo> guestPayment = Payment.vbankOf();
+                    guestPayment.associate(c_order);
+                    guestPayment.setInfo(VBankPayment.VBankPaymentInfo.of(VBankConstants.VBANK_HANA,"국민은행","취소자",
+                            "123-3123123",false));
+
+                    customProduct = CustomProduct.create(imageUrl, 1, "CANCELER-00"+c);
+                    customProduct.associateWithProduct(product);
+                    customProduct.associateWithOrder(c_order);
+                    customProductRepository.save(customProduct);
+
+                    associateCustomProductOption(true, detailEasel, material, materialOption2, customProduct);
+
+                    c_order.calculateTotalValueAndSet();
+
+                    CanceledOrders canceledOrders = CanceledOrders.of("취소사유-00"+c, c_order);
+                    canceledOrders.approveCanceled(0, "관리자");
+                    c_order.changeOrderStatusToCanceled();
+
+                    ordersRepository.save(c_order);
+                }
+
+                for (; c < 15; c++) {
+                    Orders c_order = Orders.create("CANCELER-00" + c,
+                            PriceConstants.DEFAULT_DELIVERY_PRICE,
+                            OrderDestination.create("receiver", "email", "01012341234", "경기도 어딘가",
+                                    "101동 101호", "12345")
+                    );
+                    Field orderId = c_order.getClass().getDeclaredField("id");
+                    orderId.setAccessible(true);
+                    orderId.set(c_order, "CORDER-00"+c);
+                    ordersRepository.save(c_order);
+
+                    Payment<? extends PaymentInfo> guestPayment = Payment.vbankOf();
+                    guestPayment.associate(c_order);
+                    VBankPayment.VBankPaymentInfo prev = VBankPayment.VBankPaymentInfo.of(VBankConstants.VBANK_HANA, "국민은행", "취소자",
+                            "123-3123123", false);
+                    guestPayment.setInfo(VBankPayment.VBankPaymentInfo.ofRefund(prev, OrderCancelDto.Request.RefundVO.forTest()));
+                    guestPayment.changeStatusToPaid();
+
+                    customProduct = CustomProduct.create(imageUrl, 1, "CANCELER-00"+c);
+                    customProduct.associateWithProduct(product);
+                    customProduct.associateWithOrder(c_order);
+                    customProductRepository.save(customProduct);
+
+                    associateCustomProductOption(true, detailEasel, material, materialOption2, customProduct);
+
+                    c_order.calculateTotalValueAndSet();
+
+                    CanceledOrders.of("취소사유-00"+c, c_order);
+                    c_order.changeOrderStatusToCancelRequest();
+
+                    ordersRepository.save(c_order);
+                }
+
 
 
                 VBank vBank_hana = VBank.of(VBankConstants.VBANK_HANA);
@@ -272,22 +380,26 @@ public class DBInitConfig {
             }
         }
 
-        private void associateCustomProductOption(OptionDetail detailEasel, OptionDetail material,
+        private void associateCustomProductOption(boolean isOrdered, OptionDetail detailEasel, OptionDetail material,
                 OptionDetail materialOption2, CustomProduct customProduct) {
             CustomProductOption customProductOption = CustomProductOption.create();
             customProductOption.associate(detailEasel);
             customProductOption.associate(customProduct);
+            if (isOrdered) customProductOption.fixOption();
             customProductOptionRepository.save(customProductOption);
 
             customProductOption = CustomProductOption.create();
             customProductOption.associate(material);
             customProductOption.associate(customProduct);
+            if (isOrdered) customProductOption.fixOption();
             customProductOptionRepository.save(customProductOption);
 
             customProductOption = CustomProductOption.create();
             customProductOption.associate(materialOption2);
             customProductOption.associate(customProduct);
+            if (isOrdered) customProductOption.fixOption();
             customProductOptionRepository.save(customProductOption);
+
         }
 
         public static Orders getOrder() {

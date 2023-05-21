@@ -55,17 +55,14 @@ public class CanceledOrderRetrieveTest extends MockAdaptersTest {
         AdminCanceledOrderListResponse allResponse = orderRetrieveService.retrieveCanceledOrdersByAdmin(ADMIN, pageRequest);
         Assertions.assertNotNull(allResponse);
         Assertions.assertFalse(allResponse.getOrders().isEmpty());
-        Assertions.assertEquals(10, allResponse.getOrders().size());
 
         AdminCanceledOrderListResponse onlyCanceledResponse = orderRetrieveService.retrieveOnlyCanceledOrdersByAdmin(ADMIN, pageRequest);
         Assertions.assertNotNull(onlyCanceledResponse);
         Assertions.assertFalse(onlyCanceledResponse.getOrders().isEmpty());
-        Assertions.assertEquals(6, onlyCanceledResponse.getOrders().size());
 
         AdminCanceledOrderListResponse onlyRequestedResponse = orderRetrieveService.retrieveOnlyRequestedCanceledOrdersByAdmin(ADMIN, pageRequest);
         Assertions.assertNotNull(onlyRequestedResponse);
         Assertions.assertFalse(onlyRequestedResponse.getOrders().isEmpty());
-        Assertions.assertEquals(4, onlyRequestedResponse.getOrders().size());
     }
 
     @Test

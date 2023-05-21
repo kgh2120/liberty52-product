@@ -171,6 +171,20 @@ public class OrderQueryDslRepositoryImpl implements OrderQueryDslRepository {
                 .fetchOne();
     }
 
+    private Long getCanceledOrdersCount(OrderStatus... statuses) {
+        if (statuses.length == 0 || statuses.length > 2) {
+            log.error("[LIB-ERROR] 주문 취소 SQL 로직을 잘못 요청하셨습니다.");
+            throw new InternalServerErrorException("SQL Error");
+        }
+        return queryFactory
+                .select(orders.count())
+                .from(orders)
+                .where(statuses.length == 2 ?
+                                orders.orderStatus.eq(statuses[0]).or(orders.orderStatus.eq(statuses[1])) :
+                                orders.orderStatus.eq(statuses[0]))
+                .fetchOne();
+    }
+
     @Override
     public PageInfo getPageInfo(Pageable pageable) {
         if (pageable == null) {
@@ -180,6 +194,23 @@ public class OrderQueryDslRepositoryImpl implements OrderQueryDslRepository {
         long currentPage = pageable.getPageNumber() +1;
         long startPage =  currentPage % 10 ==0 ? (currentPage/10-1)*10+1 : (currentPage/10)*10 +1;
         Long total = getTotalCount();
+        long totalLastPage = total % pageable.getPageSize() == 0 ?
+                total / pageable.getPageSize() : total / pageable.getPageSize()+1;
+        long lastPage = Math.min(totalLastPage,
+                10L * (currentPage%10 == 0 ? currentPage/10 : currentPage / 10 + 1));
+
+        return new PageInfo(startPage, currentPage, lastPage, totalLastPage);
+    }
+
+    @Override
+    public PageInfo getCanceledOrdersPageInfo(Pageable pageable, OrderStatus... statuses) {
+        if (pageable == null) {
+            throw new InternalServerErrorException("Order List Pagination Error");
+        }
+
+        long currentPage = pageable.getPageNumber() +1;
+        long startPage =  currentPage % 10 ==0 ? (currentPage/10-1)*10+1 : (currentPage/10)*10 +1;
+        Long total = getCanceledOrdersCount(statuses);
         long totalLastPage = total % pageable.getPageSize() == 0 ?
                 total / pageable.getPageSize() : total / pageable.getPageSize()+1;
         long lastPage = Math.min(totalLastPage,

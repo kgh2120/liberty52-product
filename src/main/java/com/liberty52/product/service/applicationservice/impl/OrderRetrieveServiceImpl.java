@@ -5,6 +5,7 @@ import com.liberty52.product.global.exception.external.badrequest.CannotAccessOr
 import com.liberty52.product.global.util.Validator;
 import com.liberty52.product.service.applicationservice.OrderRetrieveService;
 import com.liberty52.product.service.controller.dto.*;
+import com.liberty52.product.service.entity.OrderStatus;
 import com.liberty52.product.service.entity.Orders;
 import com.liberty52.product.service.repository.OrderQueryDslRepository;
 import com.liberty52.product.service.repository.OrderQueryDslRepositoryImpl;
@@ -89,21 +90,21 @@ public class OrderRetrieveServiceImpl implements OrderRetrieveService {
     public AdminCanceledOrderListResponse retrieveCanceledOrdersByAdmin(String role, Pageable pageable) {
         Validator.isAdmin(role);
         List<Orders> orders = orderQueryDslRepository.retrieveCanceledOrdersByAdmin(pageable);
-        return getAdminCanceledOrderListResponse(pageable, orders);
+        return getAdminCanceledOrderListResponse(pageable, orders, OrderStatus.CANCELED, OrderStatus.CANCEL_REQUESTED);
     }
 
     @Override
     public AdminCanceledOrderListResponse retrieveOnlyRequestedCanceledOrdersByAdmin(String role, Pageable pageable) {
         Validator.isAdmin(role);
         List<Orders> orders = orderQueryDslRepository.retrieveOnlyRequestedCanceledOrdersByAdmin(pageable);
-        return getAdminCanceledOrderListResponse(pageable, orders);
+        return getAdminCanceledOrderListResponse(pageable, orders, OrderStatus.CANCEL_REQUESTED);
     }
 
     @Override
     public AdminCanceledOrderListResponse retrieveOnlyCanceledOrdersByAdmin(String role, Pageable pageable) {
         Validator.isAdmin(role);
         List<Orders> orders = orderQueryDslRepository.retrieveOnlyCanceledOrdersByAdmin(pageable);
-        return getAdminCanceledOrderListResponse(pageable, orders);
+        return getAdminCanceledOrderListResponse(pageable, orders, OrderStatus.CANCELED);
     }
 
     @Override
@@ -120,11 +121,11 @@ public class OrderRetrieveServiceImpl implements OrderRetrieveService {
         return AdminCanceledOrderDetailResponse.of(order, customerName);
     }
 
-    private AdminCanceledOrderListResponse getAdminCanceledOrderListResponse(Pageable pageable, List<Orders> orders) {
+    private AdminCanceledOrderListResponse getAdminCanceledOrderListResponse(Pageable pageable, List<Orders> orders, OrderStatus... statuses) {
         if (CollectionUtils.isEmpty(orders)) {
             return AdminCanceledOrderListResponse.empty();
         }
-        OrderQueryDslRepositoryImpl.PageInfo pageInfo = orderQueryDslRepository.getPageInfo(pageable);
+        OrderQueryDslRepositoryImpl.PageInfo pageInfo = orderQueryDslRepository.getCanceledOrdersPageInfo(pageable, statuses);
 
         Set<String> customerIds = orders.stream().map(Orders::getAuthId).collect(Collectors.toSet());
         Map<String, AuthClientDataResponse> customerInfos = authServiceClient.retrieveAuthData(customerIds);

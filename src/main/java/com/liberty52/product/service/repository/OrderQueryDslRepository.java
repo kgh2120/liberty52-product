@@ -1,5 +1,6 @@
 package com.liberty52.product.service.repository;
 
+import com.liberty52.product.service.entity.OrderStatus;
 import com.liberty52.product.service.entity.Orders;
 import org.springframework.data.domain.Pageable;
 
@@ -27,5 +28,7 @@ public interface OrderQueryDslRepository {
     Optional<Orders> retrieveOrderDetailWithCanceledOrdersByAdmin(String orderId);
 
     OrderQueryDslRepositoryImpl.PageInfo getPageInfo(Pageable pageable);
+
+    OrderQueryDslRepositoryImpl.PageInfo getCanceledOrdersPageInfo(Pageable pageable, OrderStatus... statuses);
 
 }

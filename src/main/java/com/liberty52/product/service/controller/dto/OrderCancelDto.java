@@ -2,7 +2,10 @@ package com.liberty52.product.service.controller.dto;
 
 import com.liberty52.product.global.util.Validator;
 import jakarta.validation.constraints.NotBlank;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 
 public class OrderCancelDto {
 
@@ -32,6 +35,10 @@ public class OrderCancelDto {
             private String refundHolder;
             private String refundAccount;
             private String refundPhoneNum;
+
+            public static RefundVO forTest() {
+                return new RefundVO("하나은행", "환불자", "1234-1234-213", "01012341234");
+            }
         }
     }
 
