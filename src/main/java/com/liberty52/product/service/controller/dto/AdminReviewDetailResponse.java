@@ -22,13 +22,14 @@ public class AdminReviewDetailResponse {
 
   public AdminReviewDetailResponse(Review review) {
     String orderAuthId = review.getCustomProduct().getOrders().getAuthId();
-    authorIds.add(orderAuthId);
     content = new ReviewContent(review.getId(), review.getRating(), review.getContent(),
         review.getReviewImages().stream().map(
             ReviewImage::getUrl).toList(), review.getCreatedAt().toLocalDate(), orderAuthId,
         review.getReplies().stream().map(
             rp -> new ReplyContent(rp.getAuthId(), rp.getContent(), rp.getId(),
                 rp.getCreatedAt().toLocalDate())).toList());
+    authorIds.add(orderAuthId);
+    content.replies.forEach(rp -> authorIds.add(rp.authorId));
   }
 
   public void setReviewAuthor(Map<String, AuthClientDataResponse> reviewAuthorId) {
