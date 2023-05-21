@@ -180,10 +180,10 @@ public class DBInitConfig {
                 review.associate(customProduct);
                 ReviewImage.create(review, imageUrl);
 
-//                for (int i = 0; i < 3; i++) {
-//                    Reply reply = Reply.create("맛있따" + i, AUTH_ID);
-//                    reply.associate(review);
-//                }
+                for (int i = 0; i < 3; i++) {
+                    Reply reply = Reply.create("맛있따" + i, AUTH_ID);
+                    reply.associate(review);
+                }
                 reviewRepository.save(review);
 
                 associateCustomProductOption(detailEasel, material, materialOption2, customProduct);

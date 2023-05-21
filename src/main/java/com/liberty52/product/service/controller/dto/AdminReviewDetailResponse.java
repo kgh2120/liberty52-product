@@ -11,27 +11,35 @@ import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-@Data @AllArgsConstructor
+@Data
+@AllArgsConstructor
 public class AdminReviewDetailResponse {
+
   private ReviewContent content;
 
   @JsonIgnore
   private Set<String> authorIds = new HashSet<>();
+
   public AdminReviewDetailResponse(Review review) {
     String orderAuthId = review.getCustomProduct().getOrders().getAuthId();
     authorIds.add(orderAuthId);
-    content = new ReviewContent(review.getRating(),review.getContent(),review.getReviewImages().stream().map(
-        ReviewImage::getUrl).toList(),review.getCreatedAt().toLocalDate(),orderAuthId,review.getReplies().stream().map(
-            rp -> new ReplyContent(rp.getAuthId(),rp.getContent(),rp.getId(),rp.getCreatedAt().toLocalDate())).toList());
+    content = new ReviewContent(review.getId(), review.getRating(), review.getContent(),
+        review.getReviewImages().stream().map(
+            ReviewImage::getUrl).toList(), review.getCreatedAt().toLocalDate(), orderAuthId,
+        review.getReplies().stream().map(
+            rp -> new ReplyContent(rp.getAuthId(), rp.getContent(), rp.getId(),
+                rp.getCreatedAt().toLocalDate())).toList());
   }
 
-  public void setReviewAuthor( Map<String, AuthClientDataResponse> reviewAuthorId){
+  public void setReviewAuthor(Map<String, AuthClientDataResponse> reviewAuthorId) {
     content.authorName = reviewAuthorId.get(content.authorId).getAuthorName();
     content.setReplyAuthor(reviewAuthorId);
   }
 
   @Data
-  public class ReviewContent{
+  public class ReviewContent {
+
+    private String reviewId;
     private Integer rating;
     private String content;
     private List<String> imageUrls;
@@ -40,8 +48,10 @@ public class AdminReviewDetailResponse {
     private LocalDate reviewCreatedAt;
     private List<ReplyContent> replies;
 
-    public ReviewContent(Integer rating, String content, List<String> imageUrls, LocalDate reviewCreatedAt,
+    public ReviewContent(String reviewId, Integer rating, String content, List<String> imageUrls,
+        LocalDate reviewCreatedAt,
         String authorId, List<ReplyContent> replies) {
+      this.reviewId = reviewId;
       this.rating = rating;
       this.content = content;
       this.imageUrls = imageUrls;
@@ -50,7 +60,7 @@ public class AdminReviewDetailResponse {
       this.replies = replies;
     }
 
-    public void setReplyAuthor( Map<String, AuthClientDataResponse> map){
+    public void setReplyAuthor(Map<String, AuthClientDataResponse> map) {
       replies.forEach(r -> {
         AuthClientDataResponse data = map.get(r.authorId);
         r.authorName = data.getAuthorName();
@@ -59,14 +69,15 @@ public class AdminReviewDetailResponse {
   }
 
   @Data
-  public class ReplyContent{
+  public class ReplyContent {
+
     private String authorId;
     private String authorName;
     private String content;
     private String replyId;
     private LocalDate replyCreatedAt;
 
-    public ReplyContent(String authorId, String content,String replyId, LocalDate replyCreatedAt) {
+    public ReplyContent(String authorId, String content, String replyId, LocalDate replyCreatedAt) {
       this.authorId = authorId;
       this.content = content;
       this.replyId = replyId;
