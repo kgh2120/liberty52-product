@@ -44,4 +44,8 @@ public class OptionDetail {
         this.productOption = productOption;
         this.productOption.addDetail(this);
     }
+
+    public void updateOnSale(boolean onSail) {
+        this.onSale = onSail;
+    }
 }
