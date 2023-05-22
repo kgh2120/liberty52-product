@@ -43,7 +43,7 @@ public class ProductInfoRetrieveServiceImpl implements ProductInfoRetrieveServic
         Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("product", "id", productId));
         List<ProductOptionResponseDto> productOptionResponseDtoList = new ArrayList<>();
         for(ProductOption productOption : product.getProductOptions()){
-            productOptionResponseDtoList.add(ProductOptionResponseDto.of(productOption.getName(), productOption.isRequire(), productOption.isOnSale(), getOptionDetails(productOption.getOptionDetails())));
+            productOptionResponseDtoList.add(ProductOptionResponseDto.of(productOption.getId(), productOption.getName(), productOption.isRequire(), productOption.isOnSale(), getOptionDetails(productOption.getOptionDetails())));
         }
         return productOptionResponseDtoList;
     }
@@ -51,7 +51,7 @@ public class ProductInfoRetrieveServiceImpl implements ProductInfoRetrieveServic
     private List<ProductOptionDetailResponseDto> getOptionDetails(List<OptionDetail> optionDetailList) {
         List<ProductOptionDetailResponseDto> productOptionDetailResponseDtoList = new ArrayList<>();
         for (OptionDetail optionDetail : optionDetailList) {
-            productOptionDetailResponseDtoList.add(ProductOptionDetailResponseDto.of(optionDetail.getName(), optionDetail.getPrice(), optionDetail.isOnSale()));
+            productOptionDetailResponseDtoList.add(ProductOptionDetailResponseDto.of(optionDetail.getId(), optionDetail.getName(), optionDetail.getPrice(), optionDetail.isOnSale()));
         }
         return productOptionDetailResponseDtoList;
 

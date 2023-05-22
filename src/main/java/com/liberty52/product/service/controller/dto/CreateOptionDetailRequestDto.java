@@ -10,7 +10,7 @@ public class CreateOptionDetailRequestDto {
     @NotBlank
     String name;
 
-    @NotBlank
+    @NotNull
     Integer price;
 
     @NotNull

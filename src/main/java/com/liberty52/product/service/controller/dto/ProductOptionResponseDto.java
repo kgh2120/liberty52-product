@@ -12,12 +12,13 @@ import java.util.List;
 @AllArgsConstructor
 public class ProductOptionResponseDto {
 
+    String optionId;
     String optionName;
     boolean require;
     boolean onSail;
     List<ProductOptionDetailResponseDto> optionDetailList;
 
-    public static ProductOptionResponseDto of(String optionName, boolean require, boolean onSale, List<ProductOptionDetailResponseDto> optionDetailList) {
-        return new ProductOptionResponseDto(optionName, require, onSale, optionDetailList);
+    public static ProductOptionResponseDto of(String optionId, String optionName, boolean require, boolean onSale, List<ProductOptionDetailResponseDto> optionDetailList) {
+        return new ProductOptionResponseDto(optionId, optionName, require, onSale, optionDetailList);
     }
 }
