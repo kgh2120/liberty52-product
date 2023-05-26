@@ -22,7 +22,7 @@ public class ProductListResponseDto extends PageDtoBase<ProductListResponseDto.P
         public ProductInfo(Product p) {
             this.id = p.getId();
             this.name = p.getName();
-            this.state = p.getState().name();
+            this.state = p.getProductState().name();
             this.price = p.getPrice();
         }
     }

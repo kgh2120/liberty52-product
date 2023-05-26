@@ -22,7 +22,7 @@ public class Product {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private ProductState state;
+    private ProductState productState;
 
     @Column(nullable = false)
     private Long price;
@@ -33,9 +33,9 @@ public class Product {
     private String pictureUrl;
 
     @Builder
-    private Product(String name, ProductState state, Long price) {
+    private Product(String name, ProductState productState, Long price) {
         this.name = name;
-        this.state = state;
+        this.productState = productState;
         this.price = price;
     }
 
@@ -45,7 +45,7 @@ public class Product {
 
     public static Product create(String name, ProductState state, Long price) {
         return builder().name(name)
-                .state(state)
+                .productState(state)
                 .price(price)
                 .build();
     }
