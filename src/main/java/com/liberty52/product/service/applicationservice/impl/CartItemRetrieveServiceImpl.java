@@ -1,6 +1,6 @@
 package com.liberty52.product.service.applicationservice.impl;
 
-import com.liberty52.product.service.applicationservice.CartItemRetriveService;
+import com.liberty52.product.service.applicationservice.CartItemRetrieveService;
 import com.liberty52.product.service.controller.dto.CartItemResponse;
 import com.liberty52.product.service.controller.dto.CartOptionResponse;
 import com.liberty52.product.service.entity.*;
@@ -16,12 +16,12 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class CartItemRetriveServiceImpl implements CartItemRetriveService {
+public class CartItemRetrieveServiceImpl implements CartItemRetrieveService {
 
     private final CartRepository cartRepository;
 
     @Override
-    public List<CartItemResponse> retriveAuthCartItem(String authId) {
+    public List<CartItemResponse> retrieveAuthCartItem(String authId) {
         List<CartItemResponse> cartItemResponseList = new ArrayList<CartItemResponse>();
         Cart cart = cartRepository.findByAuthId(authId).orElse(null);
 
@@ -32,7 +32,7 @@ public class CartItemRetriveServiceImpl implements CartItemRetriveService {
     }
 
     @Override
-    public List<CartItemResponse> retriveGuestCartItem(String guestId) {
+    public List<CartItemResponse> retrieveGuestCartItem(String guestId) {
         List<CartItemResponse> cartItemResponseList = new ArrayList<CartItemResponse>();
         Cart cart = cartRepository.findByAuthIdAndExpiryDateGreaterThanEqual(guestId, LocalDate.now()).orElse(null);
 

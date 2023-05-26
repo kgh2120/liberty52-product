@@ -15,8 +15,8 @@ public class ImageGenerationController {
 
     @PostMapping("/images/generations")
     @ResponseStatus(HttpStatus.CREATED)
-    public ImageGenerationDto.Response imageGenerate(@RequestHeader(HttpHeaders.AUTHORIZATION) String authId, // 어뷰징 방지.
+    public ImageGenerationDto.Response generateImage(@RequestHeader(HttpHeaders.AUTHORIZATION) String authId, // 어뷰징 방지.
                                             @Validated @RequestBody ImageGenerationDto.Request dto) {
-        return service.generate(authId, dto);
+        return service.generateImage(authId, dto);
     }
 }

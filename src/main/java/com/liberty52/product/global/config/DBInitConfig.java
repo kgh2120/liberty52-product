@@ -1,9 +1,9 @@
 package com.liberty52.product.global.config;
 
 import com.liberty52.product.global.adapter.portone.dto.PortOnePaymentInfo;
-import com.liberty52.product.global.contants.PriceConstants;
-import com.liberty52.product.global.contants.ProductConstants;
-import com.liberty52.product.global.contants.VBankConstants;
+import com.liberty52.product.global.constants.PriceConstants;
+import com.liberty52.product.global.constants.ProductConstants;
+import com.liberty52.product.global.constants.VBankConstants;
 import com.liberty52.product.service.applicationservice.OrderCreateService;
 import com.liberty52.product.service.controller.dto.OrderCancelDto;
 import com.liberty52.product.service.entity.*;

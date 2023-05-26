@@ -140,7 +140,7 @@ class OrderCancelServiceImplTest extends MockS3Test {
         Assertions.assertEquals(OrderStatus.CANCEL_REQUESTED, cOrder.getOrderStatus());
 
         OrderRefundDto.Request refundRequest = TestDtoBuilder.orderRefundRequestDto(orderId, 300);
-        orderCancelService.refundCustomerOrder("ADMIN_ID", "ADMIN", refundRequest);
+        orderCancelService.refundCustomerOrderByAdmin("ADMIN_ID", "ADMIN", refundRequest);
 
         Orders order = ordersRepository.findById(orderId).get();
         Assertions.assertNotNull(order);
@@ -163,7 +163,7 @@ class OrderCancelServiceImplTest extends MockS3Test {
         OrderRefundDto.Request refundRequest = TestDtoBuilder.orderRefundRequestDto(orderId, 300);
         Assertions.assertThrows(
                 OrderRefundException.class,
-                () -> orderCancelService.refundCustomerOrder("ADMIN_ID", "ADMIN", refundRequest)
+                () -> orderCancelService.refundCustomerOrderByAdmin("ADMIN_ID", "ADMIN", refundRequest)
         );
     }
 
@@ -186,7 +186,7 @@ class OrderCancelServiceImplTest extends MockS3Test {
         OrderRefundDto.Request refundRequest = TestDtoBuilder.orderRefundRequestDto(orderId, 300);
         Assertions.assertThrows(
                 AlreadyCancelOrderException.class,
-                () -> orderCancelService.refundCustomerOrder("ADMIN_ID", "ADMIN", refundRequest)
+                () -> orderCancelService.refundCustomerOrderByAdmin("ADMIN_ID", "ADMIN", refundRequest)
         );
     }
 
@@ -204,7 +204,7 @@ class OrderCancelServiceImplTest extends MockS3Test {
         OrderRefundDto.Request refundRequest = TestDtoBuilder.orderRefundRequestDto(orderId, 300);
         Assertions.assertThrows(
                 OrderRefundException.class,
-                () -> orderCancelService.refundCustomerOrder("ADMIN_ID", "ADMIN", refundRequest)
+                () -> orderCancelService.refundCustomerOrderByAdmin("ADMIN_ID", "ADMIN", refundRequest)
         );
     }
 
@@ -222,7 +222,7 @@ class OrderCancelServiceImplTest extends MockS3Test {
         OrderRefundDto.Request refundRequest = TestDtoBuilder.orderRefundRequestDto(orderId, 300);
         Assertions.assertThrows(
                 InvalidRoleException.class,
-                () -> orderCancelService.refundCustomerOrder("ADMIN_ID", "USER", refundRequest)
+                () -> orderCancelService.refundCustomerOrderByAdmin("ADMIN_ID", "USER", refundRequest)
         );
     }
 

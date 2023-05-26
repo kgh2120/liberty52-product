@@ -17,7 +17,7 @@ public class ImageGenerationServiceImpl implements ImageGenerationService {
     private final S3Uploader s3Uploader;
 
     @Override
-    public ImageGenerationDto.Response generate(String authId, ImageGenerationDto.Request dto) {
+    public ImageGenerationDto.Response generateImage(String authId, ImageGenerationDto.Request dto) {
         List<String> urls = dallEApiClient
                 .generateImageAsB64Json(dto.prompt(),
                         dto.n(),

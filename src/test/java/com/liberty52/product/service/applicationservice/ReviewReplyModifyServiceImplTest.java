@@ -17,14 +17,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
-import static com.liberty52.product.global.contants.RoleConstants.ADMIN;
+import static com.liberty52.product.global.constants.RoleConstants.ADMIN;
 
 @Transactional
 @SpringBootTest
-class ReplyModifyServiceImplTest {
+class ReviewReplyModifyServiceImplTest {
 
     @Autowired
-    ReplyModifyService service;
+    ReviewReplyModifyService service;
 
     final String mockAdminId = "bar";
     final String mockReplyContent = "Hello world";
@@ -48,19 +48,19 @@ class ReplyModifyServiceImplTest {
     @Test
     void Modify_Reply_Success() {
         String newContent = UUID.randomUUID().toString();
-        service.modify(mockAdminId, ADMIN, ReplyModifyRequestDto.createForTest(newContent), reviewId, replyId);
+        service.modifyReviewReplyByAdmin(mockAdminId, ADMIN, ReplyModifyRequestDto.createForTest(newContent), reviewId, replyId);
         Reply reply = replyRepository.findById(replyId).get();
         Assertions.assertEquals(newContent, reply.getContent());
     }
 
     @Test
     void InvalidRoleException() {
-        Assertions.assertThrows(InvalidRoleException.class, () -> service.modify(mockAdminId, UUID.randomUUID().toString(), ReplyModifyRequestDto.createForTest(UUID.randomUUID().toString()), reviewId, replyId));
+        Assertions.assertThrows(InvalidRoleException.class, () -> service.modifyReviewReplyByAdmin(mockAdminId, UUID.randomUUID().toString(), ReplyModifyRequestDto.createForTest(UUID.randomUUID().toString()), reviewId, replyId));
     }
 
     @Test
     void ResourceNotFoundException() {
-        Assertions.assertThrows(ResourceNotFoundException.class, () -> service.modify(mockAdminId, ADMIN, ReplyModifyRequestDto.createForTest(UUID.randomUUID().toString()), reviewId, UUID.randomUUID().toString()));
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> service.modifyReviewReplyByAdmin(mockAdminId, ADMIN, ReplyModifyRequestDto.createForTest(UUID.randomUUID().toString()), reviewId, UUID.randomUUID().toString()));
     }
 
     @Test
@@ -73,6 +73,6 @@ class ReplyModifyServiceImplTest {
         otherReview.associate(customProduct);
         reviewRepository.save(otherReview);
 
-        Assertions.assertThrows(BadRequestException.class, () -> service.modify(mockAdminId, ADMIN, ReplyModifyRequestDto.createForTest(UUID.randomUUID().toString()), otherReview.getId(), replyId));
+        Assertions.assertThrows(BadRequestException.class, () -> service.modifyReviewReplyByAdmin(mockAdminId, ADMIN, ReplyModifyRequestDto.createForTest(UUID.randomUUID().toString()), otherReview.getId(), replyId));
     }
 }

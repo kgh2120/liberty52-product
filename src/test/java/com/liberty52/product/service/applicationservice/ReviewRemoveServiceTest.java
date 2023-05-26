@@ -71,11 +71,11 @@ public class ReviewRemoveServiceTest extends MockS3Test {
 
         String role = "ADMIN";
 
-        Assertions.assertThrows(InvalidRoleException.class, () -> reviewRemoveService.removeCustomerReview(randomString(), review.getId()));
-        Assertions.assertThrows(ReviewNotFoundByIdException.class, () -> reviewRemoveService.removeCustomerReview(role, randomString()));
+        Assertions.assertThrows(InvalidRoleException.class, () -> reviewRemoveService.removeCustomerReviewByAdmin(randomString(), review.getId()));
+        Assertions.assertThrows(ReviewNotFoundByIdException.class, () -> reviewRemoveService.removeCustomerReviewByAdmin(role, randomString()));
 
 
-        reviewRemoveService.removeCustomerReview(role, review.getId());
+        reviewRemoveService.removeCustomerReviewByAdmin(role, review.getId());
         Review reviewAfter = reviewRepository.findById(review.getId()).orElse(null);
         Assertions.assertNull(reviewAfter);
     }
@@ -85,7 +85,7 @@ public class ReviewRemoveServiceTest extends MockS3Test {
         Reply replyBefore = replyRepository.findById(reply.getId()).orElse(null);
         Assertions.assertNotNull(replyBefore);
 
-        reviewRemoveService.removeReply("adminId", "ADMIN", reply.getId());
+        reviewRemoveService.removeReplyByAdmin("adminId", "ADMIN", reply.getId());
         Review reviewAfter = reviewRepository.findById(review.getId()).orElse(null);
         Reply replyAfter = replyRepository.findById(reply.getId()).orElse(null);
         Assertions.assertNull(replyAfter);

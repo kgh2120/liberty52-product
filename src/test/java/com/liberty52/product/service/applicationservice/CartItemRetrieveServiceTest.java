@@ -29,7 +29,7 @@ public class CartItemRetrieveServiceTest extends MockS3Test {
     CartRepository cartRepository;
 
     @Autowired
-    CartItemRetriveService cartItemRetriveService;
+    CartItemRetrieveService cartItemRetrieveService;
 
     @Test
     void 장바구니조회() throws IOException {
@@ -50,7 +50,7 @@ public class CartItemRetrieveServiceTest extends MockS3Test {
         dto2.create("Liberty 52_Frame", 2, option2);
         cartItemCreateService.createAuthCartItem("aaa", imageFile, dto2);
 
-        List<CartItemResponse> cartItemResponseList = cartItemRetriveService.retriveAuthCartItem("aaa");
+        List<CartItemResponse> cartItemResponseList = cartItemRetrieveService.retrieveAuthCartItem("aaa");
         Assertions.assertEquals(cartItemResponseList.size(), 2);
 
         CartItemResponse cartItemResponse1 = cartItemResponseList.get(0);
@@ -101,10 +101,10 @@ public class CartItemRetrieveServiceTest extends MockS3Test {
 //        Assertions.assertEquals(cartOptionResponse22.getPrice(), 500000);
         Assertions.assertEquals(cartOptionResponse22.isRequire(), true);
 
-        List<CartItemResponse> cartItemResponseList1 = cartItemRetriveService.retriveAuthCartItem("bbb");
+        List<CartItemResponse> cartItemResponseList1 = cartItemRetrieveService.retrieveAuthCartItem("bbb");
         Assertions.assertEquals(cartItemResponseList1.size(), 0);
 
-        List<CartItemResponse> cartItemResponseList2 = cartItemRetriveService.retriveAuthCartItem("ccc");
+        List<CartItemResponse> cartItemResponseList2 = cartItemRetrieveService.retrieveAuthCartItem("ccc");
         Assertions.assertEquals(cartItemResponseList2.size(), 0);
     }
 
@@ -128,7 +128,7 @@ public class CartItemRetrieveServiceTest extends MockS3Test {
         cartItemCreateService.createGuestCartItem("aaa", imageFile, dto2);
 
 
-        List<CartItemResponse> cartItemResponseList = cartItemRetriveService.retriveGuestCartItem("aaa");
+        List<CartItemResponse> cartItemResponseList = cartItemRetrieveService.retrieveGuestCartItem("aaa");
         Assertions.assertEquals(cartItemResponseList.size(), 2);
 
         CartItemResponse cartItemResponse1 = cartItemResponseList.get(0);
@@ -179,16 +179,16 @@ public class CartItemRetrieveServiceTest extends MockS3Test {
 //        Assertions.assertEquals(cartOptionResponse22.getPrice(), 500000);
         Assertions.assertEquals(cartOptionResponse22.isRequire(), true);
 
-        List<CartItemResponse> cartItemResponseList1 = cartItemRetriveService.retriveGuestCartItem("bbb");
+        List<CartItemResponse> cartItemResponseList1 = cartItemRetrieveService.retrieveGuestCartItem("bbb");
         Assertions.assertEquals(cartItemResponseList1.size(), 0);
 
-        List<CartItemResponse> cartItemResponseList2 = cartItemRetriveService.retriveGuestCartItem("ccc");
+        List<CartItemResponse> cartItemResponseList2 = cartItemRetrieveService.retrieveGuestCartItem("ccc");
         Assertions.assertEquals(cartItemResponseList2.size(), 0);
 
         Cart cart1 = cartRepository.findByAuthId("aaa").orElseThrow();
         cart1.updateExpiryDate(LocalDate.now().minusDays(7));
         cartRepository.save(cart1);
-        List<CartItemResponse> cartItemResponseList3 = cartItemRetriveService.retriveGuestCartItem("aaa");
+        List<CartItemResponse> cartItemResponseList3 = cartItemRetrieveService.retrieveGuestCartItem("aaa");
         Assertions.assertEquals(cartItemResponseList3.size(), 0);
     }
 }

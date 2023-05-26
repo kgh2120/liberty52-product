@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-import static com.liberty52.product.global.contants.RepresentImageUrl.LIBERTY52_FRAME_REPRESENTATIVE_URL;
+import static com.liberty52.product.global.constants.RepresentImageUrl.LIBERTY52_FRAME_REPRESENTATIVE_URL;
 
 @NoArgsConstructor
 @Data

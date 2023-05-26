@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.liberty52.product.global.contants.RoleConstants.ADMIN;
+import static com.liberty52.product.global.constants.RoleConstants.ADMIN;
 
 @SpringBootTest
 @Transactional

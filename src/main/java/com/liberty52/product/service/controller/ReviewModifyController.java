@@ -19,7 +19,7 @@ public class ReviewModifyController {
 
     @PutMapping("/reviews/{reviewId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void reviewModify(@RequestHeader(HttpHeaders.AUTHORIZATION) String reviewerId,
+    public void modifyReview(@RequestHeader(HttpHeaders.AUTHORIZATION) String reviewerId,
                              @PathVariable String reviewId,
                              @Validated @RequestPart ReviewModifyRequestDto dto,
                              @RequestPart(required = false) List<MultipartFile> images) {
@@ -28,25 +28,25 @@ public class ReviewModifyController {
 
     @PatchMapping("/reviews/{reviewId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void reviewRatingContentModify(@RequestHeader(HttpHeaders.AUTHORIZATION) String reviewerId,
+    public void modifyReviewRatingContent(@RequestHeader(HttpHeaders.AUTHORIZATION) String reviewerId,
                                           @PathVariable String reviewId,
                                           @Validated @RequestBody ReviewModifyRequestDto dto) {
-        reviewModifyService.modifyRatingContent(reviewerId, reviewId, dto);
+        reviewModifyService.modifyReviewRatingContent(reviewerId, reviewId, dto);
     }
 
     @PostMapping("/reviews/{reviewId}/images") // 이미지 추가
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void reviewImagesAdd(@RequestHeader(HttpHeaders.AUTHORIZATION) String reviewerId,
+    public void addReviewImages(@RequestHeader(HttpHeaders.AUTHORIZATION) String reviewerId,
                                 @PathVariable String reviewId,
                                 @RequestPart List<MultipartFile> images) {
-        reviewModifyService.addImages(reviewerId, reviewId, images);
+        reviewModifyService.addReviewImages(reviewerId, reviewId, images);
     }
 
     @DeleteMapping("/reviews/{reviewId}/images")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void reviewImagesRemove(@RequestHeader(HttpHeaders.AUTHORIZATION) String reviewerId,
+    public void removeReviewImages(@RequestHeader(HttpHeaders.AUTHORIZATION) String reviewerId,
                                    @PathVariable String reviewId,
                                    @Validated @RequestBody ReviewImagesRemoveRequestDto dto) {
-        reviewModifyService.removeImages(reviewerId, reviewId, dto);
+        reviewModifyService.removeReviewImages(reviewerId, reviewId, dto);
     }
 }

@@ -1,24 +1,25 @@
 package com.liberty52.product.service.applicationservice.impl;
 
-import com.liberty52.product.global.exception.external.forbidden.InvalidRoleException;
 import com.liberty52.product.global.exception.external.notfound.ResourceNotFoundException;
+import com.liberty52.product.global.util.Validator;
 import com.liberty52.product.service.applicationservice.ProductInfoRetrieveService;
-import com.liberty52.product.service.controller.dto.*;
+import com.liberty52.product.service.controller.dto.ProductDetailResponseDto;
+import com.liberty52.product.service.controller.dto.ProductInfoRetrieveResponseDto;
+import com.liberty52.product.service.controller.dto.ProductListResponseDto;
+import com.liberty52.product.service.controller.dto.ProductOptionDetailResponseDto;
+import com.liberty52.product.service.controller.dto.ProductOptionResponseDto;
 import com.liberty52.product.service.entity.OptionDetail;
 import com.liberty52.product.service.entity.Product;
 import com.liberty52.product.service.entity.ProductOption;
 import com.liberty52.product.service.entity.Review;
 import com.liberty52.product.service.repository.ProductRepository;
 import com.liberty52.product.service.repository.ReviewRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static com.liberty52.product.global.contants.RoleConstants.ADMIN;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -59,9 +60,7 @@ public class ProductInfoRetrieveServiceImpl implements ProductInfoRetrieveServic
 
     @Override
     public List<ProductInfoRetrieveResponseDto> retrieveProductListByAdmin(String role) {
-        if(!ADMIN.equals(role)){
-            throw new InvalidRoleException(role);
-        }
+      Validator.isAdmin(role);
         List<ProductInfoRetrieveResponseDto> dto = new ArrayList<>();
         List<Product> productList = productRepository.findAll();
         List<Review> reviewList = reviewRepository.findAll();
@@ -81,9 +80,7 @@ public class ProductInfoRetrieveServiceImpl implements ProductInfoRetrieveServic
 
     @Override
     public ProductInfoRetrieveResponseDto retrieveProductByAdmin(String role, String productId) {
-        if(!ADMIN.equals(role)){
-            throw new InvalidRoleException(role);
-        }
+      Validator.isAdmin(role);
         Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("product", "id", productId));
         List<Review> productReviewList = reviewRepository.findByCustomProduct_Product(product);
         float meanRate = product.getRate(productReviewList);

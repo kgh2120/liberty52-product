@@ -9,7 +9,7 @@ public interface ReviewRetrieveService {
 
     ReviewRetrieveResponse retrieveReviews(String productId, String authorId, Pageable pageable, boolean isPhotoFilter);
 
-    AdminReviewRetrieveResponse retrieveReviews(String role, Pageable pageable);
+    AdminReviewRetrieveResponse retrieveReviewByAdmin(String role, Pageable pageable);
 
-    AdminReviewDetailResponse retrieveReviewDetail(String role,String reviewId);
+    AdminReviewDetailResponse retrieveReviewDetailByAdmin(String role,String reviewId);
 }

@@ -31,13 +31,13 @@ public class ReviewModifyServiceImpl implements ReviewModifyService {
     private final S3UploaderApi s3Uploader;
 
     @Override
-    public void modifyRatingContent(String reviewerId, String reviewId, ReviewModifyRequestDto dto) {
+    public void modifyReviewRatingContent(String reviewerId, String reviewId, ReviewModifyRequestDto dto) {
         Review review = validAndGetReview(reviewerId, reviewId);
         review.modify(dto.getRating(), dto.getContent());
     }
 
     @Override
-    public <T extends MultipartFile> void addImages(String reviewerId, String reviewId, List<T> images) {
+    public <T extends MultipartFile> void addReviewImages(String reviewerId, String reviewId, List<T> images) {
         if(images.size() > Review.IMAGES_MAX_COUNT || images.isEmpty())
             throw new BadRequestException(1 + " <= Size of images <= " + Review.IMAGES_MAX_COUNT);
         Review review = validAndGetReview(reviewerId, reviewId);
@@ -45,7 +45,7 @@ public class ReviewModifyServiceImpl implements ReviewModifyService {
     }
 
     @Override
-    public void removeImages(String reviewerId, String reviewId, ReviewImagesRemoveRequestDto dto) {
+    public void removeReviewImages(String reviewerId, String reviewId, ReviewImagesRemoveRequestDto dto) {
         Review review = validAndGetReview(reviewerId, reviewId);
         List<ReviewImage> reviewImages = review.getReviewImages().stream().filter(ri -> dto.getUrls().contains(ri.getUrl())).toList();
         reviewImages.forEach(review::removeImage);

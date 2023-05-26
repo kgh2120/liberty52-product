@@ -38,7 +38,7 @@ class ImageGenerationControllerTest {
         ImageGenerationDto.Request request = new ImageGenerationDto.Request(prompt, n);
         String url1 = "url1";
         String url2 = "url2";
-        BDDMockito.given(service.generate(authId, request))
+        BDDMockito.given(service.generateImage(authId, request))
                 .willReturn(new ImageGenerationDto.Response(List.of(url1, url2)));
 
         mockMvc.perform(MockMvcRequestBuilders

@@ -1,4 +1,4 @@
-package com.liberty52.product.global.contants;
+package com.liberty52.product.global.constants;
 
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;

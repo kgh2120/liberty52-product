@@ -6,7 +6,6 @@ import com.liberty52.product.service.entity.OrderStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,10 +31,10 @@ public class OrderStatusModifyController {
 
   @PutMapping("/admin/orders/{orderId}/vbank")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void modifyOrderStatusOfVBank(
+  public void modifyOrderStatusOfVBankByAdmin(
       @RequestHeader("LB-Role") String role, @PathVariable String orderId,
       @Validated @RequestBody VBankStatusModifyDto dto
   ) {
-    orderStatusModifyService.modifyOrderStatusOfVBank(role, orderId,dto);
+    orderStatusModifyService.modifyOrderStatusOfVBankByAdmin(role, orderId,dto);
   }
 }

@@ -36,14 +36,14 @@ public class ReviewRetrieveController {
     }
 
     @GetMapping("/admin/reviews")
-    public ResponseEntity<AdminReviewRetrieveResponse> retrieveReview(@RequestHeader("LB-Role") String role, Pageable pageable){
-        AdminReviewRetrieveResponse response = reviewRetrieveService.retrieveReviews(role,pageable);
+    public ResponseEntity<AdminReviewRetrieveResponse> retrieveReviewByAdmin(@RequestHeader("LB-Role") String role, Pageable pageable){
+        AdminReviewRetrieveResponse response = reviewRetrieveService.retrieveReviewByAdmin(role,pageable);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/admin/reviews/{reviewId}")
-    public ResponseEntity<AdminReviewDetailResponse> retrieveReviewDetail(@RequestHeader("LB-Role") String role, @PathVariable String reviewId){
-        AdminReviewDetailResponse response = reviewRetrieveService.retrieveReviewDetail(role,reviewId);
+    public ResponseEntity<AdminReviewDetailResponse> retrieveReviewDetailByAdmin(@RequestHeader("LB-Role") String role, @PathVariable String reviewId){
+        AdminReviewDetailResponse response = reviewRetrieveService.retrieveReviewDetailByAdmin(role,reviewId);
         return ResponseEntity.ok(response);
     }
 }

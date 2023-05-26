@@ -42,7 +42,7 @@ public class ReviewRetrieveServiceImpl implements
     }
 
     @Override
-    public AdminReviewRetrieveResponse retrieveReviews(String role, Pageable pageable) {
+    public AdminReviewRetrieveResponse retrieveReviewByAdmin(String role, Pageable pageable) {
         Validator.isAdmin(role);
         AdminReviewRetrieveResponse response = reviewQueryDslRepository.retrieveAllReviews(pageable);
         setAuthorDataFromAuthService(response);
@@ -54,7 +54,7 @@ public class ReviewRetrieveServiceImpl implements
     }
 
     @Override
-    public AdminReviewDetailResponse retrieveReviewDetail(String role, String reviewId) {
+    public AdminReviewDetailResponse retrieveReviewDetailByAdmin(String role, String reviewId) {
         Validator.isAdmin(role);
         AdminReviewDetailResponse response = reviewQueryDslRepository.retrieveReviewDetail(reviewId);
         setAuthorDataFromAuthService(response);

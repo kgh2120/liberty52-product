@@ -2,7 +2,7 @@ package com.liberty52.product.service.entity;
 
 import com.liberty52.product.MockS3Test;
 import com.liberty52.product.global.adapter.s3.S3UploaderApi;
-import com.liberty52.product.global.contants.PriceConstants;
+import com.liberty52.product.global.constants.PriceConstants;
 import com.liberty52.product.service.applicationservice.OrderCreateService;
 import com.liberty52.product.service.controller.dto.OrderCreateRequestDto;
 import com.liberty52.product.service.controller.dto.PaymentCardResponseDto;

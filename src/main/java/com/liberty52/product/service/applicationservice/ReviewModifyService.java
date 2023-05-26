@@ -7,11 +7,11 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface ReviewModifyService {
-    void modifyRatingContent(String reviewerId, String reviewId, ReviewModifyRequestDto dto);
+    void modifyReviewRatingContent(String reviewerId, String reviewId, ReviewModifyRequestDto dto);
 
-    <T extends MultipartFile> void addImages(String reviewerId, String reviewId, List<T> images);
+    <T extends MultipartFile> void addReviewImages(String reviewerId, String reviewId, List<T> images);
 
-    void removeImages(String reviewerId, String reviewId, ReviewImagesRemoveRequestDto dto);
+    void removeReviewImages(String reviewerId, String reviewId, ReviewImagesRemoveRequestDto dto);
 
     <T extends MultipartFile> void modifyReview(String reviewerId, String reviewId, ReviewModifyRequestDto dto, List<T> images);
 }

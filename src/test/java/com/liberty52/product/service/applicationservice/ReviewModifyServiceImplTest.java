@@ -68,7 +68,7 @@ class ReviewModifyServiceImplTest extends MockS3Test {
     void modifyReviewRatingContent() {
         Integer rating = review.getRating() % 5 + 1;
         String content = UUID.randomUUID().toString();
-        reviewModifyService.modifyRatingContent(authId, review.getId(), ReviewModifyRequestDto.createForTest(rating, content));
+        reviewModifyService.modifyReviewRatingContent(authId, review.getId(), ReviewModifyRequestDto.createForTest(rating, content));
 
         Review review = reviewRepository.findById(this.review.getId()).get();
         Assertions.assertEquals(rating, review.getRating());
@@ -79,24 +79,24 @@ class ReviewModifyServiceImplTest extends MockS3Test {
     void modifyReviewRatingValidation() {
         Integer invalidRatingOverMaxValue = Review.RATING_MAX_VALUE + 1;
         String content = UUID.randomUUID().toString();
-        Assertions.assertThrows(InvalidRatingException.class, () -> reviewModifyService.modifyRatingContent(authId, review.getId(), ReviewModifyRequestDto.createForTest(invalidRatingOverMaxValue, content)));
+        Assertions.assertThrows(InvalidRatingException.class, () -> reviewModifyService.modifyReviewRatingContent(authId, review.getId(), ReviewModifyRequestDto.createForTest(invalidRatingOverMaxValue, content)));
 
         Integer invalidRatingBelowMinValue = Review.RATING_MIN_VALUE - 1;
-        Assertions.assertThrows(InvalidRatingException.class, () -> reviewModifyService.modifyRatingContent(authId, review.getId(), ReviewModifyRequestDto.createForTest(invalidRatingBelowMinValue, content)));
+        Assertions.assertThrows(InvalidRatingException.class, () -> reviewModifyService.modifyReviewRatingContent(authId, review.getId(), ReviewModifyRequestDto.createForTest(invalidRatingBelowMinValue, content)));
 
         Integer validRating = 1;
         String invalidContentOver = "a".repeat(Review.CONTENT_MAX_LENGTH + 3);
-        Assertions.assertThrows(InvalidTextSize.class, () -> reviewModifyService.modifyRatingContent(authId, review.getId(), ReviewModifyRequestDto.createForTest(validRating, invalidContentOver)));
+        Assertions.assertThrows(InvalidTextSize.class, () -> reviewModifyService.modifyReviewRatingContent(authId, review.getId(), ReviewModifyRequestDto.createForTest(validRating, invalidContentOver)));
 
         String invalidContentBelow = "";
-        Assertions.assertThrows(InvalidTextSize.class, () -> reviewModifyService.modifyRatingContent(authId, review.getId(), ReviewModifyRequestDto.createForTest(validRating, invalidContentBelow)));
+        Assertions.assertThrows(InvalidTextSize.class, () -> reviewModifyService.modifyReviewRatingContent(authId, review.getId(), ReviewModifyRequestDto.createForTest(validRating, invalidContentBelow)));
     }
 
     @Test
     void addImages() {
         int addCount = 2;
         int sum = review.getReviewImages().size() + addCount;
-        reviewModifyService.addImages(authId, review.getId(), IntStream.range(0, addCount).mapToObj(i -> newImageFile()).toList());
+        reviewModifyService.addReviewImages(authId, review.getId(), IntStream.range(0, addCount).mapToObj(i -> newImageFile()).toList());
         Review review1 = reviewRepository.findById(review.getId()).get();
         Assertions.assertEquals(sum, review1.getReviewImages().size());
     }
@@ -105,7 +105,7 @@ class ReviewModifyServiceImplTest extends MockS3Test {
     void addImagesValidation() {
         int addCount = Review.IMAGES_MAX_COUNT;
         int sum = review.getReviewImages().size() + addCount;
-        reviewModifyService.addImages(authId, review.getId(), IntStream.range(0, addCount).mapToObj(i -> newImageFile()).toList());
+        reviewModifyService.addReviewImages(authId, review.getId(), IntStream.range(0, addCount).mapToObj(i -> newImageFile()).toList());
         Review review1 = reviewRepository.findById(review.getId()).get();
         Assertions.assertEquals(Math.min(Review.IMAGES_MAX_COUNT, sum), review1.getReviewImages().size());
     }
@@ -115,7 +115,7 @@ class ReviewModifyServiceImplTest extends MockS3Test {
         int removeCount = 2;
         int expected = review.getReviewImages().size() - removeCount;
         List<String> removeList = images.subList(0, 2).stream().map(ReviewImage::getUrl).toList();
-        reviewModifyService.removeImages(authId, review.getId(), ReviewImagesRemoveRequestDto.createForTest(removeList));
+        reviewModifyService.removeReviewImages(authId, review.getId(), ReviewImagesRemoveRequestDto.createForTest(removeList));
         Review review1 = reviewRepository.findById(review.getId()).get();
 
         Assertions.assertEquals(expected, review1.getReviewImages().size());

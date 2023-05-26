@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.liberty52.product.global.contants.RoleConstants.ADMIN;
+import static com.liberty52.product.global.constants.RoleConstants.ADMIN;
 
 @SpringBootTest
 @Transactional
@@ -27,7 +27,7 @@ public class OptionDetailRemoveServiceTest {
         OptionDetailRemoveRequestDto dto = OptionDetailRemoveRequestDto.create(false);
         OptionDetail beforeOptionDetail = optionDetailRepository.findById(detailId).orElseGet(null);
         boolean onSail = beforeOptionDetail.isOnSale();
-        optionDetailRemoveService.removeOptionDetail(ADMIN, detailId, dto);
+        optionDetailRemoveService.removeOptionDetailByAdmin(ADMIN, detailId, dto);
         OptionDetail afterOptionDetail = optionDetailRepository.findById(detailId).orElseGet(null);
         Assertions.assertEquals(afterOptionDetail.isOnSale(), !onSail);
 

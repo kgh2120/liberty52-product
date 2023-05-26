@@ -54,7 +54,7 @@ public class OrderCancelServiceImpl implements OrderCancelService {
     }
 
     @Override
-    public void refundCustomerOrder(String adminId, String role, OrderRefundDto.Request request) {
+    public void refundCustomerOrderByAdmin(String adminId, String role, OrderRefundDto.Request request) {
         Validator.isAdmin(role);
 
         Orders order = ordersRepository.findById(request.getOrderId())

@@ -1,11 +1,9 @@
 package com.liberty52.product.service.controller;
 
 import com.liberty52.product.service.applicationservice.ReviewRemoveService;
-import com.liberty52.product.service.controller.dto.ReplyCreateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,16 +17,16 @@ public class ReviewRemoveController {
         reviewItemRemoveService.removeReview(reviewerId, reviewId);
     }
 
-    @DeleteMapping("/customerReviews/{reviewId}")
+    @DeleteMapping("/admin/customerReviews/{reviewId}")
     @ResponseStatus(HttpStatus.OK)
-    public void removeCustomerReview(@RequestHeader(HttpHeaders.AUTHORIZATION) String adminId, @RequestHeader("LB-Role") String role, @PathVariable String reviewId) {
+    public void removeCustomerReviewByAdmin(@RequestHeader(HttpHeaders.AUTHORIZATION) String adminId, @RequestHeader("LB-Role") String role, @PathVariable String reviewId) {
 
-        reviewItemRemoveService.removeCustomerReview(role, reviewId);
+        reviewItemRemoveService.removeCustomerReviewByAdmin(role, reviewId);
     }
 
-    @DeleteMapping("/reviews/replies/{replyId}")
+    @DeleteMapping("/admin/reviews/replies/{replyId}")
     @ResponseStatus(HttpStatus.OK)
-    public void replyRemove(@RequestHeader(HttpHeaders.AUTHORIZATION) String adminId, @RequestHeader("LB-Role") String role, @PathVariable String replyId) {
-        reviewItemRemoveService.removeReply(adminId, role ,replyId);
+    public void removeReplyByAdmin(@RequestHeader(HttpHeaders.AUTHORIZATION) String adminId, @RequestHeader("LB-Role") String role, @PathVariable String replyId) {
+        reviewItemRemoveService.removeReplyByAdmin(adminId, role ,replyId);
     }
 }

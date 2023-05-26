@@ -1,6 +1,6 @@
 package com.liberty52.product.global.util;
 
-import com.liberty52.product.global.contants.RoleConstants;
+import com.liberty52.product.global.constants.RoleConstants;
 import com.liberty52.product.global.exception.external.forbidden.InvalidRoleException;
 
 import java.util.Objects;

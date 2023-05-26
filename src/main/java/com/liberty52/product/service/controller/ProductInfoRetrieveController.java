@@ -19,13 +19,13 @@ public class ProductInfoRetrieveController {
 
     @GetMapping("/products")
     @ResponseStatus(HttpStatus.OK)
-    public ProductListResponseDto productList(Pageable pageable) {
+    public ProductListResponseDto retrieveProductList(Pageable pageable) {
         return productInfoRetrieveService.retrieveProductList(pageable);
     }
 
     @GetMapping("/products/{productId}")
     @ResponseStatus(HttpStatus.OK)
-    public ProductDetailResponseDto productDetail(@PathVariable String productId) {
+    public ProductDetailResponseDto retrieveProductDetail(@PathVariable String productId) {
         return productInfoRetrieveService.retrieveProductDetail(productId);
     }
 
@@ -35,13 +35,13 @@ public class ProductInfoRetrieveController {
         return productInfoRetrieveService.retrieveProductOptionInfoList(productId);
     }
 
-    @GetMapping("/productInfo")
+    @GetMapping("/admin/productInfo")
     @ResponseStatus(HttpStatus.OK)
     public List<ProductInfoRetrieveResponseDto> retrieveProductListByAdmin(@RequestHeader("LB-Role") String role) {
         return productInfoRetrieveService.retrieveProductListByAdmin(role);
     }
 
-    @GetMapping("/productInfo/{productId}")
+    @GetMapping("/admin/productInfo/{productId}")
     @ResponseStatus(HttpStatus.OK)
     public ProductInfoRetrieveResponseDto retrieveProductByAdmin(@RequestHeader("LB-Role") String role, @PathVariable String productId) {
         return productInfoRetrieveService.retrieveProductByAdmin(role, productId);

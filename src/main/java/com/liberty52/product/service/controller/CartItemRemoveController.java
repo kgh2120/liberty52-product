@@ -15,13 +15,13 @@ public class CartItemRemoveController {
 
     @DeleteMapping("/carts/custom-products/{customProductId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void cartItemRemove(@RequestHeader(HttpHeaders.AUTHORIZATION) String authId, @PathVariable String customProductId) {
+    public void removeCartItem(@RequestHeader(HttpHeaders.AUTHORIZATION) String authId, @PathVariable String customProductId) {
         cartItemRemoveService.removeCartItem(authId, customProductId);
     }
 
     @DeleteMapping("/carts/custom-products")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void cartItemListRemove(@RequestHeader(HttpHeaders.AUTHORIZATION) String authId,
+    public void removeCartItemList(@RequestHeader(HttpHeaders.AUTHORIZATION) String authId,
                                    @RequestBody @Validated CartItemListRemoveRequestDto dto) {
         cartItemRemoveService.removeCartItemList(authId, dto);
     }

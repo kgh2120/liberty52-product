@@ -1,17 +1,14 @@
 package com.liberty52.product.service.applicationservice;
 
-import static com.liberty52.product.global.contants.RoleConstants.ADMIN;
+import static com.liberty52.product.global.constants.RoleConstants.ADMIN;
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 import com.liberty52.product.global.config.DBInitConfig.DBInitService;
 import com.liberty52.product.global.exception.external.forbidden.InvalidRoleException;
 import com.liberty52.product.global.exception.external.notfound.ResourceNotFoundException;
 import com.liberty52.product.service.controller.dto.ReplyCreateRequestDto;
 import com.liberty52.product.service.entity.Reply;
-import com.liberty52.product.service.repository.ReplyRepository;
 import jakarta.persistence.EntityManager;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @SpringBootTest
-class ReplyCreateServiceImplTest {
+class ReviewReplyCreateServiceImplTest {
 
     @Autowired
-    ReplyCreateService service;
+    ReviewReplyCreateService service;
 
     final String mockAdminId = "bar";
     final String mockUserRole = "USER";
@@ -43,7 +40,7 @@ class ReplyCreateServiceImplTest {
         //given
         String reviewId = DBInitService.getReview().getId();
         ReplyCreateRequestDto dto = ReplyCreateRequestDto.createForTest(mockReplyContent);
-        service.createReply(mockAdminId, dto, reviewId, ADMIN);
+        service.createReviewReplyByAdmin(mockAdminId, dto, reviewId, ADMIN);
         //when
         Reply finded = em.createQuery(
                         "select r from Reply r where r.review.id = :id and r.authId = :authId", Reply.class)
@@ -65,7 +62,7 @@ class ReplyCreateServiceImplTest {
         String reviewId = mockReviewId;
         ReplyCreateRequestDto dto = ReplyCreateRequestDto.createForTest(mockReplyContent);
         //when
-        assertThatThrownBy(() -> service.createReply(mockAdminId, dto, reviewId, mockUserRole))
+        assertThatThrownBy(() -> service.createReviewReplyByAdmin(mockAdminId, dto, reviewId, mockUserRole))
                 .isInstanceOf(InvalidRoleException.class);
 
     }
@@ -76,7 +73,7 @@ class ReplyCreateServiceImplTest {
         String reviewId = mockReviewId;
         ReplyCreateRequestDto dto = ReplyCreateRequestDto.createForTest(mockReplyContent);
         //when
-        assertThatThrownBy(() -> service.createReply(mockAdminId, dto, reviewId, ADMIN))
+        assertThatThrownBy(() -> service.createReviewReplyByAdmin(mockAdminId, dto, reviewId, ADMIN))
                 .isInstanceOf(ResourceNotFoundException.class);
 
         //then

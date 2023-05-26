@@ -7,6 +7,6 @@ public interface OrderCancelService {
 
     OrderCancelDto.Response cancelOrder(String authId, OrderCancelDto.Request request);
 
-    void refundCustomerOrder(String adminId, String role, OrderRefundDto.Request request);
+    void refundCustomerOrderByAdmin(String adminId, String role, OrderRefundDto.Request request);
 
 }

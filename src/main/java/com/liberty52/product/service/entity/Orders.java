@@ -1,6 +1,6 @@
 package com.liberty52.product.service.entity;
 
-import com.liberty52.product.global.contants.PriceConstants;
+import com.liberty52.product.global.constants.PriceConstants;
 import com.liberty52.product.global.util.Utils;
 import com.liberty52.product.service.entity.payment.Payment;
 import jakarta.persistence.*;

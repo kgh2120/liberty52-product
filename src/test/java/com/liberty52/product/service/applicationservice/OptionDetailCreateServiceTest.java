@@ -1,6 +1,5 @@
 package com.liberty52.product.service.applicationservice;
 
-import com.liberty52.product.global.exception.external.notfound.ProductNotFoundByNameException;
 import com.liberty52.product.global.exception.external.notfound.ResourceNotFoundException;
 import com.liberty52.product.service.controller.dto.CreateOptionDetailRequestDto;
 import com.liberty52.product.service.entity.OptionDetail;
@@ -14,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.liberty52.product.global.contants.RoleConstants.ADMIN;
+import static com.liberty52.product.global.constants.RoleConstants.ADMIN;
 
 @SpringBootTest
 @Transactional
@@ -37,7 +36,7 @@ public class OptionDetailCreateServiceTest {
         String optionId = product.getProductOptions().get(0).getId();
 
         CreateOptionDetailRequestDto createOptionDetailRequestDto = CreateOptionDetailRequestDto.create(name, 20000, true);
-        optionDetailCreateService.createOptionDetail(ADMIN, createOptionDetailRequestDto, optionId);
+        optionDetailCreateService.createOptionDetailByAdmin(ADMIN, createOptionDetailRequestDto, optionId);
 
         ProductOption productOption = productOptionRepository.findById(optionId).orElseGet(null);
         OptionDetail optiondetail = productOption.getOptionDetails().get(productOption.getOptionDetails().size() - 1);
@@ -46,7 +45,7 @@ public class OptionDetailCreateServiceTest {
         Assertions.assertEquals(optiondetail.getPrice(), 20000);
         Assertions.assertEquals(optiondetail.isOnSale(), true);
 
-        Assertions.assertThrows(ResourceNotFoundException.class, () -> optionDetailCreateService.createOptionDetail(ADMIN, createOptionDetailRequestDto, "null"));
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> optionDetailCreateService.createOptionDetailByAdmin(ADMIN, createOptionDetailRequestDto, "null"));
 
     }
 }

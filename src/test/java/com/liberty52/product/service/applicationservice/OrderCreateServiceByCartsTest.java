@@ -46,7 +46,7 @@ public class OrderCreateServiceByCartsTest extends MockS3Test {
     @Autowired
     private CartItemCreateService cartItemCreateService;
     @Autowired
-    private CartItemRetriveService cartItemRetriveService;
+    private CartItemRetrieveService cartItemRetrieveService;
     @Autowired
     private OrderCreateService orderCreateService;
     @Autowired
@@ -62,7 +62,7 @@ public class OrderCreateServiceByCartsTest extends MockS3Test {
 
     @Test
     void test_preregisterCardPaymentOrdersByCarts() {
-        List<String> customProductIdList = cartItemRetriveService.retriveAuthCartItem(aid).stream()
+        List<String> customProductIdList = cartItemRetrieveService.retrieveAuthCartItem(aid).stream()
                 .map(CartItemResponse::getId).toList();
 
         PaymentCardResponseDto orderResponseDto = orderCreateService.createCardPaymentOrdersByCarts(
@@ -94,7 +94,7 @@ public class OrderCreateServiceByCartsTest extends MockS3Test {
 
     @Test
     void test_registerVBankPaymentOrdersByCarts() {
-        List<String> customProductIdList = cartItemRetriveService.retriveAuthCartItem(aid).stream()
+        List<String> customProductIdList = cartItemRetrieveService.retrieveAuthCartItem(aid).stream()
                 .map(CartItemResponse::getId).toList();
 
         PaymentVBankResponseDto orderResponseDto = orderCreateService.createVBankPaymentOrdersByCarts(
@@ -133,7 +133,7 @@ public class OrderCreateServiceByCartsTest extends MockS3Test {
     @Test
     void test_createOrdersByCartForGuest() {
         final String receiverPhoneNum = "01012341234";
-        List<String> customProductIdList = cartItemRetriveService.retriveAuthCartItem(aid).stream()
+        List<String> customProductIdList = cartItemRetrieveService.retrieveAuthCartItem(aid).stream()
                 .map(CartItemResponse::getId).toList();
 
         PaymentCardResponseDto orderResponseDto = orderCreateService.createCardPaymentOrdersByCartsForGuest(
@@ -165,7 +165,7 @@ public class OrderCreateServiceByCartsTest extends MockS3Test {
     @Test
     void test_test_createOrdersByVBankForGuest() {
         final String receiverPhoneNum = "01012341234";
-        List<String> customProductIdList = cartItemRetriveService.retriveAuthCartItem(aid).stream()
+        List<String> customProductIdList = cartItemRetrieveService.retrieveAuthCartItem(aid).stream()
                 .map(CartItemResponse::getId).toList();
 
         PaymentVBankResponseDto orderResponseDto = orderCreateService.createVBankPaymentOrdersByCartsForGuest(

@@ -21,7 +21,7 @@ public class CartItemModifyController {
 
   @PatchMapping("/carts/custom-products/{customProductId}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void modifyCartItem(@RequestHeader(HttpHeaders.AUTHORIZATION) String authId, @RequestPart CartModifyRequestDto dto,
+  public void modifyUserCartItem(@RequestHeader(HttpHeaders.AUTHORIZATION) String authId, @RequestPart CartModifyRequestDto dto,
       @RequestPart(value = "file",required = false) MultipartFile imageFile, @PathVariable String customProductId) {
     cartItemModifyService.modifyUserCartItem(authId,dto,imageFile,customProductId);
   }

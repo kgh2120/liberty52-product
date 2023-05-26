@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.*;
 public class OptionDetailRemoveController {
     private final OptionDetailRemoveService optionDetailRemoveService;
 
-    @DeleteMapping("/optionDetail/{optionDetailId}")
+    @DeleteMapping("/admin/optionDetail/{optionDetailId}")
     @ResponseStatus(HttpStatus.OK)
-    public void removeOptionDetail(@RequestHeader("LB-Role") String role, @PathVariable String optionDetailId, @Validated @RequestBody OptionDetailRemoveRequestDto dto) {
-        optionDetailRemoveService.removeOptionDetail(role, optionDetailId, dto);
+    public void removeOptionDetailByAdmin(@RequestHeader("LB-Role") String role, @PathVariable String optionDetailId, @Validated @RequestBody OptionDetailRemoveRequestDto dto) {
+        optionDetailRemoveService.removeOptionDetailByAdmin(role, optionDetailId, dto);
     }
 }

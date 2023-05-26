@@ -7,5 +7,5 @@ public interface OrderStatusModifyService {
 
   void modifyOrderStatusByAdmin(String role, String orderId, OrderStatus status);
 
-  void modifyOrderStatusOfVBank(String role,String orderId, VBankStatusModifyDto dto);
+  void modifyOrderStatusOfVBankByAdmin(String role,String orderId, VBankStatusModifyDto dto);
 }

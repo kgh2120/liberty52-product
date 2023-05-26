@@ -13,10 +13,10 @@ public class OptionDetailCreateController {
 
     private final OptionDetailCreateService optionDetailCreateService;
 
-    @PostMapping("/optionDetail/{optionId}")
+    @PostMapping("/admin/optionDetail/{optionId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createOptionDetail(@RequestHeader("LB-Role") String role,
+    public void createOptionDetailByAdmin(@RequestHeader("LB-Role") String role,
                                    @Validated @RequestBody CreateOptionDetailRequestDto dto, @PathVariable String optionId) {
-        optionDetailCreateService.createOptionDetail(role, dto, optionId);
+        optionDetailCreateService.createOptionDetailByAdmin(role, dto, optionId);
     }
 }

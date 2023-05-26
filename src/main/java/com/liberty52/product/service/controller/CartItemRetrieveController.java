@@ -1,6 +1,6 @@
 package com.liberty52.product.service.controller;
 
-import com.liberty52.product.service.applicationservice.CartItemRetriveService;
+import com.liberty52.product.service.applicationservice.CartItemRetrieveService;
 import com.liberty52.product.service.controller.dto.CartItemResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -11,14 +11,14 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-public class CartItemRetriveController {
+public class CartItemRetrieveController {
 
-    private final CartItemRetriveService cartItemRetriveService;
+    private final CartItemRetrieveService cartItemRetrieveService;
 
     @GetMapping("/carts")
     @ResponseStatus(HttpStatus.OK)
-    public List<CartItemResponse> retriveAuthCartItem(@RequestHeader(HttpHeaders.AUTHORIZATION) String authId) {
-        return cartItemRetriveService.retriveAuthCartItem(authId);
+    public List<CartItemResponse> retrieveAuthCartItem(@RequestHeader(HttpHeaders.AUTHORIZATION) String authId) {
+        return cartItemRetrieveService.retrieveAuthCartItem(authId);
     }
 
 }

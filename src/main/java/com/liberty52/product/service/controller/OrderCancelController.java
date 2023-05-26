@@ -22,12 +22,12 @@ public class OrderCancelController {
         return orderCancelService.cancelOrder(authId, request);
     }
 
-    @PostMapping("/orders/refund")
+    @PostMapping("/admin/orders/refund")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void refundCustomerOrder(@RequestHeader(HttpHeaders.AUTHORIZATION) String adminId,
+    public void refundCustomerOrderByAdmin(@RequestHeader(HttpHeaders.AUTHORIZATION) String adminId,
                                     @RequestHeader("LB-Role") String role,
                                     @RequestBody @Validated OrderRefundDto.Request request) {
-        orderCancelService.refundCustomerOrder(adminId, role, request);
+        orderCancelService.refundCustomerOrderByAdmin(adminId, role, request);
     }
 
 }
