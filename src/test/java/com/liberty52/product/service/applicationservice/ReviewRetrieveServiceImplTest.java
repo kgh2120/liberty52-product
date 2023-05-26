@@ -14,14 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.test.context.ActiveProfiles;
 
 import static com.liberty52.product.service.utils.MockConstants.MOCK_AUTHOR_NAME;
 import static com.liberty52.product.service.utils.MockConstants.MOCK_AUTHOR_PROFILE_URL;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-@ActiveProfiles("test,dev")
 @SpringBootTest
 @Import({TestBeanConfig.class})
 class ReviewRetrieveServiceImplTest {
