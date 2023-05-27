@@ -2,7 +2,6 @@ package com.liberty52.product.service.controller;
 
 import com.liberty52.product.service.applicationservice.ProductOptionModifyService;
 import com.liberty52.product.service.controller.dto.ProductOptionModifyRequestDto;
-import com.liberty52.product.service.controller.dto.ProductOptionOnSailModifyRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -20,9 +19,10 @@ public class ProductOptionModifyController {
         productOptionModifyService.modifyProductOptionByAdmin(role, productOptionId, dto);
     }
 
-    @PatchMapping("/admin/productOption/{productOptionId}")
+    @PutMapping("/admin/productOptionOnSale/{productOptionId}")
     @ResponseStatus(HttpStatus.OK)
-    public void modifyProductOptionOnSailStateByAdmin(@RequestHeader("LB-Role") String role, @PathVariable String productOptionId, @Validated @RequestBody ProductOptionOnSailModifyRequestDto dto) {
-        productOptionModifyService.modifyProductOptionOnSailStateByAdmin(role, productOptionId, dto);
+    public void modifyProductOptionOnSailStateByAdmin(@RequestHeader("LB-Role") String role, @PathVariable String productOptionId) {
+        productOptionModifyService.modifyProductOptionOnSailStateByAdmin(role, productOptionId);
     }
+
 }

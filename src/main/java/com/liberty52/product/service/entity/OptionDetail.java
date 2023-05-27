@@ -45,8 +45,8 @@ public class OptionDetail {
         this.productOption.addDetail(this);
     }
 
-    public void updateOnSale(boolean onSail) {
-        this.onSale = onSail;
+    public void updateOnSale() {
+        onSale = !onSale;
     }
 
     public void modify(String name, Integer price, Boolean onSail) {

@@ -26,10 +26,9 @@ public class ProductOptionModifyServiceImpl implements ProductOptionModifyServic
     }
 
     @Override
-    public void modifyProductOptionOnSailStateByAdmin(String role, String productOptionId, ProductOptionOnSailModifyRequestDto dto) {
+    public void modifyProductOptionOnSailStateByAdmin(String role, String productOptionId) {
         Validator.isAdmin(role);
         ProductOption productOption = productOptionRepository.findById(productOptionId).orElseThrow(() -> new ResourceNotFoundException("ProductOption", "ID", productOptionId));
-        productOption.updateOnSale(dto.getOnSale());
-
+        productOption.updateOnSale();
     }
 }

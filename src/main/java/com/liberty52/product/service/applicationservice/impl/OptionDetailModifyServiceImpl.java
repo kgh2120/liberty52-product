@@ -4,7 +4,6 @@ import com.liberty52.product.global.exception.external.notfound.ResourceNotFound
 import com.liberty52.product.global.util.Validator;
 import com.liberty52.product.service.applicationservice.OptionDetailModifyService;
 import com.liberty52.product.service.controller.dto.OptionDetailModifyRequestDto;
-import com.liberty52.product.service.controller.dto.OptionDetailOnSailModifyRequestDto;
 import com.liberty52.product.service.entity.OptionDetail;
 import com.liberty52.product.service.repository.OptionDetailRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,9 +24,10 @@ public class OptionDetailModifyServiceImpl implements OptionDetailModifyService 
         optionDetail.modify(dto.getName(), dto.getPrice(), dto.getOnSale());
     }
 
-    public void modifyOptionDetailOnSailStateByAdmin(String role, String optionDetailId, OptionDetailOnSailModifyRequestDto dto) {
+    public void modifyOptionDetailOnSailStateByAdmin(String role, String optionDetailId) {
         Validator.isAdmin(role);
         OptionDetail optionDetail = optionDetailRepository.findById(optionDetailId).orElseThrow(() -> new ResourceNotFoundException("OptionDetail", "ID", optionDetailId));
-        optionDetail.updateOnSale(dto.getOnSale());
+        optionDetail.updateOnSale();
+
     }
 }

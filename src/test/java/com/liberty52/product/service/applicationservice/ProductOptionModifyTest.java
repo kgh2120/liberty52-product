@@ -1,13 +1,8 @@
 package com.liberty52.product.service.applicationservice;
 
-import com.liberty52.product.service.controller.dto.OptionDetailModifyRequestDto;
-import com.liberty52.product.service.controller.dto.OptionDetailOnSailModifyRequestDto;
 import com.liberty52.product.service.controller.dto.ProductOptionModifyRequestDto;
-import com.liberty52.product.service.controller.dto.ProductOptionOnSailModifyRequestDto;
-import com.liberty52.product.service.entity.OptionDetail;
 import com.liberty52.product.service.entity.Product;
 import com.liberty52.product.service.entity.ProductOption;
-import com.liberty52.product.service.repository.OptionDetailRepository;
 import com.liberty52.product.service.repository.ProductOptionRepository;
 import com.liberty52.product.service.repository.ProductRepository;
 import org.junit.jupiter.api.Assertions;
@@ -58,8 +53,7 @@ public class ProductOptionModifyTest {
         String optionId = productOption.getId();
         boolean onSail = productOption.isOnSale();
 
-        ProductOptionOnSailModifyRequestDto dto = ProductOptionOnSailModifyRequestDto.create(!onSail);
-        productOptionModifyService.modifyProductOptionOnSailStateByAdmin(ADMIN, optionId, dto);
+        productOptionModifyService.modifyProductOptionOnSailStateByAdmin(ADMIN, optionId);
 
         ProductOption afterProductOption = productOptionRepository.findById(optionId).orElse(null);
         Assertions.assertEquals(afterProductOption.isOnSale(), !onSail);

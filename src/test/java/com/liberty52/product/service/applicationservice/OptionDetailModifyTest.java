@@ -1,7 +1,6 @@
 package com.liberty52.product.service.applicationservice;
 
 import com.liberty52.product.service.controller.dto.OptionDetailModifyRequestDto;
-import com.liberty52.product.service.controller.dto.OptionDetailOnSailModifyRequestDto;
 import com.liberty52.product.service.entity.OptionDetail;
 import com.liberty52.product.service.repository.OptionDetailRepository;
 import org.junit.jupiter.api.Assertions;
@@ -28,9 +27,7 @@ public class OptionDetailModifyTest {
         OptionDetail beforeOptionDetail = optionDetailRepository.findById(detailId).orElse(null);
         boolean onSail = beforeOptionDetail.isOnSale();
 
-        OptionDetailOnSailModifyRequestDto dto = OptionDetailOnSailModifyRequestDto.create(!onSail);
-
-        optionDetailModifyService.modifyOptionDetailOnSailStateByAdmin(ADMIN, detailId, dto);
+        optionDetailModifyService.modifyOptionDetailOnSailStateByAdmin(ADMIN, detailId);
         OptionDetail afterOptionDetail = optionDetailRepository.findById(detailId).orElse(null);
         Assertions.assertEquals(afterOptionDetail.isOnSale(), !onSail);
 

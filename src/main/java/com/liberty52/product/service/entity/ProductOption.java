@@ -60,7 +60,7 @@ public class ProductOption {
         this.onSale = onSale;
     }
 
-    public void updateOnSale(Boolean onSale) {
-        this.onSale = onSale;
+    public void updateOnSale() {
+        onSale = !onSale;
     }
 }
