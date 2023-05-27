@@ -12,7 +12,7 @@ public class ProductOptionDetailResponseDto {
     String optionDetailId;
     String optionDetailName;
     int price;
-    boolean onSail;
+    boolean onSale;
 
     public static ProductOptionDetailResponseDto of(String optionDetailId, String optionDetailName, int price, boolean onSale) {
         return new ProductOptionDetailResponseDto(optionDetailId, optionDetailName, price, onSale);

@@ -4,7 +4,6 @@ import com.liberty52.product.global.exception.external.notfound.ResourceNotFound
 import com.liberty52.product.global.util.Validator;
 import com.liberty52.product.service.applicationservice.ProductOptionCreateService;
 import com.liberty52.product.service.controller.dto.CreateProductOptionRequestDto;
-import com.liberty52.product.service.entity.OptionDetail;
 import com.liberty52.product.service.entity.Product;
 import com.liberty52.product.service.entity.ProductOption;
 import com.liberty52.product.service.repository.ProductOptionRepository;
@@ -25,7 +24,7 @@ public class ProductOptionCreateServiceImpl implements ProductOptionCreateServic
     public void createProductOptionByAdmin(String role, CreateProductOptionRequestDto dto, String productId) {
         Validator.isAdmin(role);
         Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("productId", "id", productId));
-        ProductOption productOption = ProductOption.create(dto.getName(), dto.getRequire(), dto.getOnSail());
+        ProductOption productOption = ProductOption.create(dto.getName(), dto.getRequire(), dto.getOnSale());
         productOption.associate(product);
         productOptionRepository.save(productOption);
     }

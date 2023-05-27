@@ -1,6 +1,5 @@
 package com.liberty52.product.service.controller.dto;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +14,7 @@ public class ProductOptionResponseDto {
     String optionId;
     String optionName;
     boolean require;
-    boolean onSail;
+    boolean onSale;
     List<ProductOptionDetailResponseDto> optionDetailList;
 
     public static ProductOptionResponseDto of(String optionId, String optionName, boolean require, boolean onSale, List<ProductOptionDetailResponseDto> optionDetailList) {

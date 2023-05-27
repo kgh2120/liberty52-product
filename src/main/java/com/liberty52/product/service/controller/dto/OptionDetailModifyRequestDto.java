@@ -18,10 +18,10 @@ public class OptionDetailModifyRequestDto {
     Integer price;
 
     @NotNull
-    Boolean onSail;
+    Boolean onSale;
 
-    public static OptionDetailModifyRequestDto create(String name, int price, boolean onSail){
-        return new OptionDetailModifyRequestDto(name, price, onSail);
+    public static OptionDetailModifyRequestDto create(String name, int price, boolean onSale){
+        return new OptionDetailModifyRequestDto(name, price, onSale);
     }
 
 

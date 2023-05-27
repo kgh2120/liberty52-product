@@ -55,7 +55,7 @@ public class ProductInfoRetrieveServiceTest {
         ProductOption productOption = product.getProductOptions().get(0);
 
         Assertions.assertEquals(optionDto.getOptionName(), productOption.getName());
-        Assertions.assertEquals(optionDto.isOnSail(), productOption.isOnSale());
+        Assertions.assertEquals(optionDto.isOnSale(), productOption.isOnSale());
         Assertions.assertEquals(optionDto.isRequire(), productOption.isRequire());
 
         Assertions.assertEquals(optionDto.getOptionDetailList().size(), productOption.getOptionDetails().size());
@@ -63,7 +63,7 @@ public class ProductInfoRetrieveServiceTest {
         OptionDetail optionDetail = productOption.getOptionDetails().get(0);
 
         Assertions.assertEquals(detailDto.getOptionDetailName(), optionDetail.getName());
-        Assertions.assertEquals(detailDto.isOnSail(), optionDetail.isOnSale());
+        Assertions.assertEquals(detailDto.isOnSale(), optionDetail.isOnSale());
         Assertions.assertEquals(detailDto.getPrice(), optionDetail.getPrice());
 
     }

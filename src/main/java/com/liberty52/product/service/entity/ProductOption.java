@@ -53,4 +53,14 @@ public class ProductOption {
     public static ProductOption create(String name, boolean require, boolean onSale) {
         return builder().name(name).require(require).onSale(onSale).build();
     }
+
+    public void modify(String name, Boolean require, Boolean onSale) {
+        this.name = name;
+        this.require = require;
+        this.onSale = onSale;
+    }
+
+    public void updateOnSale(Boolean onSale) {
+        this.onSale = onSale;
+    }
 }

@@ -7,11 +7,11 @@ import lombok.Getter;
 public class OptionDetailOnSailModifyRequestDto {
 
     @NotNull
-    Boolean onSail;
+    Boolean onSale;
 
-    public static OptionDetailOnSailModifyRequestDto create(boolean onSail){
+    public static OptionDetailOnSailModifyRequestDto create(boolean onSale){
         OptionDetailOnSailModifyRequestDto dto = new OptionDetailOnSailModifyRequestDto();
-        dto.onSail = onSail;
+        dto.onSale = onSale;
         return dto;
     }
 }
