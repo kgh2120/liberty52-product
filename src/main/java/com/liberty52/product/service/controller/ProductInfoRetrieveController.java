@@ -1,12 +1,10 @@
 package com.liberty52.product.service.controller;
 
 import com.liberty52.product.service.applicationservice.ProductInfoRetrieveService;
-import com.liberty52.product.service.controller.dto.ProductDetailResponseDto;
-import com.liberty52.product.service.controller.dto.ProductInfoRetrieveResponseDto;
-import com.liberty52.product.service.controller.dto.ProductListResponseDto;
-import com.liberty52.product.service.controller.dto.ProductOptionResponseDto;
+import com.liberty52.product.service.controller.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,5 +43,11 @@ public class ProductInfoRetrieveController {
     @ResponseStatus(HttpStatus.OK)
     public ProductInfoRetrieveResponseDto retrieveProductByAdmin(@RequestHeader("LB-Role") String role, @PathVariable String productId) {
         return productInfoRetrieveService.retrieveProductByAdmin(role, productId);
+    }
+
+    @GetMapping("/productOptionInfoByCart")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ProductInfoByCartResponseDto> retrieveProductOptionListByCart(@RequestHeader(HttpHeaders.AUTHORIZATION) String authId) {
+        return productInfoRetrieveService.retrieveProductOptionListByCart(authId);
     }
 }

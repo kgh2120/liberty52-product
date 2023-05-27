@@ -1,19 +1,20 @@
 package com.liberty52.product.service.applicationservice;
 
 import com.liberty52.product.global.exception.external.notfound.ResourceNotFoundException;
-import com.liberty52.product.service.controller.dto.ProductInfoRetrieveResponseDto;
-import com.liberty52.product.service.controller.dto.ProductOptionDetailResponseDto;
-import com.liberty52.product.service.controller.dto.ProductOptionResponseDto;
+import com.liberty52.product.service.controller.dto.*;
 import com.liberty52.product.service.entity.*;
-import com.liberty52.product.service.repository.ProductRepository;
-import com.liberty52.product.service.repository.ReviewRepository;
+import com.liberty52.product.service.repository.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
 import static com.liberty52.product.global.constants.RoleConstants.ADMIN;
@@ -29,6 +30,12 @@ public class ProductInfoRetrieveServiceTest {
     ProductRepository productRepository;
 
     @Autowired
+    CartRepository cartRepository;
+
+    @Autowired
+    CustomProductRepository customProductRepository;
+
+    @Autowired
     ReviewRepository reviewRepository;
 
     @BeforeEach
@@ -38,7 +45,7 @@ public class ProductInfoRetrieveServiceTest {
 
     @Test
     void 상품옵션조회(){
-        Product product = productRepository.findById("LIB-001").orElseGet(null);
+        Product product = productRepository.findById("LIB-001").orElse(null);
 
         List<ProductOptionResponseDto> productOptionResponseDtoList=productInfoRetrieveService.retrieveProductOptionInfoList("LIB-001");
         Assertions.assertThrows(ResourceNotFoundException.class, () -> productInfoRetrieveService.retrieveProductOptionInfoList("null"));
@@ -101,6 +108,44 @@ public class ProductInfoRetrieveServiceTest {
         Assertions.assertEquals(dto.getRatingCount(), reviewList.size());
         Assertions.assertEquals(dto.getState(), ProductState.ON_SAIL);
         Assertions.assertThrows(ResourceNotFoundException.class, () -> productInfoRetrieveService.retrieveProductByAdmin(ADMIN, "null"));
+
+    }
+
+    @Test
+    void 장바구니상품정보조회() throws IOException {
+        String authId = "cartTester";
+        int quantity = 2;
+        String testUrl = "test";
+        Product product = productRepository.findByName("Liberty 52_Frame").orElseGet(null);
+
+        Cart cart = Cart.create(authId);
+        cartRepository.save(cart);
+        CustomProduct customProduct = CustomProduct.createCartItem(authId, quantity, testUrl);
+        customProduct.associateWithCart(cart);
+        customProduct.associateWithProduct(product);
+        customProductRepository.save(customProduct);
+        cartRepository.save(cart);
+
+        List<ProductInfoByCartResponseDto> testList = productInfoRetrieveService.retrieveProductOptionListByCart(authId);
+        Assertions.assertEquals(testList.get(0).getProductId(), product.getId());
+
+        List<ProductOption> optionList = product.getProductOptions();
+        List<ProductOptionInfoByCartResponseDto> optionTestList = testList.get(0).getProductOptionList();
+        for(int i = 0; i < product.getProductOptions().size(); i++){
+            Assertions.assertEquals(optionTestList.get(i).getOptionId(), optionList.get(i).getId());
+            Assertions.assertEquals(optionTestList.get(i).getOptionName(), optionList.get(i).getName());
+            Assertions.assertEquals(optionTestList.get(i).isRequire(), optionList.get(i).isRequire());
+
+            List<OptionDetail> detailList = optionList.get(i).getOptionDetails();
+            List<OptionDetailInfoByCartResponseDto> detailTestList = optionTestList.get(i).getOptionDetailList();
+            for(int k = 0; k < detailTestList.size(); k++){
+                Assertions.assertEquals(detailTestList.get(k).getOptionDetailId(), detailList.get(k).getId());
+                Assertions.assertEquals(detailTestList.get(k).getOptionDetailName(), detailList.get(k).getName());
+                Assertions.assertEquals(detailTestList.get(k).getPrice(), detailList.get(k).getPrice());
+
+            }
+        }
+
 
     }
 }
