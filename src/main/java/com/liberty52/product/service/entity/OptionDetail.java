@@ -48,4 +48,10 @@ public class OptionDetail {
     public void updateOnSale(boolean onSail) {
         this.onSale = onSail;
     }
+
+    public void modify(String name, Integer price, Boolean onSail) {
+        this.name = name;
+        this.price = price;
+        this.onSale = onSail;
+    }
 }

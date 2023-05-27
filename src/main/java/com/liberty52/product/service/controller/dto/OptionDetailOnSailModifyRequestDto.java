@@ -4,13 +4,13 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 @Getter
-public class OptionDetailRemoveRequestDto {
+public class OptionDetailOnSailModifyRequestDto {
 
     @NotNull
     Boolean onSail;
 
-    public static OptionDetailRemoveRequestDto create(boolean onSail){
-        OptionDetailRemoveRequestDto dto = new OptionDetailRemoveRequestDto();
+    public static OptionDetailOnSailModifyRequestDto create(boolean onSail){
+        OptionDetailOnSailModifyRequestDto dto = new OptionDetailOnSailModifyRequestDto();
         dto.onSail = onSail;
         return dto;
     }
