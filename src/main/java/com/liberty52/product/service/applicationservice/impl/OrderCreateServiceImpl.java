@@ -14,6 +14,7 @@ import com.liberty52.product.service.applicationservice.OrderCreateService;
 import com.liberty52.product.service.controller.dto.*;
 import com.liberty52.product.service.entity.*;
 import com.liberty52.product.service.entity.payment.Payment;
+import com.liberty52.product.service.entity.payment.VBank;
 import com.liberty52.product.service.entity.payment.VBankPayment;
 import com.liberty52.product.service.repository.*;
 import jakarta.transaction.Transactional;
@@ -208,7 +209,8 @@ public class OrderCreateServiceImpl implements OrderCreateService {
     private void saveVBankPayment(OrderCreateRequestDto dto, Orders order) {
         order.changeOrderStatusToWaitingDeposit();
 
-        if (!vBankRepository.existsByAccount(dto.getVbankDto().getVbankInfo())) {
+        VBank vBank = VBank.ofFullInfo(dto.getVbankDto().getVbankInfo());
+        if (!vBankRepository.existsByBankAndAccountAndHolder(vBank.getBank(), vBank.getAccount(), vBank.getHolder())) {
             throw new ResourceNotFoundException("VBANK", "ACCOUNT", dto.getVbankDto().getVbankInfo());
         }
 

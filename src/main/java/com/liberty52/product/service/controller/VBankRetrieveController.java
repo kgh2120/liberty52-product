@@ -1,7 +1,7 @@
 package com.liberty52.product.service.controller;
 
-import com.liberty52.product.service.applicationservice.VBankInfoRetrieveService;
-import com.liberty52.product.service.controller.dto.VBankInfoListResponseDto;
+import com.liberty52.product.service.applicationservice.VBankRetrieveService;
+import com.liberty52.product.service.controller.dto.VBankRetrieve;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,14 +10,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class VBankInfoRetrieveController {
+public class VBankRetrieveController {
 
-    private final VBankInfoRetrieveService vBankInfoRetrieveService;
+    private final VBankRetrieveService vBankRetrieveService;
 
     @GetMapping("/vbanks")
     @ResponseStatus(HttpStatus.OK)
-    public VBankInfoListResponseDto getVBankInfoList() {
-        return vBankInfoRetrieveService.getVBankInfoList();
+    public VBankRetrieve.ListResponse getVBankInfoList() {
+        return VBankRetrieve.ListResponse.fromDtoList(
+                vBankRetrieveService.getVBankList()
+        );
     }
 
 }

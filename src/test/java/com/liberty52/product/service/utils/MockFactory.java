@@ -1,16 +1,19 @@
 package com.liberty52.product.service.utils;
 
-import static com.liberty52.product.service.utils.MockConstants.*;
-
 import com.liberty52.product.service.controller.dto.OrderDetailRetrieveResponse;
 import com.liberty52.product.service.controller.dto.OrderRetrieveProductResponse;
 import com.liberty52.product.service.controller.dto.OrdersRetrieveResponse;
 import com.liberty52.product.service.controller.dto.ReviewRetrieveResponse;
 import com.liberty52.product.service.entity.*;
+import com.liberty52.product.service.entity.payment.BankType;
+import com.liberty52.product.service.entity.payment.VBank;
 
+import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.liberty52.product.service.utils.MockConstants.*;
 
 public class MockFactory {
     public static CustomProduct createCustomProduct(String imageUrl, int quantity, String authId) {
@@ -94,6 +97,24 @@ public class MockFactory {
         }
 
         return review;
+    }
+
+    public static VBank mockVBank() throws Exception {
+        VBank vBank = VBank.of(BankType.HANA, "m_account", "m_holder");
+        Field id = vBank.getClass().getDeclaredField("id");
+        id.setAccessible(true);
+        id.set(vBank, "m_vBankId");
+        id.setAccessible(false);
+        return vBank;
+    }
+
+    public static DeliveryOption mockDeliveryOptionOnlyFee(int fee) throws Exception {
+        DeliveryOption option = DeliveryOption.feeOf(fee);
+        Field id = option.getClass().getDeclaredField("id");
+        id.setAccessible(true);
+        id.set(option, 1L);
+        id.setAccessible(false);
+        return option;
     }
 
 
