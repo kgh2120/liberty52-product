@@ -179,6 +179,10 @@ public class DBInitConfig {
 
                // Add Review
                 Review review = Review.create(3, "good");
+                Field reviewId = review.getClass().getDeclaredField("id");
+                reviewId.setAccessible(true);
+                reviewId.set(review, "REVIEW-001");
+
                 review.associate(customProduct);
                 ReviewImage.create(review, imageUrl);
 

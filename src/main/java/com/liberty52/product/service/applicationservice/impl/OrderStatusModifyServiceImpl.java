@@ -1,6 +1,8 @@
 package com.liberty52.product.service.applicationservice.impl;
 
-import com.liberty52.product.global.exception.external.badrequest.BadRequestException;
+import com.liberty52.product.global.exception.external.badrequest.AbnormalOrderStatusRequestException;
+import com.liberty52.product.global.exception.external.badrequest.OrderStatusIsNotWaitingDepositException;
+import com.liberty52.product.global.exception.external.badrequest.SameOrderStatusRequestException;
 import com.liberty52.product.global.exception.external.notfound.OrderNotFoundByIdException;
 import com.liberty52.product.global.util.Validator;
 import com.liberty52.product.service.applicationservice.OrderStatusModifyService;
@@ -35,14 +37,11 @@ public class OrderStatusModifyServiceImpl implements OrderStatusModifyService {
 
   private void validateOrderStatus(OrderStatus requestedStatus, OrderStatus currentStatus,
       OrderStatus previousStatus) {
-    if (requestedStatus == OrderStatus.ORDERED){
-      throw new BadRequestException("비정상적인 상태 변경 요청입니다.");
-    }
     if (currentStatus == requestedStatus) {
-      throw new BadRequestException("현재와 같은 상태 변경입니다.");
+      throw new SameOrderStatusRequestException();
     }
-    if (currentStatus != previousStatus) {
-      throw new BadRequestException("상태 변경이 허용되지 않습니다.");
+    if (requestedStatus == OrderStatus.ORDERED || currentStatus != previousStatus) {
+      throw new AbnormalOrderStatusRequestException();
     }
   }
 
@@ -53,7 +52,7 @@ public class OrderStatusModifyServiceImpl implements OrderStatusModifyService {
         .orElseThrow(() -> new OrderNotFoundByIdException(orderId));
 
     if (order.getOrderStatus() != OrderStatus.WAITING_DEPOSIT) {
-      throw new BadRequestException("입금대기 상태가 아닙니다.");
+      throw new OrderStatusIsNotWaitingDepositException();
     }
 
     VBankPayment.VBankPaymentInfo prev = order.getPayment().getInfoAsDto();
