@@ -10,7 +10,7 @@ public interface ProductInfoRetrieveService {
 
     ProductDetailResponseDto retrieveProductDetail(String productId);
 
-    List<ProductOptionResponseDto> retrieveProductOptionInfoList(String productId);
+    List<ProductOptionResponseDto> retrieveProductOptionInfoListByAdmin(String role, String productId, boolean onSale);
 
     List<ProductInfoRetrieveResponseDto> retrieveProductListByAdmin(String role);
 

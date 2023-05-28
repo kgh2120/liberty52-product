@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,10 +28,10 @@ public class ProductInfoRetrieveController {
         return productInfoRetrieveService.retrieveProductDetail(productId);
     }
 
-    @GetMapping("/productOptionInfo/{productId}")
+    @GetMapping("/admin/productOptionInfo/{productId}")
     @ResponseStatus(HttpStatus.OK)
-    public List<ProductOptionResponseDto> retrieveProductOptionInfoList(@PathVariable String productId) {
-        return productInfoRetrieveService.retrieveProductOptionInfoList(productId);
+    public List<ProductOptionResponseDto> retrieveProductOptionInfoListByAdmin(@RequestHeader("LB-Role") String role, @PathVariable String productId, @RequestParam boolean onSale) {
+        return productInfoRetrieveService.retrieveProductOptionInfoListByAdmin(role, productId, onSale);
     }
 
     @GetMapping("/admin/productInfo")

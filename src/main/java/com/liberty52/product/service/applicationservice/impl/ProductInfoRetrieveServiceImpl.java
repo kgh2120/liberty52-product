@@ -13,6 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,28 +38,19 @@ public class ProductInfoRetrieveServiceImpl implements ProductInfoRetrieveServic
   }
 
   @Override
-  public List<ProductOptionResponseDto> retrieveProductOptionInfoList(String productId) {
-    Product product = productRepository.findById(productId)
-        .orElseThrow(() -> new ResourceNotFoundException("product", "id", productId));
-    List<ProductOptionResponseDto> productOptionResponseDtoList = new ArrayList<>();
-    for (ProductOption productOption : product.getProductOptions()) {
-      productOptionResponseDtoList.add(
-          ProductOptionResponseDto.of(productOption.getId(), productOption.getName(),
-              productOption.isRequire(), productOption.isOnSale(),
-              getOptionDetails(productOption.getOptionDetails())));
+  public List<ProductOptionResponseDto> retrieveProductOptionInfoListByAdmin(String role, String productId, boolean onSale) {
+      Validator.isAdmin(role);
+      Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("product", "id", productId));
+    if(product.getProductOptions().size() == 0){
+        return Collections.emptyList();
     }
-    return productOptionResponseDtoList;
-  }
 
-  private List<ProductOptionDetailResponseDto> getOptionDetails(
-      List<OptionDetail> optionDetailList) {
-    List<ProductOptionDetailResponseDto> productOptionDetailResponseDtoList = new ArrayList<>();
-    for (OptionDetail optionDetail : optionDetailList) {
-      productOptionDetailResponseDtoList.add(
-          ProductOptionDetailResponseDto.of(optionDetail.getId(), optionDetail.getName(),
-              optionDetail.getPrice(), optionDetail.isOnSale()));
+    if(onSale){
+        return product.getProductOptions().stream().filter(ProductOption::isOnSale).map(productOption -> new ProductOptionResponseDto(productOption, onSale)).collect(Collectors.toList());
+    } else {
+        return product.getProductOptions().stream().sorted(Comparator.comparing(ProductOption::isOnSale).reversed()).map(productOption -> new ProductOptionResponseDto(productOption, onSale)).collect(Collectors.toList());
+
     }
-    return productOptionDetailResponseDtoList;
 
   }
 
