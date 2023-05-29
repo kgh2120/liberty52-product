@@ -49,8 +49,8 @@ public class ReviewQueryDslRepositoryImpl implements ReviewQueryDslRepository {
         Map<String, Long> pageInfo = getPageInfo(pageable, productId, isPhotoFilter);
 
         return new ReviewRetrieveResponse(reviews,
-                pageInfo.get(startPage),
                 pageInfo.get(currentPage),
+                pageInfo.get(startPage),
                 pageInfo.get(lastPage),
                 pageInfo.get(totalLastPage)
                 , authorId);
@@ -73,8 +73,8 @@ public class ReviewQueryDslRepositoryImpl implements ReviewQueryDslRepository {
             return noReviewExistCase(reviews);
         Map<String, Long> pageInfo = getPageInfo(pageable);
         return new AdminReviewRetrieveResponse(reviews,
-                pageInfo.get(startPage),
                 pageInfo.get(currentPage),
+                pageInfo.get(startPage),
                 pageInfo.get(lastPage),
                 pageInfo.get(totalLastPage));
     }
