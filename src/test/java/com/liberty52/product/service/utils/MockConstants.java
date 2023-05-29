@@ -18,7 +18,7 @@ public class MockConstants {
     public static final int MOCK_QUANTITY = 1;
     public static final Long MOCK_PRICE = 10000000L;
     public static final int MOCK_LIST_SIZE = 3;
-    public static final ProductState MOCK_PRODUCT_STATE_ON_SAIL = ProductState.ON_SAIL;
+    public static final ProductState MOCK_PRODUCT_STATE_ON_SAIL = ProductState.ON_SALE;
     public static final OrderStatus MOCK_ORDER_STATUS_ORDERED = OrderStatus.ORDERED;
 
     public static final long MOCK_TOTAL_PRODUCT_PRICE = MOCK_PRICE * MOCK_LIST_SIZE;

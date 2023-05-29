@@ -47,7 +47,7 @@ class CartItemRemoveServiceImplTest extends MockS3Test {
 
     @BeforeEach
     void beforeEach() {
-        Product product = MockFactory.createProduct("Liberty 52_Frame", ProductState.ON_SAIL, 10_000_000L);
+        Product product = MockFactory.createProduct("Liberty 52_Frame", ProductState.ON_SALE, 10_000_000L);
         product = productRepository.save(product);
 
         ProductOption displayOption = MockFactory.createProductOption("거치 방식", true);

@@ -20,7 +20,8 @@ public class ProductDetailResponseDto {
         this.name = product.getName();
         this.state = product.getProductState().name();
         this.price = product.getPrice();
-        this.options = product.getProductOptions().stream().map(ProductOptionDto::new).toList();
+        this.options = product.getProductOptions().stream().filter(ProductOption::isOnSale)
+                .map(ProductOptionDto::new).toList();
     }
 
     @Data
@@ -34,7 +35,9 @@ public class ProductDetailResponseDto {
             this.id = op.getId();
             this.name = op.getName();
             this.require = op.isRequire();
-            this.optionItems = op.getOptionDetails().stream().map(OptionDetailDto::new).toList();
+            this.optionItems = op.getOptionDetails().stream()
+                    .filter(OptionDetail::isOnSale)
+                    .map(OptionDetailDto::new).toList();
         }
         @Data
         public static class OptionDetailDto {
