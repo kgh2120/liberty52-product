@@ -46,7 +46,7 @@ public class ProductInfoRetrieveController {
         return productInfoRetrieveService.retrieveProductByAdmin(role, productId);
     }
 
-    @GetMapping("/productOptionInfoByCart")
+    @GetMapping("/carts/productOptionInfo")
     @ResponseStatus(HttpStatus.OK)
     public List<ProductInfoByCartResponseDto> retrieveProductOptionListByCart(@RequestHeader(HttpHeaders.AUTHORIZATION) String authId) {
         return productInfoRetrieveService.retrieveProductOptionListByCart(authId);
