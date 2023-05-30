@@ -2,9 +2,13 @@ package com.liberty52.product.global.util;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 
 public class Utils {
+
+    public static DateTimeFormatter DATE_FORMAT_CUSTOM = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
     public static LocalDateTime convertUnixToLocalDateTime(long unixTime) {
         return LocalDateTime.ofEpochSecond(unixTime, 0, ZoneOffset.UTC);
     }

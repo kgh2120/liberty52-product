@@ -1,6 +1,7 @@
 package com.liberty52.product.service.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.liberty52.product.global.util.Utils;
 import com.liberty52.product.service.entity.Orders;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -66,9 +67,9 @@ public class AdminCanceledOrderListResponse {
             response.orderDate = entity.getOrderDate().toString();
             response.customerId = entity.getAuthId();
             response.orderStatus = entity.getOrderStatus().name();
-            response.reqAt = entity.getCanceledOrders().getReqAt().toString();
+            response.reqAt = entity.getCanceledOrders().getReqAt().format(Utils.DATE_FORMAT_CUSTOM);
             response.canceledAt = entity.getCanceledOrders().getCanceledAt() != null ?
-                    entity.getCanceledOrders().getCanceledAt().toString() : "대기중";
+                    entity.getCanceledOrders().getCanceledAt().format(Utils.DATE_FORMAT_CUSTOM) : "대기중";
             response.approvedAdminName = entity.getCanceledOrders().getApprovedAdminName();
             return response;
         }
