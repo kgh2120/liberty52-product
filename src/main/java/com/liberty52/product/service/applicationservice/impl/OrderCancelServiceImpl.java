@@ -76,7 +76,7 @@ public class OrderCancelServiceImpl implements OrderCancelService {
                 Events.raise(OrderCanceledEvent.toAdmin(order, ORDER_TEAM_MAIL_ADDRESS));
             }
             case CANCELED -> throw new AlreadyCancelOrderException();
-            default -> throw new OrderRefundException(order.getOrderStatus());
+            default -> throw new OrderRefundException(order.getOrderStatus().getKoName());
         }
     }
 

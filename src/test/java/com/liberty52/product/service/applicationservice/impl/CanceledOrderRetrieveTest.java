@@ -74,7 +74,7 @@ public class CanceledOrderRetrieveTest extends MockAdaptersTest {
 
         Assertions.assertNotNull(response);
         Assertions.assertEquals(orderId, response.getBasicOrderDetail().getOrderId());
-        Assertions.assertEquals(OrderStatus.CANCEL_REQUESTED.name(), response.getBasicOrderDetail().getOrderStatus());
+        Assertions.assertEquals(OrderStatus.CANCEL_REQUESTED.getKoName(), response.getBasicOrderDetail().getOrderStatus());
         Assertions.assertEquals(3, response.getBasicOrderDetail().getProducts().get(0).getOptions().size());
         Assertions.assertNotNull(response.getCanceledInfo());
         Assertions.assertEquals("취소사유", response.getCanceledInfo().getReason());

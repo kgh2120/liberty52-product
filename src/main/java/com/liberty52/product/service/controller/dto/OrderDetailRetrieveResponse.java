@@ -34,7 +34,7 @@ public class OrderDetailRetrieveResponse {
     public OrderDetailRetrieveResponse(Orders orders) {
         this.orderId = orders.getId();
         this.orderDate = orders.getOrderedAt().format(Utils.DATE_FORMAT_DATE);
-        this.orderStatus = orders.getOrderStatus().name();
+        this.orderStatus = orders.getOrderStatus().getKoName();
         OrderDestination destination = orders.getOrderDestination();
         this.address = destination.getAddress1()+" " + destination.getAddress2();
         this.receiverName = destination.getReceiverName();

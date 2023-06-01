@@ -67,7 +67,7 @@ public class AdminOrderListResponse {
             response.productName = getProductName(entity);
             response.orderDate = entity.getOrderedAt().format(Utils.DATE_FORMAT_DATE);
             response.customerId = entity.getAuthId();
-            response.orderStatus = entity.getOrderStatus().getName();
+            response.orderStatus = entity.getOrderStatus().getKoName();
             return response;
         }
 
