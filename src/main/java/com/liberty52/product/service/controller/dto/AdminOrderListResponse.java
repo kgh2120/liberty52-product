@@ -1,13 +1,15 @@
 package com.liberty52.product.service.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.liberty52.product.global.util.Utils;
 import com.liberty52.product.service.entity.Orders;
-import java.util.List;
-import java.util.Map;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
+import java.util.Map;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -63,7 +65,7 @@ public class AdminOrderListResponse {
             response.orderId = entity.getId();
             response.orderNumber = entity.getOrderNum();
             response.productName = getProductName(entity);
-            response.orderDate = entity.getOrderDate().toString();
+            response.orderDate = entity.getOrderedAt().format(Utils.DATE_FORMAT_DATE);
             response.customerId = entity.getAuthId();
             response.orderStatus = entity.getOrderStatus().getName();
             return response;

@@ -1,5 +1,6 @@
 package com.liberty52.product.service.controller.dto;
 
+import com.liberty52.product.global.util.Utils;
 import com.liberty52.product.service.entity.CustomProductOption;
 import com.liberty52.product.service.entity.Orders;
 import com.liberty52.product.service.entity.payment.Payment;
@@ -30,7 +31,7 @@ public class OrdersRetrieveResponse {
 
     public OrdersRetrieveResponse(Orders orders) {
         this.orderId = orders.getId();
-        this.orderDate = orders.getOrderDate().toString();
+        this.orderDate = orders.getOrderedAt().format(Utils.DATE_FORMAT_DATE);
         this.orderStatus = orders.getOrderStatus().name();
         this.address = orders.getOrderDestination().getAddress1() + " " + orders.getOrderDestination().getAddress2();
         this.receiverName = orders.getOrderDestination().getReceiverName();

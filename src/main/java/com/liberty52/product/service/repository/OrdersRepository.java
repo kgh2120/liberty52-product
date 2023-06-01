@@ -4,12 +4,12 @@ import com.liberty52.product.service.entity.OrderStatus;
 import com.liberty52.product.service.entity.Orders;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public interface OrdersRepository extends JpaRepository<Orders, String> {
 
-    Long countAllByOrderStatusAndOrderDateLessThan(OrderStatus status, LocalDate orderDate);
+    Long countAllByOrderStatusAndOrderedAtLessThan(OrderStatus status, LocalDateTime orderedAt);
 
-    void deleteAllByOrderStatusAndOrderDateLessThan(OrderStatus status, LocalDate orderDate);
+    void deleteAllByOrderStatusAndOrderedAtLessThan(OrderStatus status, LocalDateTime orderedAt);
 
 }

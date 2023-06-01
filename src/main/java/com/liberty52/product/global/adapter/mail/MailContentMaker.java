@@ -6,21 +6,17 @@ import com.liberty52.product.global.adapter.mail.content.OrderedProductInfoSecti
 import com.liberty52.product.global.adapter.mail.content.RequestDepositMail;
 import com.liberty52.product.global.constants.ProductConstants;
 import com.liberty52.product.global.constants.RepresentImageUrl;
+import com.liberty52.product.global.util.Utils;
 import com.liberty52.product.service.entity.CustomProduct;
 import com.liberty52.product.service.entity.Orders;
 import com.liberty52.product.service.entity.payment.CardPayment;
 import com.liberty52.product.service.entity.payment.VBankPayment;
 
 import java.text.DecimalFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 public class MailContentMaker {
 
-    private static final DateTimeFormatter DATE_FORMAT;
-    static {
-        DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    }
     private static final DecimalFormat PRICE_FORMAT;
     static {
         PRICE_FORMAT = new DecimalFormat("###,###");
@@ -30,7 +26,7 @@ public class MailContentMaker {
         String vBankInfo = ((VBankPayment.VBankPaymentInfo)(order.getPayment().getInfoAsDto())).getVbankInfo();
         String customerName = order.getOrderDestination().getReceiverName();
         String orderNum = order.getOrderNum();
-        String orderedDate = order.getOrderDate().format(DATE_FORMAT);
+        String orderedDate = order.getOrderedAt().format(Utils.DATE_FORMAT_DATE);
         String receiverName = order.getOrderDestination().getReceiverName();
         String receiverPhone = order.getOrderDestination().getReceiverPhoneNumber();
         String address1 = "(" + order.getOrderDestination().getZipCode() + ")" + " " + order.getOrderDestination().getAddress1();
@@ -57,7 +53,7 @@ public class MailContentMaker {
         // 기본정보
         String customerName = order.getOrderDestination().getReceiverName();
         String orderNum = order.getOrderNum();
-        String orderedDate = order.getOrderDate().format(DATE_FORMAT);
+        String orderedDate = order.getOrderedAt().format(Utils.DATE_FORMAT_DATE);
 
         // 배송정보
         String receiverName = order.getOrderDestination().getReceiverName();
@@ -70,7 +66,7 @@ public class MailContentMaker {
         String cardName = paymentInfo.getCardName();
         String cardNumber = paymentInfo.getCardNumber();
         String cardQuota = paymentInfo.getCardQuota() > 0 ? paymentInfo.getCardQuota()+"개월" : "일시불";
-        String paidAt = paymentInfo.getPaidAt().format(DATE_FORMAT);
+        String paidAt = paymentInfo.getPaidAt().format(Utils.DATE_FORMAT_DATE);
 
         // 주문상품 정보
         String productInfo = orderedProductInfoSection(order);
@@ -92,7 +88,7 @@ public class MailContentMaker {
         // 기본정보
         String customerName = order.getOrderDestination().getReceiverName();
         String orderNum = order.getOrderNum();
-        String orderedDate = order.getOrderDate().format(DATE_FORMAT);
+        String orderedDate = order.getOrderedAt().format(Utils.DATE_FORMAT_DATE);
 
         // 배송정보
         String receiverName = order.getOrderDestination().getReceiverName();
@@ -107,7 +103,7 @@ public class MailContentMaker {
         String depositorName = paymentInfo.getDepositorName();
         String depositorAcc = paymentInfo.getDepositorAccount();
         String isApplyCashReceipt = paymentInfo.getIsApplyCashReceipt() ? "신청" : "미신청";
-        String paidAt = paymentInfo.getPaidAt().format(DATE_FORMAT);
+        String paidAt = paymentInfo.getPaidAt().format(Utils.DATE_FORMAT_DATE);
 
         // 주문 상품 정보
         String productInfo = orderedProductInfoSection(order);
@@ -146,7 +142,7 @@ public class MailContentMaker {
     public static String makeOrderCanceledContent(String contentTitle, Orders order) {
         String customerName = order.getOrderDestination().getReceiverName();
         String orderNum = order.getOrderNum();
-        String orderDate = order.getOrderDate().format(DATE_FORMAT);
+        String orderDate = order.getOrderedAt().format(Utils.DATE_FORMAT_DATE);
         String cancelReason = order.getCanceledOrders().getReason();
 
         String orderAmount = PRICE_FORMAT.format(order.getAmount() - order.getDeliveryPrice());

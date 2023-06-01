@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -28,7 +28,7 @@ public class Orders {
     @Column(updatable = false, nullable = false)
     private String authId;
 
-    private final LocalDate orderDate = LocalDate.now();
+    private final LocalDateTime orderedAt = LocalDateTime.now();
 
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;

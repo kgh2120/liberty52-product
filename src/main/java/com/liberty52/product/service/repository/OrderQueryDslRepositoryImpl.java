@@ -51,7 +51,7 @@ public class OrderQueryDslRepositoryImpl implements OrderQueryDslRepository {
     public List<Orders> retrieveOrders(String authId) {
         return selectOrdersAndAssociatedEntity()
                 .where(orders.authId.eq(authId).and(orders.orderStatus.ne(OrderStatus.READY)))
-                .orderBy(orders.orderDate.desc())
+                .orderBy(orders.orderedAt.desc())
                 .fetch();
     }
 
@@ -132,7 +132,7 @@ public class OrderQueryDslRepositoryImpl implements OrderQueryDslRepository {
                 .fetchJoin()
                 .leftJoin(product).on(customProduct.product.eq(product))
                 .where(orders.orderStatus.ne(OrderStatus.READY))
-                .orderBy(orders.orderDate.desc())
+                .orderBy(orders.orderedAt.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize());
     }
@@ -152,7 +152,7 @@ public class OrderQueryDslRepositoryImpl implements OrderQueryDslRepository {
                                 orders.orderStatus.eq(statuses[0])
                 )
                 .leftJoin(canceledOrders).on(canceledOrders.orders.eq(orders))
-                .orderBy(orders.orderDate.desc())
+                .orderBy(orders.orderedAt.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize());
     }

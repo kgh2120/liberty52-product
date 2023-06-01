@@ -280,7 +280,7 @@ public class OrderCreateServiceImpl implements OrderCreateService {
             customProductOption.associate(detail);
         }
 
-        return MonoItemOrderResponseDto.create(order.getId(), order.getOrderDate(), order.getOrderStatus());
+        return MonoItemOrderResponseDto.create(order.getId(), order.getOrderedAt(), order.getOrderStatus());
     }
 
 }

@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Field;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.UUID;
 
@@ -32,15 +32,15 @@ class OrderDeleteServiceImplTest {
         }
 
         final OrderStatus ready = OrderStatus.READY;
-        final LocalDate today = LocalDate.now(ZoneId.of("Asia/Seoul"));
+        final LocalDateTime today = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
 
-        Long beforeCount = ordersRepository.countAllByOrderStatusAndOrderDateLessThan(ready, today);
+        Long beforeCount = ordersRepository.countAllByOrderStatusAndOrderedAtLessThan(ready, today);
         Assertions.assertEquals(N, beforeCount);
 
 //        orderDeleteService.deleteOrderOfReadyByScheduled();
-        ordersRepository.deleteAllByOrderStatusAndOrderDateLessThan(ready, today);
+        ordersRepository.deleteAllByOrderStatusAndOrderedAtLessThan(ready, today);
 
-        Long afterCount = ordersRepository.countAllByOrderStatusAndOrderDateLessThan(ready, today);
+        Long afterCount = ordersRepository.countAllByOrderStatusAndOrderedAtLessThan(ready, today);
         Assertions.assertEquals(0, afterCount);
     }
 
@@ -49,9 +49,9 @@ class OrderDeleteServiceImplTest {
                 UUID.randomUUID().toString(),
                 OrderDestination.create("receiverName", "receiverEmail", "receiverPhoneNumber", "address1", "address2", "zipCode")
         );
-        Field orderDate = order.getClass().getDeclaredField("orderDate");
-        orderDate.setAccessible(true);
-        orderDate.set(order, LocalDate.now(ZoneId.of("Asia/Seoul")).minusDays(1));
+        Field orderedAt = order.getClass().getDeclaredField("orderedAt");
+        orderedAt.setAccessible(true);
+        orderedAt.set(order, LocalDateTime.now(ZoneId.of("Asia/Seoul")).minusDays(1));
         ordersRepository.save(order);
     }
 

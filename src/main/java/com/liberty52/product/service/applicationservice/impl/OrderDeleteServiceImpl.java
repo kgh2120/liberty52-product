@@ -10,7 +10,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 @Slf4j
@@ -27,12 +27,12 @@ public class OrderDeleteServiceImpl implements OrderDeleteService {
     @Scheduled(cron = "0 50/5 23 * * *", zone = "Asia/Seoul")
     public void deleteOrderOfReadyByScheduled() {
         OrderStatus ready = OrderStatus.READY;
-        LocalDate today = LocalDate.now(ZoneId.of("Asia/Seoul"));
+        LocalDateTime today = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
 
-        Long count = ordersRepository.countAllByOrderStatusAndOrderDateLessThan(ready, today);
+        Long count = ordersRepository.countAllByOrderStatusAndOrderedAtLessThan(ready, today);
         log.info("ORDER SCHEDULED: Now, There are {} Ready status Order of yesterday", count);
 
-        ordersRepository.deleteAllByOrderStatusAndOrderDateLessThan(ready, today);
+        ordersRepository.deleteAllByOrderStatusAndOrderedAtLessThan(ready, today);
         log.info("ORDER SCHEDULED: Now, Delete {} Ready status Order of yesterday", count);
     }
 }

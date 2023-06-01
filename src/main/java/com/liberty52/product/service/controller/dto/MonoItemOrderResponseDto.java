@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Builder(access = AccessLevel.PRIVATE)
@@ -16,7 +17,7 @@ public class MonoItemOrderResponseDto {
 
 
 
-    public static MonoItemOrderResponseDto create(String id, LocalDate orderDate, OrderStatus orderStatus) {
-        return builder().id(id).orderDate(orderDate).status(orderStatus.name()).build();
+    public static MonoItemOrderResponseDto create(String id, LocalDateTime orderedAt, OrderStatus orderStatus) {
+        return builder().id(id).orderDate(orderedAt.toLocalDate()).status(orderStatus.name()).build();
     }
 }

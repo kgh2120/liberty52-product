@@ -32,9 +32,9 @@ public class AdminCanceledOrderDetailResponse {
         public static CanceledOrderDetailResponse of(Orders order) {
             CanceledOrderDetailResponse response = new CanceledOrderDetailResponse();
             response.reason = order.getCanceledOrders().getReason();
-            response.reqAt = order.getCanceledOrders().getReqAt().format(Utils.DATE_FORMAT_CUSTOM);
+            response.reqAt = order.getCanceledOrders().getReqAt().format(Utils.DATE_FORMAT_DATETIME);
             response.canceledAt = order.getCanceledOrders().getCanceledAt() != null ?
-                    order.getCanceledOrders().getCanceledAt().format(Utils.DATE_FORMAT_CUSTOM) : "대기중";
+                    order.getCanceledOrders().getCanceledAt().format(Utils.DATE_FORMAT_DATETIME) : "대기중";
             response.fee = order.getCanceledOrders().getFee();
             response.approvedAdminName = order.getCanceledOrders().getApprovedAdminName();
             return response;

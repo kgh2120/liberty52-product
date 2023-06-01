@@ -64,12 +64,12 @@ public class AdminCanceledOrderListResponse {
             response.orderId = entity.getId();
             response.orderNumber = entity.getOrderNum();
             response.productName = getProductName(entity);
-            response.orderDate = entity.getOrderDate().toString();
+            response.orderDate = entity.getOrderedAt().format(Utils.DATE_FORMAT_DATE);
             response.customerId = entity.getAuthId();
             response.orderStatus = entity.getOrderStatus().name();
-            response.reqAt = entity.getCanceledOrders().getReqAt().format(Utils.DATE_FORMAT_CUSTOM);
+            response.reqAt = entity.getCanceledOrders().getReqAt().format(Utils.DATE_FORMAT_DATETIME);
             response.canceledAt = entity.getCanceledOrders().getCanceledAt() != null ?
-                    entity.getCanceledOrders().getCanceledAt().format(Utils.DATE_FORMAT_CUSTOM) : "대기중";
+                    entity.getCanceledOrders().getCanceledAt().format(Utils.DATE_FORMAT_DATETIME) : "대기중";
             response.approvedAdminName = entity.getCanceledOrders().getApprovedAdminName();
             return response;
         }
