@@ -2,12 +2,14 @@ package com.liberty52.product.service.applicationservice.impl;
 
 import com.liberty52.product.global.adapter.s3.S3UploaderApi;
 import com.liberty52.product.global.exception.external.badrequest.BadRequestException;
-import com.liberty52.product.global.exception.external.badrequest.CartItemRequiredButOrderItemFoundException;
-import com.liberty52.product.global.exception.external.badrequest.ReviewAlreadyExistByOrderException;
+import com.liberty52.product.global.exception.external.badrequest.ReviewAlreadyExistByCustomProductException;
+import com.liberty52.product.global.exception.external.badrequest.ReviewCannotWriteByOrderStatusIsNotCompleteException;
+import com.liberty52.product.global.exception.external.badrequest.ReviewCannotWriteInCartException;
 import com.liberty52.product.global.exception.external.notfound.CustomProductNotFoundByIdException;
 import com.liberty52.product.service.applicationservice.ReviewCreateService;
 import com.liberty52.product.service.controller.dto.ReviewCreateRequestDto;
 import com.liberty52.product.service.entity.CustomProduct;
+import com.liberty52.product.service.entity.OrderStatus;
 import com.liberty52.product.service.entity.Review;
 import com.liberty52.product.service.entity.ReviewImage;
 import com.liberty52.product.service.repository.CustomProductRepository;
@@ -32,11 +34,15 @@ public class ReviewCreateServiceImpl implements ReviewCreateService {
         .orElseThrow(() -> new CustomProductNotFoundByIdException(dto.getCustomProductId()));
 
     if (customProduct.isInCart()){
-      throw new BadRequestException("구매한 제품에만 리뷰를 남길 수 있습니다");
+      throw new ReviewCannotWriteInCartException();
     }
 
-    if (reviewRepository.findByCustomProduct_Orders(customProduct.getOrders()).isPresent()) {
-      throw new ReviewAlreadyExistByOrderException();
+    if(customProduct.getOrders().getOrderStatus() != OrderStatus.COMPLETE){
+      throw new ReviewCannotWriteByOrderStatusIsNotCompleteException();
+    }
+
+    if (reviewRepository.findByCustomProduct(customProduct).isPresent()) {
+      throw new ReviewAlreadyExistByCustomProductException();
     }
 
     Review review = Review.create(dto.getRating(), dto.getContent());
