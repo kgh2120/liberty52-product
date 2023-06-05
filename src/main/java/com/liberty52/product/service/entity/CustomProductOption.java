@@ -47,14 +47,15 @@ public class CustomProductOption {
      * 필드로 저장하고, 옵션 디테일과의 연관 관계를 끊는다.
      *
      */
-    public void fixOption(){
+    public void setOptionDetailAndDissociate(){
         price = optionDetail.getPrice();
         detailName = optionDetail.getName();
         optionName = optionDetail.getProductOption().getName();
-        removeAssociateWithOptionDetail();
+        this.dissociateOptionDetail();
     }
 
-    private void removeAssociateWithOptionDetail() {
-        optionDetail = null;
+    private void dissociateOptionDetail() {
+        this.optionDetail = null;
     }
+
 }

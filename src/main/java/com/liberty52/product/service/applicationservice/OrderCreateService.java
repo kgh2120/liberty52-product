@@ -5,9 +5,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface OrderCreateService {
 
-    @Deprecated
-    MonoItemOrderResponseDto save(String authId, MultipartFile imageFile, MonoItemOrderRequestDto dto);
-
     PaymentConfirmResponseDto confirmFinalApprovalOfCardPayment(String authId, String orderId);
 
     PaymentCardResponseDto createCardPaymentOrders(String authId, OrderCreateRequestDto dto, MultipartFile imageFile);

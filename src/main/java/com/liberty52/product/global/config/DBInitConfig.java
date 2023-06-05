@@ -131,7 +131,7 @@ public class DBInitConfig {
                 customProduct0.associateWithCart(cart);
                 customProductRepository.save(customProduct0);
 
-                associateCustomProductOption(false, detailEasel, material, materialOption2, customProduct0);
+                associateCustomProductOption(detailEasel, material, materialOption2, customProduct0);
 
                 // Add Order
                 Orders order = ordersRepository.save(
@@ -150,7 +150,7 @@ public class DBInitConfig {
                 customProduct0.associateWithOrder(order);
                 customProductRepository.save(customProduct0);
 
-                associateCustomProductOption(true, detailEasel, material, materialOption2, customProduct0);
+                associateCustomProductOption(detailEasel, material, materialOption2, customProduct0);
                 Payment<?> payment = Payment.cardOf();
                 PortOnePaymentInfo info = PortOnePaymentInfo.testOf(
                         UUID.randomUUID().toString(), UUID.randomUUID().toString(), 100L,
@@ -159,6 +159,7 @@ public class DBInitConfig {
                 payment.setInfo(CardPayment.CardPaymentInfo.of(info));
                 payment.changeStatusToPaid();
                 order.calculateTotalValueAndSet();
+                order.finishCreation();
 
 
                 // Add Order
@@ -190,11 +191,12 @@ public class DBInitConfig {
                 }
                 reviewRepository.save(review);
 
-                associateCustomProductOption(true, detailEasel, material, materialOption2, customProduct);
+                associateCustomProductOption(detailEasel, material, materialOption2, customProduct);
                 Payment<? extends PaymentInfo> vbank = Payment.vbankOf();
                 vbank.setInfo(VBankPayment.VBankPaymentInfo.of("하나은행 1234123412341234 리버티","하나은행", "김테스터", "138-978554-10547",false));
                 vbank.associate(orderSub);
                 orderSub.calculateTotalValueAndSet();
+                orderSub.finishCreation();
 
                 for (int i = 0; i < 10; i++) {
                     Orders guestOrder = Orders.create("GUEST-00"+i,
@@ -219,7 +221,7 @@ public class DBInitConfig {
                     customProduct.associateWithOrder(guestOrder);
                     customProductRepository.save(customProduct);
 
-                    associateCustomProductOption(true, detailEasel, material, materialOption2, customProduct);
+                    associateCustomProductOption(detailEasel, material, materialOption2, customProduct);
 
                     Review noPhotoReview = Review.create(3, "good");
                     noPhotoReview.associate(customProduct);
@@ -227,6 +229,7 @@ public class DBInitConfig {
                     reviewRepository.save(noPhotoReview);
 
                     guestOrder.calculateTotalValueAndSet();
+                    guestOrder.finishCreation();
                     ordersRepository.save(guestOrder);
                 }
 
@@ -251,7 +254,7 @@ public class DBInitConfig {
                     customProduct.associateWithOrder(guestOrder);
                     customProductRepository.save(customProduct);
 
-                    associateCustomProductOption(true, detailEasel, material, materialOption2, customProduct);
+                    associateCustomProductOption(detailEasel, material, materialOption2, customProduct);
 
                     Review noPhotoReview = Review.create(3, "good");
                     noPhotoReview.associate(customProduct);
@@ -259,6 +262,7 @@ public class DBInitConfig {
                     reviewRepository.save(noPhotoReview);
 
                     guestOrder.calculateTotalValueAndSet();
+                    guestOrder.finishCreation();
                     ordersRepository.save(guestOrder);
                 }
 
@@ -289,9 +293,10 @@ public class DBInitConfig {
                     customProduct.associateWithOrder(c_order);
                     customProductRepository.save(customProduct);
 
-                    associateCustomProductOption(true, detailEasel, material, materialOption2, customProduct);
+                    associateCustomProductOption(detailEasel, material, materialOption2, customProduct);
 
                     c_order.calculateTotalValueAndSet();
+                    c_order.finishCreation();
 
                     CanceledOrders canceledOrders = CanceledOrders.of("취소사유-00"+c, c_order);
                     canceledOrders.approveCanceled(0, "SYSTEM");
@@ -321,9 +326,10 @@ public class DBInitConfig {
                     customProduct.associateWithOrder(c_order);
                     customProductRepository.save(customProduct);
 
-                    associateCustomProductOption(true, detailEasel, material, materialOption2, customProduct);
+                    associateCustomProductOption(detailEasel, material, materialOption2, customProduct);
 
                     c_order.calculateTotalValueAndSet();
+                    c_order.finishCreation();
 
                     CanceledOrders canceledOrders = CanceledOrders.of("취소사유-00"+c, c_order);
                     canceledOrders.approveCanceled(0, "관리자");
@@ -355,9 +361,10 @@ public class DBInitConfig {
                     customProduct.associateWithOrder(c_order);
                     customProductRepository.save(customProduct);
 
-                    associateCustomProductOption(true, detailEasel, material, materialOption2, customProduct);
+                    associateCustomProductOption(detailEasel, material, materialOption2, customProduct);
 
                     c_order.calculateTotalValueAndSet();
+                    c_order.finishCreation();
 
                     CanceledOrders.of("취소사유-00"+c, c_order);
                     c_order.changeOrderStatusToCancelRequest();
@@ -383,24 +390,21 @@ public class DBInitConfig {
             }
         }
 
-        private void associateCustomProductOption(boolean isOrdered, OptionDetail detailEasel, OptionDetail material,
+        private void associateCustomProductOption(OptionDetail detailEasel, OptionDetail material,
                 OptionDetail materialOption2, CustomProduct customProduct) {
             CustomProductOption customProductOption = CustomProductOption.create();
             customProductOption.associate(detailEasel);
             customProductOption.associate(customProduct);
-            if (isOrdered) customProductOption.fixOption();
             customProductOptionRepository.save(customProductOption);
 
             customProductOption = CustomProductOption.create();
             customProductOption.associate(material);
             customProductOption.associate(customProduct);
-            if (isOrdered) customProductOption.fixOption();
             customProductOptionRepository.save(customProductOption);
 
             customProductOption = CustomProductOption.create();
             customProductOption.associate(materialOption2);
             customProductOption.associate(customProduct);
-            if (isOrdered) customProductOption.fixOption();
             customProductOptionRepository.save(customProductOption);
 
         }

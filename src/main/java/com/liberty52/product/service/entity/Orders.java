@@ -122,7 +122,7 @@ public class Orders {
             totalAmount.getAndAdd(customProduct.getProduct().getPrice());
             // 옵션 추가금액
             customProduct.getOptions().forEach(customProductOption ->
-                        totalAmount.getAndAdd(customProductOption.getPrice()));
+                        totalAmount.getAndAdd(customProductOption.getOptionDetail().getPrice()));
             // 수량
             totalAmount.getAndUpdate(x -> customProduct.getQuantity() * x);
         });
@@ -142,6 +142,21 @@ public class Orders {
 
     public void modifyOrderStatus(OrderStatus orderStatus){
         this.orderStatus = orderStatus;
+    }
+
+    /**
+     * 주문 생성 이후, 모든 로직이 종료되면 호출. <br>
+     * 카드 결제 -> 결제 승인 로직 이후. <br>
+     * 가상계좌 결제 -> 생성 로직 이후. <br>
+     * <br>
+     * 장바구니 카드결제 시, 결제창 호출한 후 미결제 종료함에도 장바구니를 유지시켜야 하기 때문에, <br>
+     * 모든 주문 리소스 생성 이후에 호출하여 타 엔티티간의 관계를 끊어주기 위한 메소드다.
+     */
+    public void finishCreation() {
+        this.customProducts.forEach(e -> {
+            e.dissociateCart();
+            e.getOptions().forEach(CustomProductOption::setOptionDetailAndDissociate);
+        });
     }
 
 }

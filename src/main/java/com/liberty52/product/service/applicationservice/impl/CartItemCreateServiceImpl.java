@@ -41,11 +41,11 @@ public class CartItemCreateServiceImpl implements CartItemCreateService {
     }
 
     private void createCartItem(Cart cart, String authId, MultipartFile imageFile, CartItemRequest dto) {
-        CustomProduct customProduct = CustomProduct.createCartItem(authId, dto.getQuantity(), s3Uploader.upload(imageFile));
-        customProduct.associateWithCart(cart);
-
         Product product = productRepository.findByName(dto.getProductName()).orElseThrow(() -> new ProductNotFoundByNameException(dto.getProductName())); //예외처리 해야함
+
+        CustomProduct customProduct = CustomProduct.createCartItem(authId, dto.getQuantity(), s3Uploader.upload(imageFile));
         customProduct.associateWithProduct(product);
+        customProduct.associateWithCart(cart);
         customProductRepository.save(customProduct);
 
         for (String optionDetailName :dto.getOptions()){

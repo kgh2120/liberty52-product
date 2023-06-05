@@ -14,16 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class OrderCreateController {
     private final OrderCreateService orderCreateService;
 
-    @Deprecated
-    @PostMapping("/orders/custom-products")
-    @ResponseStatus(HttpStatus.CREATED)
-    public MonoItemOrderResponseDto orderSave(
-            @RequestHeader(HttpHeaders.AUTHORIZATION) String authId,
-            @RequestPart("imageFile") MultipartFile imageFile,
-            @RequestPart("dto") @Validated MonoItemOrderRequestDto dto) {
-        return orderCreateService.save(authId, imageFile, dto);
-    }
-
     @PostMapping("/orders/card")
     @ResponseStatus(HttpStatus.CREATED)
     public PaymentCardResponseDto createCardPaymentOrders(
