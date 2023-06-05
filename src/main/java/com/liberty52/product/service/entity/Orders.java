@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -28,7 +29,7 @@ public class Orders {
     @Column(updatable = false, nullable = false)
     private String authId;
 
-    private final LocalDateTime orderedAt = LocalDateTime.now();
+    private final LocalDateTime orderedAt = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
 
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;

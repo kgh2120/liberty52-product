@@ -37,7 +37,7 @@ public class CustomProduct {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @OneToMany(mappedBy = "customProduct")
+    @OneToMany(mappedBy = "customProduct", orphanRemoval = true)
     private List<CustomProductOption> options = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
