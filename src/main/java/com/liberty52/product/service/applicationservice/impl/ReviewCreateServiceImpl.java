@@ -46,12 +46,11 @@ public class ReviewCreateServiceImpl implements ReviewCreateService {
     }
 
     Review review = Review.create(dto.getRating(), dto.getContent());
-    review.associate(customProduct);
+    customProduct.associateWithReview(review);
 
     if (images != null){
       addImage(images, review);
     }
-    reviewRepository.save(review);
   }
   private void addImage(List<MultipartFile> imageFiles, Review review) {
     if (imageFiles.size() > Review.IMAGES_MAX_COUNT)

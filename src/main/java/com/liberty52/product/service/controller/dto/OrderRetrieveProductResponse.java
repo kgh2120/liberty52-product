@@ -19,6 +19,7 @@ public class OrderRetrieveProductResponse {
     private String productUrl;
 
     private List<String> options;
+    private boolean hasReview;
 
 
     @QueryProjection
@@ -29,12 +30,13 @@ public class OrderRetrieveProductResponse {
     }
 
     @QueryProjection
-    public OrderRetrieveProductResponse(String customProductId, String name, int quantity, Long price, String productUrl, List<String> options) {
+    public OrderRetrieveProductResponse(String customProductId, String name, int quantity, Long price, String productUrl, boolean hasReview, List<String> options) {
         this.customProductId = customProductId;
         this.name = name;
         this.quantity = quantity;
         this.price = price;
         this.productUrl = productUrl;
         this.options = options;
+        this.hasReview = hasReview;
     }
 }

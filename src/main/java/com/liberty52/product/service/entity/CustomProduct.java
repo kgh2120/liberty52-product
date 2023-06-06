@@ -48,6 +48,9 @@ public class CustomProduct {
     @JoinColumn(name = "order_id")
     private Orders orders;
 
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "customProduct", cascade = CascadeType.ALL)
+    private Review review;
+
     public Map<String, String> getOptionsMap() {
         Map<String, String> optionsMap = new HashMap<>();
         for (CustomProductOption option : this.options) {
@@ -95,6 +98,11 @@ public class CustomProduct {
         this.orders = orders;
         orders.addCustomProduct(this);
     }
+    public void associateWithReview(Review review) {
+        Objects.requireNonNull(review);
+        this.review = review;
+        this.review.associate(this);
+    }
 
     public void dissociateCart() {
         this.cart = null;
@@ -137,4 +145,6 @@ public class CustomProduct {
     public void modifyQuantity(int quantity){
         this.quantity = quantity;
     }
+
+
 }

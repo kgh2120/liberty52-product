@@ -49,6 +49,7 @@ public class OrdersRetrieveResponse {
                                 .mapToLong(CustomProductOption::getPrice)
                                 .sum(),
                         c.getUserCustomPictureUrl(),
+                        c.getReview() != null,
                         c.getOptions().stream().map(CustomProductOption::getDetailName).toList()
                 )
         ).toList();

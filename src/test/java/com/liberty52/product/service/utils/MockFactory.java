@@ -72,6 +72,7 @@ public class MockFactory {
                 ,MOCK_QUANTITY
                 ,MOCK_PRICE,
                 MOCK_PRODUCT_REPRESENT_URL,
+                false,
                 null);
     }
 

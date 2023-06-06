@@ -54,6 +54,7 @@ public class Review {
 
     public void associate(CustomProduct customProduct) {
         this.customProduct = customProduct;
+//        this.customProduct.associateWithReview(this);
     }
 
     public void addImage(ReviewImage reviewImage) {

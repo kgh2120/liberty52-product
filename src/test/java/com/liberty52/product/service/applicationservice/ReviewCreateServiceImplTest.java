@@ -25,6 +25,9 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -58,6 +61,9 @@ class ReviewCreateServiceImplTest extends MockS3Test {
   private Orders order;
   private CustomProduct customProduct;
 
+  @Autowired
+  EntityManager em;
+
 
   @BeforeEach
   void setMockCustomProductData() throws IOException, NoSuchFieldException, IllegalAccessException {
@@ -79,19 +85,26 @@ class ReviewCreateServiceImplTest extends MockS3Test {
     customProduct.associateWithProduct(product);
     customProductRepository.save(customProduct);
     mockOrderCustomProductId = customProduct.getId();
+//    em.flush();
+//    em.clear();
+//    System.out.println("BeforeEach!");
   }
 
   @Test
   void createReview() {
     //given
+
     testImageList.add(imageFile);
     ReviewCreateRequestDto dto = ReviewCreateRequestDto.createForTest(rating, content, mockOrderCustomProductId);
     //when
     reviewCreateService.createReview(MOCK_AUTH_ID, dto, testImageList);
+
+
     Review review = reviewRepository.findByCustomProduct(customProduct).get();
     //then
     Assertions.assertEquals(rating, review.getRating());
     Assertions.assertEquals(content, review.getContent());
+
   }
 
   @Test
