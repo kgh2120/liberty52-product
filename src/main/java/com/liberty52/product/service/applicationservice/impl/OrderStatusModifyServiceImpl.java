@@ -9,6 +9,7 @@ import com.liberty52.product.service.applicationservice.OrderStatusModifyService
 import com.liberty52.product.service.controller.dto.VBankStatusModifyDto;
 import com.liberty52.product.service.entity.OrderStatus;
 import com.liberty52.product.service.entity.Orders;
+import com.liberty52.product.service.entity.payment.BankType;
 import com.liberty52.product.service.entity.payment.Payment;
 import com.liberty52.product.service.entity.payment.VBankPayment;
 import com.liberty52.product.service.entity.payment.VBankPayment.VBankPaymentInfo;
@@ -48,6 +49,8 @@ public class OrderStatusModifyServiceImpl implements OrderStatusModifyService {
   @Override
   public void modifyOrderStatusOfVBankByAdmin(String role, String orderId, VBankStatusModifyDto dto) {
     Validator.isAdmin(role);
+    BankType.getBankType(dto.getDepositorBank());
+
     Orders order = ordersRepository.findById(orderId)
         .orElseThrow(() -> new OrderNotFoundByIdException(orderId));
 
